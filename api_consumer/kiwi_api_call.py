@@ -1,4 +1,8 @@
+from pathlib import Path
+
 import requests as requests
+
+from navigator.paths import get_api_consumer_path
 
 
 def kiwi_call(**kwargs) -> dict:
@@ -7,7 +11,8 @@ def kiwi_call(**kwargs) -> dict:
     date_from = kwargs.get('date_from')
     date_to = kwargs.get('date_to')
     url = f"https://tequila-api.kiwi.com/v2/search?fly_from={fly_from}&fly_to={fly_to}"
-    api_key = open("api.txt", "r").read()
+    p = Path(get_api_consumer_path(), "api.txt")
+    api_key = open(p, "r").read()
     header_dict = {
         "apikey": api_key,
         "dateFrom": f"{date_from}",
@@ -24,4 +29,5 @@ def kiwi_call_example():
 
 if __name__ == "__main__":
     call = kiwi_call_example()
-    print("oi")
+    # p = Path("api_consumer/api.txt")
+    # print("oi")
