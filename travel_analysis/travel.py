@@ -27,6 +27,7 @@ class TravelAnalyser:
         for item in self.flight_data:
             aux = {"price": item.price, "quality": round(item.quality), "cityFrom": item.flight_from,
                    "cityTo": item.flight_to, "departure": item.time_departure, "arrival": item.time_arrival,
+                   "date_departure": item.date_departure, "date_arrival": item.date_arrival,
                    "flightDuration": item.duration, "flightDurationSeconds": item.duration_seconds,
                    "longLayover": item.long_layover,
                    "seats_available": int(item.seats_available) if item.seats_available is not None else 0,
