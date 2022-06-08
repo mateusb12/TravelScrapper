@@ -45,5 +45,6 @@ class TravelAnalyser:
 
 if __name__ == "__main__":
     ta = TravelAnalyser(kiwi_call_example())
-    ta.filter_long_layover_flights(threshold=5)
-    pass
+    ta.df_generator()
+    # ta.filter_long_layover_flights(threshold=5)
+    # pass
