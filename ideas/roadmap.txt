@@ -1,0 +1,12 @@
+→ populate dataset with fillers
+→ filler_generator has 70% chance of generating a flight with average price, 20% chance of generating an
+overpriced flight and 10% chance of generating a cheap flight
+→ create a function called "update_flight()" that can insert new flights in our dataset
+→ create nice visualizations for the dataset (barplot, normal_dist, bee swarm plot, etc)
+→ create a send_email() function
+→ attach that function inside update_flight()
+→ from airport to airport (ABC-DEF)
+→ from country to country (Poland-France)
+→ include how distant the airport is from the city center
+→ include flixbus and regiojet
+→ include accomodation like booking
