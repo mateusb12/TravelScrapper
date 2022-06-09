@@ -37,11 +37,11 @@ def random_date():
     day = random.randint(1, 31)
     month = random.randint(1, 12)
     year = random.randint(2022, 2023)
-    return f"{day:02d}:{month:02d}:{year:04d}"
+    return f"{day:02d}/{month:02d}/{year:04d}"
 
 
 def sum_days(date, days):
-    day, month, year = date.split(":")
+    day, month, year = date.split("/")
     day = int(day)
     month = int(month)
     year = int(year)
@@ -52,4 +52,4 @@ def sum_days(date, days):
     if month > 12:
         year += 1
         month -= 12
-    return f"{day:02d}:{month:02d}:{year:04d}"
+    return f"{day:02d}/{month:02d}/{year:04d}"

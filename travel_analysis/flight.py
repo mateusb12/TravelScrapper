@@ -22,15 +22,15 @@ class Flight:
         self.connections = input_flight_data['routes']
         self.routes = input_flight_data['route']
         self.link = input_flight_data['deep_link']
-        self.time_departure = datetime.strptime(input_flight_data['local_departure'], '%Y-%m-%dT%H:%M:%S.%fZ')\
+        self.time_departure = datetime.strptime(input_flight_data['local_departure'], '%Y-%m-%dT%H:%M:%S.%fZ') \
             .strftime("%H:%M")
-        self.time_arrival = datetime.strptime(input_flight_data['local_arrival'], '%Y-%m-%dT%H:%M:%S.%fZ')\
+        self.time_arrival = datetime.strptime(input_flight_data['local_arrival'], '%Y-%m-%dT%H:%M:%S.%fZ') \
             .strftime("%H:%M")
         self.connection_times = self.calculate_connection_time()
-        self.date_departure = datetime.strptime(input_flight_data['local_departure'], '%Y-%m-%dT%H:%M:%S.%fZ')\
-            .strftime("%d-%m-%Y")
-        self.date_arrival = datetime.strptime(input_flight_data['local_arrival'], '%Y-%m-%dT%H:%M:%S.%fZ')\
-            .strftime("%d-%m-%Y")
+        self.date_departure = datetime.strptime(input_flight_data['local_departure'], '%Y-%m-%dT%H:%M:%S.%fZ') \
+            .strftime("%d-%m-%Y")  # .replace(":", "-")
+        self.date_arrival = datetime.strptime(input_flight_data['local_arrival'], '%Y-%m-%dT%H:%M:%S.%fZ') \
+            .strftime("%d-%m-%Y")  # .replace(":", "-")
 
     def calculate_connection_time(self) -> list[timedelta]:
         # sourcery skip: for-append-to-extend, inline-immediately-returned-variable, list-comprehension

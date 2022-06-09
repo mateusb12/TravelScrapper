@@ -17,8 +17,8 @@ class FillerGenerator:
         self.city_to = city_to
 
     def export_to_series(self):
-        series_format = {"price": self.price, "quality": self.quality, "cityFrom": self.city_from,
-                         "cityTo": self.city_to,
+        series_format = {"price": self.price, "quality": self.quality,
+                         "cityFrom": self.city_from, "cityTo": self.city_to,
                          "departure": self.departure, "arrival": self.arrival, "date_departure": self.departure_date,
                          "date_arrival": self.arrival_date, "flightDuration": self.flight_duration,
                          "direct_flight": True, "flightDurationSeconds": self.flight_duration_seconds,

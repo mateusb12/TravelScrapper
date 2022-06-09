@@ -14,6 +14,10 @@ def get_travel_analysis_path() -> Path:
     return get_main_folder_path() / 'travel_analysis'
 
 
+def get_fillers_path() -> Path:
+    return get_main_folder_path() / 'fillers'
+
+
 if __name__ == "__main__":
     aux = get_travel_analysis_path()
     print(aux)
