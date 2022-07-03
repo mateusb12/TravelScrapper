@@ -1,4 +1,5 @@
 import random
+from datetime import timedelta
 
 
 def random_normal_number(mean, std_dev):
@@ -55,3 +56,10 @@ def sum_days(date, days):
         year += 1
         month -= 12
     return f"{day:02d}/{month:02d}/{year:04d}"
+
+
+def timedelta_format(td: timedelta):
+    s = td.seconds
+    hours, remainder = divmod(s, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return f"{int(hours):02d}:{int(minutes):02d}"

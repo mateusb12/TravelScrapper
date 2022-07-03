@@ -84,13 +84,6 @@ class FlightUpdater:
     def is_existing_flight(self, input_flight: pd.DataFrame) -> bool:
         row = input_flight.iloc[0]
         return self.df.isin([*row]).all(1).any()
-        # city_from = row['cityFrom']
-        # city_to = row['cityTo']
-        # price = row['price']
-        # query = self.df.loc[(self.df['cityFrom'] == city_from) &
-        #                     (self.df['cityTo'] == city_to) &
-        #                     (self.df['price'] == price)]
-        # return len(query) > 0
 
     def append_new_flight(self) -> None:
         """

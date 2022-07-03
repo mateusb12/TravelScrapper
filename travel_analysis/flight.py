@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 
 from api_consumer.kiwi_api_call import kiwi_call_example
+from fillers.time_manipulations import timedelta_format
 
 
 class Flight:
@@ -50,32 +51,36 @@ class Flight:
                 self.long_layover = True
         return connection_time_list
 
-    def is_direct_flight(self):
-        return len(self.connections) < 2
+    def is_direct_flight(self) -> bool:
+        return self.connection_times[0] == "00:00"
 
     def fill_connection_times(self):
         if len(self.connection_times) == 2:
-            self.connection_times.append(0)
+            self.connection_times.append(timedelta(0))
         elif len(self.connection_times) == 1:
-            self.connection_times.append(0)
-            self.connection_times.append(0)
+            self.connection_times.append(timedelta(0))
+            self.connection_times.append(timedelta(0))
         elif len(self.connection_times) == 0:
-            self.connection_times.append(0)
-            self.connection_times.append(0)
-            self.connection_times.append(0)
+            self.connection_times.append(timedelta(0))
+            self.connection_times.append(timedelta(0))
+            self.connection_times.append(timedelta(0))
 
     def convert_to_series(self):
         self.fill_connection_times()
         if self.quality is None:
             self.quality = 0
+        if self.seats_available is None:
+            self.seats_available = 0
+        self.connection_times = [timedelta_format(item) for item in self.connection_times]
 
         aux_dict = {"id": -1, "price": self.price, "quality": int(self.quality), "cityFrom": self.flight_from,
                     "cityTo": self.flight_to, "departure": self.time_departure, "arrival": self.time_arrival,
                     "date_departure": self.date_departure, "date_arrival": self.date_arrival,
                     "flightDuration": self.duration, "direct_flight": self.is_direct_flight(),
+                    "flightDurationSeconds": self.duration_seconds,
                     "longLayover": self.long_layover,
                     "seatsAvailable": self.seats_available,
-                    "connection_1": str(self.connection_times[0]), "connection_2": self.connection_times[1],
+                    "connection_1": self.connection_times[0], "connection_2": self.connection_times[1],
                     "connection_3": self.connection_times[2], "link": self.link}
         aux_dict = {k: [v] for k, v in aux_dict.items()}
         return pd.DataFrame(aux_dict)
