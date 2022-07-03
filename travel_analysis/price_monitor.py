@@ -38,7 +38,7 @@ def update_flight_db(filename: str, ratio: int = 100) -> None:
 
 
 def __main():
-    update_flight_db("flight_database.csv", 6)
+    update_flight_db("fortaleza_rio.csv")
 
 
 if __name__ == "__main__":

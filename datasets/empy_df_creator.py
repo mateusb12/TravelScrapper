@@ -5,7 +5,7 @@ import pandas as pd
 
 
 def create_empty_df(reference: Path) -> None:
-    base_dict = {"id": 0, "price": 0, "quality": 0, "cityFrom": "", "cityTo": "", "departure": "", "arrival": "",
+    base_dict = {"id": 0, "price": 9999999, "quality": 0, "cityFrom": "", "cityTo": "", "departure": "", "arrival": "",
                  "date_departure": "", "date_arrival": "", "flightDuration": "", "direct_flight": False,
                  "flightDurationSeconds": 0, "longLayover": False, "seatsAvailable": 0, "connection_1": "00:00",
                  "connection_2": "00:00", "connection_3": "00:00", "link": ""}

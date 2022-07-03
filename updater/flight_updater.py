@@ -104,7 +104,6 @@ class FlightUpdater:
         """
         dataset_folder = get_datasets_reference()
         ref = Path(dataset_folder, self.filename)
-        self.df = self.df.drop(self.df[self.df['id'] == -1].index)
         self.df.sort_values(by='price', inplace=True)
         self.df.to_csv(ref, index=False, encoding='utf-8')
         print(colored("Dataset saved!", "green"))
