@@ -16,11 +16,24 @@ def create_random_flight() -> pd.Series:
 
 def generate_filler_df(size: int = 10) -> pd.DataFrame:
     df_list = [create_random_flight() for _ in range(size)]
-    return pd.DataFrame(df_list)
+    df = pd.DataFrame(df_list)
+    df.drop(df.columns[0], axis=1)
+    df = df.assign(id=(df['cityFrom'] + '_' + df['cityTo']).astype('category').cat.codes)
+    df.insert(0, "id", df.pop("id"))
+    df = df.sort_values(by='id', inplace=False)
+    return df
 
 
-def dataset_updater(input_df: pd.DataFrame):
+def filler_dataset_updater(input_df: pd.DataFrame):
     """ Get an existing dataframe and add new flights to it"""
     df = input_df.copy()
     df = df.append(create_random_flight(), ignore_index=True)
     return df
+
+
+def __main():
+    print(generate_filler_df())
+
+
+if __name__ == "__main__":
+    __main()

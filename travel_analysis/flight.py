@@ -1,4 +1,7 @@
+import random
 from datetime import datetime, timedelta
+
+import pandas as pd
 
 from api_consumer.kiwi_api_call import kiwi_call_example
 
@@ -31,6 +34,8 @@ class Flight:
             .strftime("%d-%m-%Y")  # .replace(":", "-")
         self.date_arrival = datetime.strptime(input_flight_data['local_arrival'], '%Y-%m-%dT%H:%M:%S.%fZ') \
             .strftime("%d-%m-%Y")  # .replace(":", "-")
+        self.flight_numbers = [route['flight_no'] for route in self.routes]
+        self.identifier = f"{self.flight_from}_{self.flight_to}"
 
     def calculate_connection_time(self) -> list[timedelta]:
         # sourcery skip: for-append-to-extend, inline-immediately-returned-variable, list-comprehension
@@ -45,7 +50,40 @@ class Flight:
                 self.long_layover = True
         return connection_time_list
 
+    def is_direct_flight(self):
+        return len(self.connections) < 2
+
+    def fill_connection_times(self):
+        if len(self.connection_times) == 2:
+            self.connection_times.append(timedelta(0))
+        elif len(self.connection_times) == 1:
+            self.connection_times.append(timedelta(0))
+            self.connection_times.append(timedelta(0))
+        elif len(self.connection_times) == 0:
+            self.connection_times.append(timedelta(0))
+            self.connection_times.append(timedelta(0))
+            self.connection_times.append(timedelta(0))
+
+    def convert_to_series(self):
+        self.fill_connection_times()
+
+        aux_dict = {"price": self.price, "quality": self.quality, "cityFrom": self.flight_from,
+                    "cityTo": self.flight_to, "departure": self.time_departure, "arrival": self.time_arrival,
+                    "date_departure": self.date_departure, "date_arrival": self.date_arrival,
+                    "flight_duration": self.duration, "direct_flight": self.is_direct_flight(),
+                    "long_layover": self.long_layover, "bag_price": self.bag_price,
+                    "seats_available": self.seats_available,
+                    "connection_1": self.connection_times[0], "connection_2": self.connection_times[1],
+                    "connection_3": self.connection_times[2], "link": self.link}
+        return pd.Series(aux_dict)
+
+
+def get_flight_example():
+    flight_data = kiwi_call_example()
+    example = random.choice(flight_data["data"])
+    return Flight(example)
+
 
 if __name__ == "__main__":
-    flight_data = kiwi_call_example()
-    flight = Flight(flight_data)
+    flight = get_flight_example()
+    print(flight)
