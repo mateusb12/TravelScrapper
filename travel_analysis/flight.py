@@ -55,27 +55,27 @@ class Flight:
 
     def fill_connection_times(self):
         if len(self.connection_times) == 2:
-            self.connection_times.append(timedelta(0))
+            self.connection_times.append(0)
         elif len(self.connection_times) == 1:
-            self.connection_times.append(timedelta(0))
-            self.connection_times.append(timedelta(0))
+            self.connection_times.append(0)
+            self.connection_times.append(0)
         elif len(self.connection_times) == 0:
-            self.connection_times.append(timedelta(0))
-            self.connection_times.append(timedelta(0))
-            self.connection_times.append(timedelta(0))
+            self.connection_times.append(0)
+            self.connection_times.append(0)
+            self.connection_times.append(0)
 
     def convert_to_series(self):
         self.fill_connection_times()
 
-        aux_dict = {"price": self.price, "quality": self.quality, "cityFrom": self.flight_from,
+        aux_dict = {"id": -1, "price": self.price, "quality": self.quality, "cityFrom": self.flight_from,
                     "cityTo": self.flight_to, "departure": self.time_departure, "arrival": self.time_arrival,
                     "date_departure": self.date_departure, "date_arrival": self.date_arrival,
                     "flight_duration": self.duration, "direct_flight": self.is_direct_flight(),
-                    "long_layover": self.long_layover, "bag_price": self.bag_price,
+                    "long_layover": self.long_layover, "bag_price": self.bag_price["1"],
                     "seats_available": self.seats_available,
                     "connection_1": self.connection_times[0], "connection_2": self.connection_times[1],
                     "connection_3": self.connection_times[2], "link": self.link}
-        return pd.Series(aux_dict)
+        return pd.Series(aux_dict, name='flight')
 
 
 def get_flight_example():

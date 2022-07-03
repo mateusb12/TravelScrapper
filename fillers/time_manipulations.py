@@ -19,6 +19,8 @@ def sum_time(time1, time2):
     if minute >= 60:
         hour += 1
         minute -= 60
+    if hour >= 24:
+        hour -= 24
     return f"{hour:02d}:{minute:02d}"
 
 

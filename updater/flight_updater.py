@@ -17,6 +17,7 @@ class FlightUpdater:
     query: pd.DataFrame = None
     new_flight: Flight = None
     existing_flight: bool = None
+    filename: str = None
 
     def set_new_flight(self, input_flight: Flight) -> None:
         """
@@ -25,6 +26,9 @@ class FlightUpdater:
         self.new_flight = input_flight
         self.query = self.query_existing_flight(input_flight)
         self.existing_flight = len(self.query) > 0
+
+    def set_filename(self, filename: str) -> None:
+        self.filename = filename
 
     def query_existing_flight(self, input_flight: Flight) -> pd.DataFrame:
         """
@@ -64,6 +68,21 @@ class FlightUpdater:
         print(f"New flight price: {colored(str(self.new_flight.price), new_flight_color)}")
         print(f"Difference: {self.get_price_diff_tag()}")
 
+    @staticmethod
+    def append_series(input_df: pd.DataFrame, input_new_row: pd.Series) -> pd.DataFrame:
+        df_columns = input_df.columns
+        df_list = list(input_df.values.tolist())
+        new_row_list = input_new_row.values.tolist()
+        df_list.append(new_row_list)
+        return pd.DataFrame(df_list, columns=df_columns)
+
+    @staticmethod
+    def reorder_df(input_df: pd.DataFrame) -> pd.DataFrame:
+        df = input_df
+        df = df.assign(id=(df['cityFrom'] + '_' + df['cityTo']).astype('category').cat.codes)
+        df.insert(0, "id", df.pop("id"))
+        return df.sort_values(by='id', inplace=False)
+
     def append_new_flight(self) -> None:
         """
         This method appends the new flight to the dataset.
@@ -71,21 +90,35 @@ class FlightUpdater:
         self.print_flight_price_diff()
         new_row = self.new_flight.convert_to_series()
         df = self.df
-        df = pd.concat([df, new_row], ignore_index=True)
-        df = df.assign(id=(df['cityFrom'] + '_' + df['cityTo']).astype('category').cat.codes)
-        df.insert(0, "id", df.pop("id"))
-        df = df.sort_values(by='id', inplace=False)
+        df = self.append_series(df, new_row)
+        df = self.reorder_df(df)
         self.df = df
         print(colored("New flight added to dataset!", "green"))
         print(new_row)
 
+    def save_df(self):
+        """
+        This method saves the dataset.
+        """
+        ref = Path(get_datasets_reference(), self.filename)
+        self.df.to_csv(ref, index=False)
+        print(colored("Dataset saved!", "green"))
+
+
+def flight_pipeline(input_fu: FlightUpdater):
+    flight = get_flight_example()
+    input_fu.set_new_flight(flight)
+    input_fu.append_new_flight()
+
 
 def __main():
-    dataset = pd.read_csv(Path(get_datasets_reference(), 'test_df.csv'))
+    dataset = pd.read_csv(Path(get_datasets_reference(), '50.csv'))
     flight = get_flight_example()
     fu = FlightUpdater(df=dataset)
-    fu.set_new_flight(flight)
-    fu.append_new_flight()
+    fu.set_filename('50.csv')
+    for _ in range(5):
+        flight_pipeline(fu)
+    fu.save_df()
 
 
 if __name__ == "__main__":
