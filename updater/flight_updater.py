@@ -54,7 +54,7 @@ class FlightUpdater:
         This method returns the difference between the new flight price and the cheapest one.
         """
         diff = self.new_flight.price - self.get_cheapest_price()
-        return colored(f"+{diff}", "red") if diff > 0 else colored(f"{diff}", "green")
+        return colored(f"+{diff}", "red") if diff >= 0 else colored(f"{diff}", "green")
 
     def print_flight_price_diff(self) -> None:
         """
@@ -104,7 +104,7 @@ class FlightUpdater:
         """
         dataset_folder = get_datasets_reference()
         ref = Path(dataset_folder, self.filename)
-        self.df.drop(self.df.index[0], inplace=True)
+        self.df = self.df.drop(self.df[self.df['id'] == -1].index)
         self.df.sort_values(by='price', inplace=True)
         self.df.to_csv(ref, index=False, encoding='utf-8')
         print(colored("Dataset saved!", "green"))

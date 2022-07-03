@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pandas as pd
 from termcolor import colored
+from random import shuffle
 
 from api_consumer.kiwi_api_call import kiwi_call_example
 from datasets.empy_df_creator import create_empty_df
@@ -21,9 +22,10 @@ def load_df(df_filename: str) -> pd.DataFrame:
     return output_df
 
 
-def update_flight_db(filename: str, ratio: int = 5) -> None:
+def update_flight_db(filename: str, ratio: int = 100) -> None:
     aux = kiwi_call_example()
     flight_api_data = aux['data']
+    shuffle(flight_api_data)
     dataset = load_df(filename)
     fu = FlightUpdater(df=dataset)
     size = len(flight_api_data)
@@ -36,7 +38,7 @@ def update_flight_db(filename: str, ratio: int = 5) -> None:
 
 
 def __main():
-    update_flight_db("flight_database.csv", 7)
+    update_flight_db("flight_database.csv", 6)
 
 
 if __name__ == "__main__":
