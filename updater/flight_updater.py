@@ -23,7 +23,7 @@ class FlightUpdater:
         """
         This method sets the new flight.
         """
-        if self.filename is not None:
+        if self.filename is None:
             self.filename = self.df.filename
         self.new_flight = input_flight
         self.query = self.query_existing_flight(input_flight)
@@ -102,8 +102,11 @@ class FlightUpdater:
         """
         This method saves the dataset.
         """
-        ref = Path(get_datasets_reference(), self.filename)
-        self.df.to_csv(ref, index=False)
+        dataset_folder = get_datasets_reference()
+        ref = Path(dataset_folder, self.filename)
+        self.df.drop(self.df.index[0], inplace=True)
+        self.df.sort_values(by='price', inplace=True)
+        self.df.to_csv(ref, index=False, encoding='utf-8')
         print(colored("Dataset saved!", "green"))
 
 

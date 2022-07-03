@@ -24,10 +24,11 @@ def kiwi_call(**kwargs) -> dict:
 
 
 def kiwi_call_example():
-    return kiwi_call(fly_from="LHR", fly_to="MAD", date_from="2020-06-01", date_to="2020-06-10")
+    return kiwi_call(fly_from="FOR", fly_to="SAO", date_from="2022-07-01", date_to="2022-12-12")
 
 
 if __name__ == "__main__":
     call = kiwi_call_example()
+    print("done!")
     # p = Path("api_consumer/api.txt")
     # print("oi")
