@@ -66,16 +66,19 @@ class Flight:
 
     def convert_to_series(self):
         self.fill_connection_times()
+        if self.quality is None:
+            self.quality = 0
 
-        aux_dict = {"id": -1, "price": self.price, "quality": self.quality, "cityFrom": self.flight_from,
+        aux_dict = {"id": -1, "price": self.price, "quality": int(self.quality), "cityFrom": self.flight_from,
                     "cityTo": self.flight_to, "departure": self.time_departure, "arrival": self.time_arrival,
                     "date_departure": self.date_departure, "date_arrival": self.date_arrival,
-                    "flight_duration": self.duration, "direct_flight": self.is_direct_flight(),
-                    "long_layover": self.long_layover, "bag_price": self.bag_price["1"],
-                    "seats_available": self.seats_available,
-                    "connection_1": self.connection_times[0], "connection_2": self.connection_times[1],
+                    "flightDuration": self.duration, "direct_flight": self.is_direct_flight(),
+                    "longLayover": self.long_layover,
+                    "seatsAvailable": self.seats_available,
+                    "connection_1": str(self.connection_times[0]), "connection_2": self.connection_times[1],
                     "connection_3": self.connection_times[2], "link": self.link}
-        return pd.Series(aux_dict, name='flight')
+        aux_dict = {k: [v] for k, v in aux_dict.items()}
+        return pd.DataFrame(aux_dict)
 
 
 def get_flight_example():
@@ -86,4 +89,4 @@ def get_flight_example():
 
 if __name__ == "__main__":
     flight = get_flight_example()
-    print(flight)
+    print(flight.convert_to_series())

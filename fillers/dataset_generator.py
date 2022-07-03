@@ -31,9 +31,13 @@ def filler_dataset_updater(input_df: pd.DataFrame):
     return df
 
 
+def generate_filler_csv(size: int = 10):
+    d = generate_filler_df(size)
+    d.to_csv(f'{size}.csv', index=False)
+
+
 def __main():
-    d = generate_filler_df(50)
-    d.to_csv('50.csv', index=False)
+    generate_filler_csv(1)
 
 
 if __name__ == "__main__":
