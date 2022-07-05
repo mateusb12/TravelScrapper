@@ -7,7 +7,7 @@ from random import shuffle
 
 from api_consumer.kiwi_api_call import kiwi_call_example
 from datasets.empy_df_creator import create_empty_df
-from references.reference import get_datasets_reference
+from references.paths import get_datasets_reference
 from travel_analysis.flight import Flight
 from updater.flight_updater import FlightUpdater
 

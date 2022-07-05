@@ -2,7 +2,7 @@ from pathlib import Path
 
 import requests as requests
 
-from navigator.paths import get_api_consumer_path
+from references.paths import get_api_consumer_path
 
 
 def kiwi_call(**kwargs) -> dict:

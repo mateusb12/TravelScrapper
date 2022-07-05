@@ -4,7 +4,7 @@ from pathlib import Path
 from termcolor import colored
 import pandas as pd
 
-from references.reference import get_datasets_reference
+from references.paths import get_datasets_reference
 from travel_analysis.flight import get_flight_example, Flight
 
 

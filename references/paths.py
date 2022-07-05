@@ -18,6 +18,18 @@ def get_fillers_path() -> Path:
     return get_main_folder_path() / 'fillers'
 
 
+def get_main_folder_reference():
+    return Path(__file__).parent.parent
+
+
+def get_airports_reference():
+    return get_main_folder_reference() / "airports"
+
+
+def get_datasets_reference():
+    return get_main_folder_reference() / "datasets"
+
+
 if __name__ == "__main__":
     aux = get_travel_analysis_path()
     print(aux)
