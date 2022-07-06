@@ -23,8 +23,17 @@ def kiwi_call(**kwargs) -> dict:
     return response.json()
 
 
-def kiwi_call_example():
+def kiwi_call_example() -> dict:
     return kiwi_call(fly_from="FOR", fly_to="RIO", date_from="01/10/2022", date_to="12/12/2022", limit=500)
+
+
+def set_kiwi_call(config: dict) -> dict:
+    fly_from = config.get('fly_from')
+    fly_to = config.get('fly_to')
+    date_from = config.get('date_from')
+    date_to = config.get('date_to')
+    limit = config.get('limit')
+    return kiwi_call(fly_from=fly_from, fly_to=fly_to, date_from=date_from, date_to=date_to, limit=limit)
 
 
 if __name__ == "__main__":

@@ -23,7 +23,7 @@ class Flight:
         self.price = input_flight_data['price']
         self.bag_price = input_flight_data['bags_price']
         self.seats_available = input_flight_data['availability']['seats']
-        self.connections = input_flight_data['routes']
+        self.connections = input_flight_data['route']
         self.routes = input_flight_data['route']
         self.link = input_flight_data['deep_link']
         self.time_departure = datetime.strptime(input_flight_data['local_departure'], '%Y-%m-%dT%H:%M:%S.%fZ') \
