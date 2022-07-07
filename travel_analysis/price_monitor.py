@@ -11,6 +11,9 @@ from datasets.empy_df_creator import create_empty_df
 from references.paths import get_datasets_reference
 from travel_analysis.flight import Flight
 from updater.flight_updater import FlightUpdater
+from notifications.telegram_bot.bot import telegram_bot_instance
+
+from datetime import datetime
 
 
 def load_df(df_filename: str) -> pd.DataFrame:
@@ -31,27 +34,53 @@ def get_sp_example() -> dict:
     return {"fly_from": "FOR", "fly_to": "RIO", "date_from": "30/07/2022", "date_to": "12/12/2022", "limit": 500}
 
 
-# Create update_flight_db as dataclass
 @dataclass
 class UpdateFlight:
     filename: str
     ratio: int
     kiwi_dict: dict
+    dataset: pd.DataFrame = None
 
     def update_flight_db(self) -> None:
         aux = set_kiwi_call(self.kiwi_dict)
         flight_api_data = aux['data']
         shuffle(flight_api_data)
-        dataset = load_df(self.filename)
-        fu = FlightUpdater(df=dataset)
+        self.dataset = load_df(self.filename)
+        fu = FlightUpdater(df=self.dataset)
         size = len(flight_api_data)
         loop = int(0.01 * self.ratio * size)
         for flight_dict in flight_api_data[:loop]:
             flight = Flight(flight_dict)
             fu.set_new_flight(flight)
             fu.append_new_flight()
+        cheapest = fu.get_new_cheapest()
+        if cheapest is not None:
+            body = f"New cheapest flight found in {self.filename}!\n"
+            date = f"Date: {cheapest.date_departure.replace('-', '/')}\n"
+            departure = f"Departure: {cheapest.time_departure}\n"
+            arrival = f"Arrival: {cheapest.time_arrival}\n"
+            flight_duration = f"Duration: {cheapest.duration}\n"
+            avg_price = f"Avg price: £{self.get_avg_price():.0f}\n"
+            price_diff = round(self.get_price_diff(cheapest.price))
+            price = f"New price: £{cheapest.price} ({price_diff}%)\n"
+            link = f"Link: {cheapest.link}\n"
+            full_msg = body + date + departure + arrival + flight_duration + avg_price + price + link
+            self.handle_telegram(user_id=405202204, message=full_msg)
         fu.save_df()
-        print(colored("Done!", "green"))
+        if cheapest is not None:
+            print(colored("Done!", "green"))
+        else:
+            print(colored("No new cheapest flights found!", "red"))
+
+    @staticmethod
+    def handle_telegram(user_id: int, message: str):
+        telegram_bot_instance.send_message(chat_id=user_id, text=message)
+
+    def get_avg_price(self) -> float:
+        return self.dataset.price.mean()
+
+    def get_price_diff(self, input_price: float) -> float:
+        return 100 * (input_price - self.get_avg_price()) / input_price
 
 
 def __main():

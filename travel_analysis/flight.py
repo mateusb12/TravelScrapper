@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 
 from api_consumer.kiwi_api_call import kiwi_call_example
-from fillers.time_manipulations import timedelta_format
+from fillers.time_manipulations import timedelta_format, seconds_to_hours_and_minutes
 
 
 class Flight:
@@ -19,7 +19,7 @@ class Flight:
         self.country_to = input_flight_data['countryTo']["name"]
         self.quality = input_flight_data['quality']
         self.duration_seconds = input_flight_data['duration']['total']
-        self.duration = datetime.fromtimestamp(self.duration_seconds).strftime('%H:%M')
+        self.duration = seconds_to_hours_and_minutes(self.duration_seconds)
         self.price = input_flight_data['price']
         self.bag_price = input_flight_data['bags_price']
         self.seats_available = input_flight_data['availability']['seats']

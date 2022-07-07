@@ -18,6 +18,7 @@ class FlightUpdater:
     new_flight: Flight = None
     existing_flight: bool = None
     filename: str = None
+    cheapest_flights: list = dataclasses.field(default_factory=list)
 
     def set_new_flight(self, input_flight: Flight) -> None:
         """
@@ -61,6 +62,8 @@ class FlightUpdater:
         This method prints the difference between the new flight price and the cheapest one.
         """
         is_new_flight_cheaper = self.is_new_flight_cheaper()
+        if is_new_flight_cheaper:
+            self.cheapest_flights.append(self.new_flight)
         current_flight_color = 'red' if is_new_flight_cheaper else 'cyan'
         new_flight_color = 'green' if is_new_flight_cheaper else 'magenta'
         print(f"Current cheapest price: {colored(str(self.get_cheapest_price()), current_flight_color)}")
@@ -97,6 +100,13 @@ class FlightUpdater:
             print(colored("New flight added to dataset!", "yellow"))
         else:
             print(colored("Flight already exists in dataset!", "red"))
+
+    def get_new_cheapest(self) -> Flight:
+        cheapest = None
+        for flight in self.cheapest_flights:
+            if cheapest is None or flight.price < cheapest.price:
+                cheapest = flight
+        return cheapest
 
     def save_df(self):
         """

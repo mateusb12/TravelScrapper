@@ -63,3 +63,18 @@ def timedelta_format(td: timedelta):
     hours, remainder = divmod(s, 3600)
     minutes, seconds = divmod(remainder, 60)
     return f"{int(hours):02d}:{int(minutes):02d}"
+
+
+def seconds_to_hours_and_minutes(seconds):
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return f"{int(hours):02d}:{int(minutes):02d}"
+
+
+def __main():
+    test = 11400
+    print(seconds_to_hours_and_minutes(test))
+
+
+if __name__ == "__main__":
+    __main()
