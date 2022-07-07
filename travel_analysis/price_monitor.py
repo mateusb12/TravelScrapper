@@ -1,4 +1,3 @@
-import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -6,14 +5,12 @@ import pandas as pd
 from termcolor import colored
 from random import shuffle
 
-from api_consumer.kiwi_api_call import kiwi_call_example, set_kiwi_call
+from apis.api_consumer import set_kiwi_call
 from datasets.empy_df_creator import create_empty_df
 from references.paths import get_datasets_reference
 from travel_analysis.flight import Flight
 from updater.flight_updater import FlightUpdater
 from notifications.telegram_bot.bot import telegram_bot_instance
-
-from datetime import datetime
 
 
 def load_df(df_filename: str) -> pd.DataFrame:
@@ -31,7 +28,7 @@ def get_rio_example() -> dict:
 
 
 def get_sp_example() -> dict:
-    return {"fly_from": "FOR", "fly_to": "RIO", "date_from": "30/07/2022", "date_to": "12/12/2022", "limit": 500}
+    return {"fly_from": "FOR", "fly_to": "SP", "date_from": "01/07/2022", "date_to": "30/07/2022", "limit": 500}
 
 
 @dataclass
