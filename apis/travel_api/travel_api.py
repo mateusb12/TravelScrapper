@@ -2,8 +2,9 @@ import os
 
 from flask import Flask, jsonify, request, Response
 
-from queries.query_saver import create_query_file, delete_query_file, existing_queries, get_existing_query, \
+from queries.query_crud import create_query_file, delete_query_file, existing_queries, get_existing_query, \
     update_query_file
+from queries.query_runner import run_all_queries
 from travel_analysis.price_monitor import UpdateFlight
 
 app = Flask(__name__)
@@ -45,10 +46,6 @@ def update_query(tag: str):
 def delete_query(tag: str):
     return delete_query_file(tag)
 
-    # ufd = UpdateFlight(filename=f"{tag}.csv", kiwi_dict=query_dict)
-    # ufd.update_flight_db()
-    # return Response(status=201)
-
 
 @app.route("/list_query", methods=["GET"])
 def list_all_query():
@@ -60,27 +57,10 @@ def get_query(tag: str):
     return get_existing_query(tag)
 
 
-# @app.route('/get_round_impact/<input_match_id>', methods=["GET"])
-# def get_round_impact(input_match_id):
-#     """
-#     Json format
-#     {
-#         "match_id": 44795,
-#         "round": 1,
-#         "side": "atk"
-#     }
-#     """
-#     match_id = input_match_id
-#     rr_instance = RoundReplay(vv.model)
-#     rr_instance.set_match(match_id)
-#     total_rounds = rr_instance.analyser.round_amount
-#     proba_plot = []
-#     for i in range(1, total_rounds):
-#         rr_instance.choose_round(i)
-#         proba_plot.append(rr_instance.get_round_probability(side="atk"))
-#     round_impact_df = pd.concat(proba_plot, axis=0)
-#     dict_to_return = round_impact_df.to_dict('list')
-#     return jsonify(dict_to_return)
+@app.route("/run_all_queries", methods=["POST"])
+def run_all():
+    return run_all_queries()
+
 
 port = int(os.environ.get('PORT', 5000))
 app.run(host='0.0.0.0', port=port)

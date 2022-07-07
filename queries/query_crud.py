@@ -1,7 +1,5 @@
-# Create a function that saves a dictionary as json in the current folder
 import json
 from pathlib import Path
-from typing import Tuple
 
 from references.paths import get_queries_reference
 
