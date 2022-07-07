@@ -2,7 +2,8 @@ import os
 
 from flask import Flask, jsonify, request, Response
 
-from queries.query_saver import create_query_file, delete_query_file, existing_queries, get_existing_query
+from queries.query_saver import create_query_file, delete_query_file, existing_queries, get_existing_query, \
+    update_query_file
 from travel_analysis.price_monitor import UpdateFlight
 
 app = Flask(__name__)
@@ -32,6 +33,12 @@ def get_example(tag: str):
 def create_query(tag: str):
     query_dict = request.json
     return create_query_file(query_dict, tag)
+
+
+@app.route("/update_query/<tag>", methods=["PATCH"])
+def update_query(tag: str):
+    query_dict = request.json
+    return update_query_file(query_dict, tag)
 
 
 @app.route("/delete_query/<tag>", methods=["DELETE"])

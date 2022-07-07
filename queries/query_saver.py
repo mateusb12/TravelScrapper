@@ -9,15 +9,22 @@ from references.paths import get_queries_reference
 def create_query_file(dictionary: dict, tag: str) -> tuple[str, int]:
     file_name = f"{tag}.json"
     p = Path(get_queries_reference(), file_name)
-    existing_file = p.exists()
-
+    if p.exists():
+        return f"{tag} query already exist", 406
     with open(p, 'w') as f:
         json.dump(dictionary, f)
     print(f"Saved {file_name}")
-    if existing_file:
-        return f"{file_name} already exists", 206
-    else:
-        return f"{file_name} created", 201
+    return f"{file_name} created", 201
+
+
+def update_query_file(dictionary: dict, tag: str) -> tuple[str, int]:
+    p = Path(get_queries_reference(), f"{tag}.json")
+    if not p.exists():
+        return f"{tag} query does not exist", 404
+    with open(p, 'w') as f:
+        json.dump(dictionary, f)
+    print(f"Updated {tag}.json")
+    return f"{tag}.json updated", 200
 
 
 def delete_query_file(tag: str) -> tuple[str, int]:
