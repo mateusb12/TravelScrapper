@@ -37,7 +37,6 @@ def get_sp_example() -> dict:
 @dataclass
 class UpdateFlight:
     filename: str
-    ratio: int
     kiwi_dict: dict
     dataset: pd.DataFrame = None
 
@@ -47,24 +46,13 @@ class UpdateFlight:
         shuffle(flight_api_data)
         self.dataset = load_df(self.filename)
         fu = FlightUpdater(df=self.dataset)
-        size = len(flight_api_data)
-        loop = int(0.01 * self.ratio * size)
-        for flight_dict in flight_api_data[:loop]:
+        for flight_dict in flight_api_data:
             flight = Flight(flight_dict)
             fu.set_new_flight(flight)
             fu.append_new_flight()
         cheapest = fu.get_new_cheapest()
         if cheapest is not None:
-            body = f"New cheapest flight found in {self.filename}!\n"
-            date = f"Date: {cheapest.date_departure.replace('-', '/')}\n"
-            departure = f"Departure: {cheapest.time_departure}\n"
-            arrival = f"Arrival: {cheapest.time_arrival}\n"
-            flight_duration = f"Duration: {cheapest.duration}\n"
-            avg_price = f"Avg price: £{self.get_avg_price():.0f}\n"
-            price_diff = round(self.get_price_diff(cheapest.price))
-            price = f"New price: £{cheapest.price} ({price_diff}%)\n"
-            link = f"Link: {cheapest.link}\n"
-            full_msg = body + date + departure + arrival + flight_duration + avg_price + price + link
+            full_msg = self.setup_bot_msg(cheapest)
             self.handle_telegram(user_id=405202204, message=full_msg)
         fu.save_df()
         if cheapest is not None:
@@ -82,9 +70,21 @@ class UpdateFlight:
     def get_price_diff(self, input_price: float) -> float:
         return 100 * (input_price - self.get_avg_price()) / input_price
 
+    def setup_bot_msg(self, cheapest_flight: Flight) -> str:
+        body = f"New cheapest flight found in {self.filename}!\n"
+        date = f"Date: {cheapest_flight.date_departure.replace('-', '/')}\n"
+        departure = f"Departure: {cheapest_flight.time_departure}\n"
+        arrival = f"Arrival: {cheapest_flight.time_arrival}\n"
+        flight_duration = f"Duration: {cheapest_flight.duration}\n"
+        avg_price = f"Avg price: £{self.get_avg_price():.0f}\n"
+        price_diff = round(self.get_price_diff(cheapest_flight.price))
+        price = f"New price: £{cheapest_flight.price} ({price_diff}%)\n"
+        link = f"Link: {cheapest_flight.link}\n"
+        return body + date + departure + arrival + flight_duration + avg_price + price + link
+
 
 def __main():
-    ufd = UpdateFlight(filename="fortaleza_rio.csv", ratio=100, kiwi_dict=get_rio_example())
+    ufd = UpdateFlight(filename="fortaleza_rio.csv", kiwi_dict=get_rio_example())
     ufd.update_flight_db()
 
 

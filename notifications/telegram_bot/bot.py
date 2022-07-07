@@ -1,6 +1,6 @@
 from telegram import Bot
 
-TOKEN = "5192736712:AAGsjnebJ1IImH131np6c9SwY7PFBv4K7mY"
+TOKEN = open("api.txt", "r").read()
 telegram_bot_instance = Bot(token=TOKEN)
 
 
