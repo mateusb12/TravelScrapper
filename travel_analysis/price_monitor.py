@@ -5,7 +5,7 @@ import pandas as pd
 from termcolor import colored
 from random import shuffle
 
-from apis.api_consumer import set_kiwi_call
+from apis.api_consumer.kiwi_api_call import set_kiwi_call
 from datasets.empy_df_creator import create_empty_df
 from references.paths import get_datasets_reference
 from travel_analysis.flight import Flight

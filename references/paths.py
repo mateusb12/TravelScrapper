@@ -7,7 +7,7 @@ def get_main_folder_path() -> Path:
 
 
 def get_api_consumer_path() -> Path:
-    return get_main_folder_path() / 'api_consumer'
+    return Path(get_main_folder_path(), "apis", "api_consumer")
 
 
 def get_travel_analysis_path() -> Path:
@@ -28,6 +28,18 @@ def get_airports_reference():
 
 def get_datasets_reference():
     return get_main_folder_reference() / "datasets"
+
+
+def get_notifications_reference():
+    return get_main_folder_reference() / "notifications"
+
+
+def get_telegram_bot_reference():
+    return get_notifications_reference() / "telegram_bot"
+
+
+def get_queries_reference():
+    return get_main_folder_reference() / "queries"
 
 
 if __name__ == "__main__":

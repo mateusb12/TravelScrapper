@@ -1,6 +1,11 @@
+from pathlib import Path
+
 from telegram import Bot
 
-TOKEN = open("api.txt", "r").read()
+from references.paths import get_telegram_bot_reference
+
+token_ref = Path(get_telegram_bot_reference(), "api.txt")
+TOKEN = open(token_ref, "r").read()
 telegram_bot_instance = Bot(token=TOKEN)
 
 

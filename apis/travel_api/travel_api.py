@@ -1,6 +1,9 @@
 import os
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request, Response
+
+from queries.query_saver import create_query_file, delete_query_file, existing_queries, get_existing_query
+from travel_analysis.price_monitor import UpdateFlight
 
 app = Flask(__name__)
 
@@ -23,6 +26,31 @@ def get_example(tag: str):
     else:
         example_dict = {}
     return jsonify(example_dict)
+
+
+@app.route("/create_query/<tag>", methods=["POST"])
+def create_query(tag: str):
+    query_dict = request.json
+    return create_query_file(query_dict, tag)
+
+
+@app.route("/delete_query/<tag>", methods=["DELETE"])
+def delete_query(tag: str):
+    return delete_query_file(tag)
+
+    # ufd = UpdateFlight(filename=f"{tag}.csv", kiwi_dict=query_dict)
+    # ufd.update_flight_db()
+    # return Response(status=201)
+
+
+@app.route("/list_query", methods=["GET"])
+def list_all_query():
+    return jsonify(existing_queries())
+
+
+@app.route("/get_query/<tag>", methods=["GET"])
+def get_query(tag: str):
+    return get_existing_query(tag)
 
 
 # @app.route('/get_round_impact/<input_match_id>', methods=["GET"])
