@@ -1,1 +1,1 @@
-web: gunicorn travelscrapper:app
+web: gunicorn apis.travel_api.travel_api_launcher
