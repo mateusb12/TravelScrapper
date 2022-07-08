@@ -5,7 +5,6 @@ from flask import Flask, jsonify, request, Response
 from queries.query_crud import create_query_file, delete_query_file, existing_queries, get_existing_query, \
     update_query_file
 from queries.query_runner import run_all_queries
-from travel_analysis.price_monitor import UpdateFlight
 
 app = Flask(__name__)
 
