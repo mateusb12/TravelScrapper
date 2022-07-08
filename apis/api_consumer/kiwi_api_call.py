@@ -13,7 +13,7 @@ def kiwi_call(**kwargs) -> dict:
     limit = kwargs.get('limit')
     param_tag = f"fly_from={fly_from}&fly_to={fly_to}&dateFrom={date_from}&dateTo={date_to}&limit={limit}"
     url = f"https://tequila-api.kiwi.com/v2/search?{param_tag}"
-    p = Path(get_api_consumer_path(), "kiwi_api.txt")
+    p = Path(get_api_consumer_path(), "kiwi_api_token.txt")
     api_key = open(p, "r").read()
     header_dict = {
         "apikey": api_key,
@@ -39,5 +39,5 @@ def set_kiwi_call(config: dict) -> dict:
 if __name__ == "__main__":
     call = kiwi_call_example()
     print("done!")
-    # p = Path("api_consumer/kiwi_api.txt")
+    # p = Path("api_consumer/kiwi_api_token.txt")
     # print("oi")
