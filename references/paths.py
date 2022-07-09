@@ -42,6 +42,10 @@ def get_queries_reference():
     return get_main_folder_reference() / "queries"
 
 
+def get_tokens_reference():
+    return get_main_folder_reference() / "tokens"
+
+
 if __name__ == "__main__":
     aux = get_travel_analysis_path()
     print(aux)
