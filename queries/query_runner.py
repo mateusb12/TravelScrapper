@@ -20,9 +20,10 @@ def run_query(tag: str):
     return ufd.update_flight_db()
 
 
-def run_all_queries():
+def run_all_queries() -> tuple[str, int]:
     queries = [file.stem for file in Path(get_queries_reference()).iterdir() if file.suffix == ".json"]
     results = [run_query(query) for query in queries]
+    print("Results: ", results)
     if cheapest := [item for item in results if item[1] == 200]:
         return "New cheapest flight found!", 200
     else:
