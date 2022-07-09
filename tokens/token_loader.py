@@ -1,5 +1,6 @@
 import os
-from tokens.token_registry import load_environment_tokens
+
+from tokens.token_registry import load_environment_tokens, existing_env_file
 
 
 class TokenErrorException(Exception):
@@ -24,8 +25,16 @@ def load_telegram_token():
         raise TokenErrorException(tag)
 
 
+def load_all():
+    if existing_env_file():
+        load_environment_tokens()
+    load_kiwi_token()
+    load_telegram_token()
+
+
 def __main():
-    load_environment_tokens()
+    load_all()
+    aux = dict(os.environ)
     print(load_kiwi_token())
     print(load_telegram_token())
 

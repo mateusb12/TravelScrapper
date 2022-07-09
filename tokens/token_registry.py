@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from typing import Optional
 
 from dotenv import dotenv_values
@@ -19,16 +20,20 @@ def load_env_file() -> dict[str, Optional[str]]:
 
 
 def load_environment_tokens() -> None:
-    # os.environ["KIWI_TOKEN"] = "yYmWm5MOPD_f00ARApQ9WW5KeX9FrPtv"
-    # os.environ["TELEGRAM_TOKEN"] = "5192736712:AAGsjnebJ1IImH131np6c9SwY7PFBv4K7mY"
     env_config = load_env_file()
     os.environ["KIWI_TOKEN"] = env_config["KIWI_TOKEN"]
     os.environ["TELEGRAM_TOKEN"] = env_config["TELEGRAM_TOKEN"]
 
 
+def existing_env_file() -> bool:
+    file = Path(get_tokens_reference(), ".env")
+    return file.exists()
+
+
 def __main():
-    env_c = load_env_file()
-    print(env_c)
+    print(existing_env_file())
+    # env_c = load_env_file()
+    # print(env_c)
 
 
 if __name__ == "__main__":
