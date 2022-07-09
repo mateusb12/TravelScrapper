@@ -17,15 +17,16 @@ def get_query(tag: str):
 def run_query(tag: str):
     query, status = get_query(tag)
     ufd = UpdateFlight(filename=f"{tag}.csv", kiwi_dict=query)
-    ufd.update_flight_db()
-    return "tag successfully run", 200
+    return ufd.update_flight_db()
 
 
 def run_all_queries():
     queries = [file.stem for file in Path(get_queries_reference()).iterdir() if file.suffix == ".json"]
-    for query in queries:
-        run_query(query)
-    return "All queries run", 200
+    results = [run_query(query) for query in queries]
+    if cheapest := [item for item in results if item[1] == 200]:
+        return "New cheapest flight found!", 200
+    else:
+        return "No new cheapest flight found!", 206
 
 
 def __main():

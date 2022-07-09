@@ -37,7 +37,7 @@ class UpdateFlight:
     kiwi_dict: dict
     dataset: pd.DataFrame = None
 
-    def update_flight_db(self) -> None:
+    def update_flight_db(self) -> tuple[str, int]:
         aux = set_kiwi_call(self.kiwi_dict)
         flight_api_data = aux['data']
         shuffle(flight_api_data)
@@ -53,9 +53,9 @@ class UpdateFlight:
             self.handle_telegram(user_id=405202204, message=full_msg)
         fu.save_df()
         if cheapest is not None:
-            print(colored("Done!", "green"))
+            return "New cheapest flight found!", 200
         else:
-            print(colored("No new cheapest flights found!", "red"))
+            return "No new cheapest flight found!", 206
 
     @staticmethod
     def handle_telegram(user_id: int, message: str):
