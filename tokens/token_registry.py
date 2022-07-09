@@ -13,8 +13,10 @@ class TokenLoadErrorException(Exception):
 
 
 def load_env_file() -> dict[str, Optional[str]]:
-    if file := dotenv_values(".env"):
-        return dotenv_values(".env")
+    file = Path(get_tokens_reference(), ".env")
+    file_content = dotenv_values(file)
+    if len(file_content) != 0:
+        return file_content
     else:
         raise TokenLoadErrorException(f"Error: could not find .env file in {get_tokens_reference()}")
 

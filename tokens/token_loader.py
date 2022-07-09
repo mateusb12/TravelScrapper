@@ -9,6 +9,10 @@ class TokenErrorException(Exception):
         super().__init__(f"Error: could not find [{token_type}] in environment variables.")
 
 
+def check_env_variable(var_name: str):
+    return var_name in os.environ
+
+
 def load_kiwi_token():
     tag = "KIWI_TOKEN"
     if tag in os.environ:
@@ -28,8 +32,6 @@ def load_telegram_token():
 def load_all():
     if existing_env_file():
         load_environment_tokens()
-    load_kiwi_token()
-    load_telegram_token()
 
 
 def __main():
