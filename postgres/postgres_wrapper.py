@@ -1,4 +1,4 @@
-from postgres.flight_query.query_entry import PostgresFlightEntries
+from postgres.database_creation.query_crud import PostgresQueryCrud
 from postgres.postgres_database_runner import PostgresRunner
 from postgres.flight_query.query_table import PostgresFlightTables
 
@@ -8,7 +8,7 @@ class PostgresWrapper:
         self.runner = PostgresRunner()
         self.table_handler: PostgresFlightTables = PostgresFlightTables(self.runner)
         self.table_handler.create_flight_query_table()
-        self.entry_handler: PostgresFlightEntries = PostgresFlightEntries(self.runner)
+        self.entry_handler: PostgresQueryCrud = PostgresQueryCrud(self.runner)
 
 
 def __main():
