@@ -16,8 +16,7 @@ def jsonify_flight_query(input_tuple: tuple) -> dict:
 
 
 def get_flight_query(tag: str) -> Union[bool, dict]:
-    aux = {"query_name": tag}
-    result = runner.entry_handler.flight_query_read(aux)
+    result = runner.query_handler.flight_query_read(tag)
     if not result:
         return False
     return jsonify_flight_query(result[0])
@@ -25,7 +24,7 @@ def get_flight_query(tag: str) -> Union[bool, dict]:
 
 def postgres_create_query(dictionary: dict, tag: str) -> tuple[str, int]:
     insert_tag(dictionary, tag)
-    result = runner.entry_handler.flight_query_create(dictionary)
+    result = runner.query_handler.flight_query_create(dictionary)
     if not result:
         return f"Query {tag} already exists", 406
     return f"Query {tag} created successfully", 200
@@ -41,21 +40,20 @@ def postgres_read_query(tag: str) -> Union[tuple[str, int], tuple[dict[str, Any]
 
 def postgres_update_query(dictionary: dict, tag: str) -> tuple[str, int]:
     insert_tag(dictionary, tag)
-    result = runner.entry_handler.flight_query_update(dictionary)
+    result = runner.query_handler.flight_query_update(dictionary)
     if not result:
         return f"Query {tag} does not exist", 404
     return f"Query {tag} updated successfully", 200
 
 
 def postgres_delete_query(tag: str) -> tuple[str, int]:
-    aux = {"query_name": tag}
-    result = runner.entry_handler.flight_query_delete(aux)
+    result = runner.query_handler.flight_query_delete(tag)
     if not result:
         return f"Query {tag} does not exist", 404
     return f"Query {tag} deleted successfully", 200
 
 
 def postgres_list_all_queries():
-    result = runner.entry_handler.list_all_queries()
-    result_dict = {item[-1]: jsonify_flight_query(item) for item in result}
+    result = runner.query_handler.list_all_queries()
+    result_dict = {item["query_name"]: item for item in result}
     return result_dict, 200

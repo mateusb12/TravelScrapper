@@ -1,11 +1,3 @@
-def generate_sql_creation_line(input_values: dict, table_name: str) -> str:
-    first_header = f'insert into {table_name} '
-    column_headers = "".join(f"{item}, " for item in input_values)[:-2]
-    second_header = "values ("
-    value_headers = "".join(f"'{item}', " for item in input_values.values())[:-2]
-    return f"{first_header}({column_headers}) {second_header}{value_headers});"
-
-
 def generate_sql_update_line(input_values: dict, table_name: str) -> str:
     first_header = f"update {table_name} set "
     value_headers = "".join(f"{item}='{input_values[item]}', " for item in input_values)[:-2]

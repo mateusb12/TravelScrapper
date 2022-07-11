@@ -1,4 +1,4 @@
-from postgres.database_creation.sql_lines_generator import generate_sql_creation_line, generate_sql_update_line, \
+from postgres.database_creation.sql_lines_generator import generate_sql_update_line, \
     get_sql_line_create
 from postgres.postgres_database_runner import PostgresRunner
 

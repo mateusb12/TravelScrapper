@@ -1,7 +1,7 @@
 from typing import List, Dict, Any
 
 from fillers.query_examples import get_rio_example
-from postgres.database_creation.sql_lines_generator import generate_sql_creation_line, get_sql_line_create
+from postgres.database_creation.sql_lines_generator import get_sql_line_create
 from postgres.postgres_database_runner import PostgresRunner
 
 
@@ -18,7 +18,8 @@ class PostgresQueryCrud:
         return [self.jsonify_results(item) for item in raw_results]
 
     def existing_query(self, query_dict: dict) -> bool:
-        input_query_name = query_dict["query_name"].lower()
+        input_query_name: str = str(query_dict["query_name"])
+        input_query_name = input_query_name.lower()
         all_queries = self.list_all_queries()
         if not all_queries:
             return False
