@@ -2,8 +2,8 @@ import os
 
 from flask import Flask, jsonify, request, Response
 
-from queries.query_crud import create_query_file, delete_query_file, existing_queries, get_existing_query, \
-    update_query_file
+from queries.query_crud import json_create_query, json_delete_query, existing_queries, json_read_query, \
+    json_update_query
 from queries.query_runner import run_all_queries
 
 application = Flask(__name__)
@@ -32,18 +32,18 @@ def get_example(tag: str):
 @application.route("/create_query/<tag>", methods=["POST"])
 def create_query(tag: str):
     query_dict = request.json
-    return create_query_file(query_dict, tag)
+    return json_create_query(query_dict, tag)
 
 
 @application.route("/update_query/<tag>", methods=["PATCH"])
 def update_query(tag: str):
     query_dict = request.json
-    return update_query_file(query_dict, tag)
+    return json_update_query(query_dict, tag)
 
 
 @application.route("/delete_query/<tag>", methods=["DELETE"])
 def delete_query(tag: str):
-    return delete_query_file(tag)
+    return json_delete_query(tag)
 
 
 @application.route("/list_query", methods=["GET"])
@@ -53,7 +53,7 @@ def list_all_query():
 
 @application.route("/get_query/<tag>", methods=["GET"])
 def get_query(tag: str):
-    return get_existing_query(tag)
+    return json_read_query(tag)
 
 
 @application.route("/run_all_queries", methods=["POST"])

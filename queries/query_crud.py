@@ -4,7 +4,7 @@ from pathlib import Path
 from references.paths import get_queries_reference
 
 
-def create_query_file(dictionary: dict, tag: str) -> tuple[str, int]:
+def json_create_query(dictionary: dict, tag: str) -> tuple[str, int]:
     file_name = f"{tag}.json"
     p = Path(get_queries_reference(), file_name)
     if p.exists():
@@ -15,7 +15,15 @@ def create_query_file(dictionary: dict, tag: str) -> tuple[str, int]:
     return f"{file_name} created", 201
 
 
-def update_query_file(dictionary: dict, tag: str) -> tuple[str, int]:
+def json_read_query(tag: str) -> tuple[str, int]:
+    p = Path(get_queries_reference(), f"{tag}.json")
+    if not p.exists():
+        return f"{tag} query does not exist", 404
+    with open(p, 'r') as f:
+        return json.load(f), 200
+
+
+def json_update_query(dictionary: dict, tag: str) -> tuple[str, int]:
     p = Path(get_queries_reference(), f"{tag}.json")
     if not p.exists():
         return f"{tag} query does not exist", 404
@@ -25,21 +33,13 @@ def update_query_file(dictionary: dict, tag: str) -> tuple[str, int]:
     return f"{tag}.json updated", 200
 
 
-def delete_query_file(tag: str) -> tuple[str, int]:
+def json_delete_query(tag: str) -> tuple[str, int]:
     p = Path(get_queries_reference(), f"{tag}.json")
     if p.exists():
         p.unlink()
         return f"Deleted {tag}.json", 200
     else:
         return f"{tag}.json does not exist", 404
-
-
-def get_existing_query(tag: str) -> tuple[str, int]:
-    p = Path(get_queries_reference(), f"{tag}.json")
-    if not p.exists():
-        return f"{tag} query does not exist", 404
-    with open(p, 'r') as f:
-        return json.load(f), 200
 
 
 def existing_queries():
@@ -52,7 +52,7 @@ def __main():
     #                 "limit": 500}
     # create_query_file(dict_example, "fortaleza_rio")
     # delete_query("fortaleza_rio")
-    print(get_existing_query("fortaleza_rio"))
+    print(json_read_query("fortaleza_rio"))
 
 
 if __name__ == "__main__":

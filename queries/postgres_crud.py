@@ -7,7 +7,7 @@ def insert_tag(input_dict: dict, input_tag: str):
     input_dict["query_name"] = input_tag
 
 
-def create_query(dictionary: dict, tag: str) -> tuple[str, int]:
+def postgres_create_query(dictionary: dict, tag: str) -> tuple[str, int]:
     insert_tag(dictionary, tag)
     result = runner.flight_query_create(dictionary)
     if not result:
@@ -15,7 +15,7 @@ def create_query(dictionary: dict, tag: str) -> tuple[str, int]:
     return f"Query {tag} created successfully", 200
 
 
-def read_query(tag: str) -> tuple[str, int]:
+def postgres_read_query(tag: str) -> tuple[str, int]:
     aux = {"query_name": tag}
     result = runner.flight_query_read(aux)
     if not result:
@@ -23,7 +23,7 @@ def read_query(tag: str) -> tuple[str, int]:
     return result, 200
 
 
-def update_query(dictionary: dict, tag: str) -> tuple[str, int]:
+def postgres_update_query(dictionary: dict, tag: str) -> tuple[str, int]:
     insert_tag(dictionary, tag)
     result = runner.flight_query_update(dictionary)
     if not result:
@@ -31,7 +31,7 @@ def update_query(dictionary: dict, tag: str) -> tuple[str, int]:
     return f"Query {tag} updated successfully", 200
 
 
-def delete_query(tag: str) -> tuple[str, int]:
+def postgres_delete_query(tag: str) -> tuple[str, int]:
     aux = {"query_name": tag}
     result = runner.flight_query_delete(aux)
     if not result:
