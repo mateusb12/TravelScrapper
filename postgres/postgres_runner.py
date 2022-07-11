@@ -10,6 +10,7 @@ class PostgresRunner:
                                     user=db_dict["user"], password=db_dict["password"])
         self.cursor = self.con.cursor()
         self.table_name = "flightquery"
+        self.create_flight_query_table()
         self.query_amount = len(self.list_all_queries())
 
     def run_sql_query(self, query: str):
@@ -44,9 +45,10 @@ class PostgresRunner:
         all_tables = self.list_all_tables()
         return any(input_table_name.lower() in table for table in all_tables)
 
-    def existing_query(self, query_dict: dict):
+    def existing_query(self, query_dict: dict) -> bool:
+        input_query_name = query_dict["query_name"].lower()
         all_queries = self.list_all_queries()
-        return any(query_dict['query_name'].lower() in query for query in all_queries)
+        return any(query["query_name"] == input_query_name for query in all_queries)
 
     def create_flight_query_table(self):
         if self.existing_table(self.table_name):
@@ -60,13 +62,15 @@ class PostgresRunner:
         sql = f"drop table {self.table_name}"
         self.run_sql_query(sql)
 
-    def list_all_queries(self):
+    def list_all_queries(self) -> list[tuple]:
         sql = f"select * from {self.table_name}"
         self.run_sql_query(sql)
         return self.show_query_results()
+        # return [{'fly_from': result[1], 'fly_to': result[2], 'date_from': result[3],
+        #          'date_to': result[4], 'query_limit': result[5], 'query_name': result[6]} for result in results]
 
     def get_flight_query_id(self, query_dict: dict):
-        sql = f"select id from {self.table_name} where query_name = {query_dict['query_name']}"
+        sql = f"select id from {self.table_name} where query_name = '{query_dict['query_name']}'"
         self.run_sql_query(sql)
         return self.show_query_results()[0][0]
 
@@ -75,8 +79,8 @@ class PostgresRunner:
             return False
         sql = f"insert into {self.table_name} values ({self.query_amount}, '{query_dict['fly_from']}'," \
               f" '{query_dict['fly_to']}', " \
-              f"'{query_dict['date_from']}', '{query_dict['date_to']}', {query_dict['query_limit']}," \
-              f"{query_dict['query_name']}) "
+              f"'{query_dict['date_from']}', '{query_dict['date_to']}', {query_dict['query_limit']}, " \
+              f"'{query_dict['query_name']}') "
         self.run_sql_query(sql)
         return True
 
@@ -110,8 +114,10 @@ class PostgresRunner:
 
 def __main():
     pgr = PostgresRunner()
-    aux = {"fly_from": "FOR", "fly_to": "SP", "date_from": "01/07/2022", "date_to": "01/07/2023", "query_limit": 50}
-    pgr.delete_flight_query_table()
+    aux = {"fly_from": "FOR", "fly_to": "SP", "date_from": "01/07/2022", "date_to": "01/07/2023", "query_limit": 50,
+           "query_name": "fortaleza_rio"}
+    a1 = pgr.existing_query(aux)
+    # pgr.delete_flight_query_table()
     print(pgr.list_all_queries())
     # print(runner.list_all_schemas())
     # print(runner.existing_table("FlightQuery"))

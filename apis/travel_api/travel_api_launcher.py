@@ -2,9 +2,11 @@ import os
 
 from flask import Flask, jsonify, request, Response
 
-from queries.query_crud import json_create_query, json_delete_query, existing_queries, json_read_query, \
+from queries.json_query_crud import json_create_query, json_delete_query, existing_queries, json_read_query, \
     json_update_query
-from queries.query_runner import run_all_queries
+from queries.json_query_runner import run_all_queries
+from queries.postgres_crud import postgres_create_query, postgres_read_query, postgres_update_query, \
+    postgres_delete_query, postgres_list_all_queries
 
 application = Flask(__name__)
 
@@ -32,28 +34,31 @@ def get_example(tag: str):
 @application.route("/create_query/<tag>", methods=["POST"])
 def create_query(tag: str):
     query_dict = request.json
-    return json_create_query(query_dict, tag)
+    return postgres_create_query(query_dict, tag)
+
+
+@application.route("/get_query/<tag>", methods=["GET"])
+def get_query(tag: str):
+    return postgres_read_query(tag)
 
 
 @application.route("/update_query/<tag>", methods=["PATCH"])
 def update_query(tag: str):
     query_dict = request.json
-    return json_update_query(query_dict, tag)
+    return postgres_update_query(query_dict, tag)
 
 
 @application.route("/delete_query/<tag>", methods=["DELETE"])
 def delete_query(tag: str):
-    return json_delete_query(tag)
+    return postgres_delete_query(tag)
 
 
 @application.route("/list_query", methods=["GET"])
 def list_all_query():
-    return jsonify(existing_queries())
-
-
-@application.route("/get_query/<tag>", methods=["GET"])
-def get_query(tag: str):
-    return json_read_query(tag)
+    res = postgres_list_all_queries()
+    content = res[0]
+    http_result = res[1]
+    return jsonify(content), http_result
 
 
 @application.route("/run_all_queries", methods=["POST"])
