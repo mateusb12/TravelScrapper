@@ -128,7 +128,7 @@ def flight_pipeline(input_fu: FlightUpdater):
 def __main():
     filename = "1.csv"
     dataset = pd.read_csv(Path(get_datasets_reference(), filename))
-    dataset.filename = filename
+    dataset.tag = filename
     fu = FlightUpdater(df=dataset)
     for _ in range(10):
         flight_pipeline(fu)

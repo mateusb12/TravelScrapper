@@ -2,11 +2,11 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import pandas as pd
-from termcolor import colored
 from random import shuffle
 
 from apis.api_consumer.kiwi_api_call import set_kiwi_call
 from datasets.empy_df_creator import create_empty_df
+from fillers.query_examples import get_rio_example
 from references.paths import get_datasets_reference
 from travel_analysis.flight import Flight
 from updater.flight_updater import FlightUpdater
@@ -19,29 +19,22 @@ def load_df(df_filename: str) -> pd.DataFrame:
     if not df_ref.exists():
         create_empty_df(df_ref)
     output_df = pd.read_csv(df_ref)
-    output_df.filename = df_filename
+    output_df.tag = df_filename
     return output_df
-
-
-def get_rio_example() -> dict:
-    return {"fly_from": "FOR", "fly_to": "RIO", "date_from": "01/10/2022", "date_to": "12/12/2022", "limit": 500}
-
-
-def get_sp_example() -> dict:
-    return {"fly_from": "FOR", "fly_to": "SP", "date_from": "01/07/2022", "date_to": "30/07/2022", "limit": 500}
 
 
 @dataclass
 class UpdateFlight:
-    filename: str
     kiwi_dict: dict
     dataset: pd.DataFrame = None
+    tag: str = None
 
     def update_flight_db(self) -> tuple[str, int]:
+        self.tag = self.kiwi_dict["query_name"]
         aux = set_kiwi_call(self.kiwi_dict)
         flight_api_data = aux['data']
         shuffle(flight_api_data)
-        self.dataset = load_df(self.filename)
+        self.dataset = load_df(self.tag)
         fu = FlightUpdater(df=self.dataset)
         for flight_dict in flight_api_data:
             flight = Flight(flight_dict)
@@ -68,7 +61,7 @@ class UpdateFlight:
         return 100 * (input_price - self.get_avg_price()) / input_price
 
     def setup_bot_msg(self, cheapest_flight: Flight) -> str:
-        body = f"New cheapest flight found in {self.filename}!\n"
+        body = f"New cheapest flight found in {self.tag}!\n"
         date = f"Date: {cheapest_flight.date_departure.replace('-', '/')}\n"
         departure = f"Departure: {cheapest_flight.time_departure}\n"
         arrival = f"Arrival: {cheapest_flight.time_arrival}\n"
@@ -81,7 +74,7 @@ class UpdateFlight:
 
 
 def __main():
-    ufd = UpdateFlight(filename="fortaleza_rio.csv", kiwi_dict=get_rio_example())
+    ufd = UpdateFlight(kiwi_dict=get_rio_example())
     ufd.update_flight_db()
 
 

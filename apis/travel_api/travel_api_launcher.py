@@ -2,8 +2,6 @@ import os
 
 from flask import Flask, jsonify, request, Response
 
-from queries.json_query_crud import json_create_query, json_delete_query, existing_queries, json_read_query, \
-    json_update_query
 from queries.json_query_runner import run_all_queries
 from queries.postgres_crud import postgres_create_query, postgres_read_query, postgres_update_query, \
     postgres_delete_query, postgres_list_all_queries
@@ -58,7 +56,7 @@ def list_all_query():
     res = postgres_list_all_queries()
     content = res[0]
     http_result = res[1]
-    return jsonify(content), http_result
+    return content, http_result
 
 
 @application.route("/run_all_queries", methods=["POST"])
