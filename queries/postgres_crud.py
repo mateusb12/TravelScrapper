@@ -77,16 +77,16 @@ def postgres_get_flight_df() -> pd.DataFrame:
 
 
 def postgres_create_flight(flight_dict: dict):
-    return runner.flight_handler.create_flight(flight_dict)
+    return runner.flight_handler.flight_data_create(flight_dict)
 
 
 def postgres_read_flight(flight_tag: str):
-    return runner.flight_handler.read_flight(flight_tag)
+    return runner.flight_handler.flight_data_read(flight_tag)
 
 
 def postgres_update_flight(flight_dict: dict):
-    return runner.flight_handler.update_flight(flight_dict)
+    return runner.flight_handler.flight_data_update(flight_dict)
 
 
 def postgres_delete_flight(flight_tag: str):
-    return runner.flight_handler.delete_flight(flight_tag)
+    return runner.flight_handler.flight_data_delete(flight_tag)

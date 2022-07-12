@@ -38,7 +38,6 @@ class UpdateFlight:
         for flight_dict in flight_api_data:
             flight = Flight(flight_dict)
             fu.set_new_flight(flight)
-            fu.append_new_flight()
         cheapest = fu.get_new_cheapest()
         if cheapest is not None:
             full_msg = self.setup_bot_msg(cheapest)

@@ -15,10 +15,10 @@ class PostgresFlightCrud:
         return self.db.show_query_results()
 
     def existing_flight(self, query_dict: dict) -> bool:
-        input_query_name = query_dict["flight_tag"]
         all_flights = self.list_all_flights()
-        all_tags = [item[-1] for item in all_flights]
-        return input_query_name in all_tags
+        current_link = query_dict["link"]
+        all_links = [item[-2] for item in all_flights]
+        return current_link in all_links
 
     def jsonify_results(self, result_tuple: tuple):
         keys = list(self.get_flight_example().keys())

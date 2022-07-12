@@ -37,6 +37,7 @@ class Flight:
             .strftime("%d-%m-%Y")  # .replace(":", "-")
         self.flight_numbers = [route['flight_no'] for route in self.routes]
         self.identifier = f"{self.flight_from}_{self.flight_to}"
+        self.fill_connection_times()
 
     def calculate_connection_time(self) -> list[timedelta]:
         # sourcery skip: for-append-to-extend, inline-immediately-returned-variable, list-comprehension
@@ -65,16 +66,18 @@ class Flight:
             self.connection_times.append(timedelta(0))
             self.connection_times.append(timedelta(0))
 
-    def export_dict(self) -> dict:
+    def convert_to_dict(self) -> dict:
         return {"price": self.price, "quality": int(self.quality), "cityFrom": self.flight_from,
                 "cityTo": self.flight_to, "departure": self.time_departure, "arrival": self.time_arrival,
                 "dateDeparture": self.date_departure, "dateArrival": self.date_arrival,
                 "flightDuration": self.duration, "directFlight": self.is_direct_flight(),
                 "flightDurationSeconds": self.duration_seconds,
                 "longLayover": self.long_layover,
-                "seatsAvailable": self.seats_available,
-                "connection_1": self.connection_times[0], "connection_2": self.connection_times[1],
-                "connection_3": self.connection_times[2], "link": self.link}
+                "seatsAvailable": self.seats_available if self.seats_available is not None else 0,
+                "connection_1": timedelta_format(self.connection_times[0]),
+                "connection_2": timedelta_format(self.connection_times[1]),
+                "connection_3": timedelta_format(self.connection_times[2]),
+                "link": self.link}
 
     def convert_to_series(self):
         self.fill_connection_times()
@@ -83,7 +86,7 @@ class Flight:
         if self.seats_available is None:
             self.seats_available = 0
         self.connection_times = [timedelta_format(item) for item in self.connection_times]
-        aux_dict = self.export_dict()
+        aux_dict = self.convert_to_dict()
         aux_dict = {k: [v] for k, v in aux_dict.items()}
         return pd.DataFrame(aux_dict)
 

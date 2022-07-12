@@ -4,7 +4,7 @@ from pathlib import Path
 from termcolor import colored
 import pandas as pd
 
-from queries.postgres_crud import postgres_get_flight_df
+from queries.postgres_crud import postgres_get_flight_df, postgres_create_flight, postgres_update_flight
 from references.paths import get_datasets_reference
 from travel_analysis.flight import get_flight_example, Flight
 
@@ -14,34 +14,69 @@ class FlightUpdater:
     """
     This class is used to update a dataset with new flights.
     """
-    df: pd.DataFrame = postgres_get_flight_df()
+    df: pd.DataFrame = None
     query: pd.DataFrame = None
     new_flight: Flight = None
     existing_flight: bool = None
+    is_new_flight_cheaper: bool = False
     query_tag: str = "fortaleza_rio"
     cheapest_price: int = 50000
     cheapest_flight: Flight = None
+
     # cheapest_flights: list = dataclasses.field(default_factory=list)
+
+    def __post_init__(self):
+        self.df = postgres_get_flight_df()
+        self.trim_df()
+        self.refresh_cheapest()
 
     def set_new_flight(self, input_flight: Flight) -> None:
         """
         This method sets the new flight.
         """
         self.new_flight = input_flight
-        query = self.query_existing_flight(input_flight)
-        self.existing_flight = len(self.query) > 0
-        self.flight_comparison(input_flight)
+        self.existing_flight = self.query_existing_flight(input_flight)
         if self.existing_flight:
-            self.flight_comparison(input_flight)
+            old_flight = self.query.iloc[0]
+            old_price = old_flight.price
+            self.update_existing_flight(old_flight, input_flight)
+        else:
+            old_flight = self.cheapest_flight
+            old_price = self.cheapest_price
+            self.insert_new_flight(old_flight, input_flight)
+        new_price = input_flight.price
+        self.print_flight_price_diff(old_price, new_price)
 
-    def register_new_flight(self):
-        pass
+    def insert_new_flight(self, old_flight: Flight, input_flight: Flight):
+        """
+        This method inserts the new flight in the database.
+        This method sets the new cheapest flight across the database.
+        """
+        new_flight_dict = input_flight.convert_to_dict()
+        new_flight_dict["flight_tag"] = self.query_tag
+        self.new_flight_comparison(old_flight, input_flight)
+        if self.is_new_flight_cheaper:
+            self.cheapest_flight = input_flight
+        postgres_create_flight(new_flight_dict)
 
-    def flight_comparison(self, new_flight: Flight):
-        new_price = new_flight.price
-        if new_price < self.cheapest_price:
-            self.cheapest_price = new_price
-            self.cheapest_flight = new_flight
+    def update_existing_flight(self, old_flight: Flight, new_flight: Flight):
+        """
+        If the new flight has a cheaper value than the current one, then the current one
+         is updated at the postgres database.
+        """
+        new_flight_dict = new_flight.convert_to_dict()
+        new_flight_dict["flight_tag"] = self.query_tag
+        self.new_flight_comparison(old_flight, new_flight)
+        if self.is_new_flight_cheaper:
+            postgres_update_flight(new_flight_dict)
+
+    def new_flight_comparison(self, old_flight: Flight, new_flight: Flight):
+        """
+        This method compares the new flight with the current cheapest one.
+        """
+        old_price: int = old_flight.price if old_flight is not None else 50000
+        new_price: int = new_flight.price
+        self.is_new_flight_cheaper = new_price < old_price
 
     def trim_df(self):
         """
@@ -49,98 +84,49 @@ class FlightUpdater:
         """
         self.df = self.df[self.df['flight_tag'] == self.query_tag]
 
-    def query_existing_flight(self, input_flight: Flight) -> pd.DataFrame:
+    def query_existing_flight(self, input_flight: Flight) -> bool:
         """
         This method checks if a flight already exists in the dataset.
         """
         link = input_flight.link
-        return self.df[self.df['link'] == link]
+        self.query = self.df[self.df['link'] == link]
+        return len(self.query) > 0
 
-    def get_cheapest_price(self) -> float:
-        """
-        This method returns the cheapest price of the current query.
-        """
-        return self.query['price'].min()
+    def get_cheapest_flight(self):
+        return self.df.loc[self.df['price'].idxmin()]
 
-    def is_new_flight_cheaper(self) -> bool:
-        """
-        This method checks if the new flight is cheaper than the cheapest one.
-        """
-        return self.new_flight.price < self.get_cheapest_price()
+    def refresh_cheapest(self):
+        cheapest_row = self.get_cheapest_flight()
+        cheapest_dict = cheapest_row.to_dict()
+        del cheapest_dict["id"]
+        cheapest_price = cheapest_dict["price"]
+        # cheapest_flight = Flight(cheapest_dict)
+        self.cheapest_price = cheapest_price
+        # self.cheapest_flight = cheapest_flight
 
-    def get_price_diff_tag(self) -> str:
+    @staticmethod
+    def get_price_diff_tag(old_price: int, new_price: int) -> str:
         """
         This method returns the difference between the new flight price and the cheapest one.
         """
-        diff = self.new_flight.price - self.get_cheapest_price()
+        diff = new_price - old_price
         return colored(f"+{diff}", "red") if diff >= 0 else colored(f"{diff}", "green")
 
-    def print_flight_price_diff(self) -> None:
+    def print_flight_price_diff(self, old_price: int, new_price: int) -> None:
         """
         This method prints the difference between the new flight price and the cheapest one.
         """
-        is_new_flight_cheaper = self.is_new_flight_cheaper()
-        if is_new_flight_cheaper:
-            self.cheapest_flights.append(self.new_flight)
-        current_flight_color = 'red' if is_new_flight_cheaper else 'cyan'
-        new_flight_color = 'green' if is_new_flight_cheaper else 'magenta'
-        print(f"Current cheapest price: {colored(str(self.get_cheapest_price()), current_flight_color)}")
-        print(f"New flight price: {colored(str(self.new_flight.price), new_flight_color)}")
-        print(f"Difference: {self.get_price_diff_tag()}")
-
-    @staticmethod
-    def append_series(input_df: pd.DataFrame, input_new_row: pd.Series) -> pd.DataFrame:
-        df_columns = input_df.columns
-        df_list = list(input_df.values.tolist())
-        new_row_list = input_new_row.values.tolist()
-        df_list.append(new_row_list)
-        return pd.DataFrame(df_list, columns=df_columns)
-
-    def reorder_df(self):
-        df = self.df
-        df = df.assign(id=(df['cityFrom'] + '_' + df['cityTo']).astype('category').cat.codes)
-        df.insert(0, "id", df.pop("id"))
-        self.df = df.sort_values(by='id', inplace=False)
-
-    def is_existing_flight(self, input_flight: pd.DataFrame) -> bool:
-        row = input_flight.iloc[0]
-        return self.df.isin([*row]).all(1).any()
-
-    def append_new_flight(self) -> None:
-        """
-        This method appends the new flight to the dataset.
-        """
-        self.print_flight_price_diff()
-        new_flight = self.new_flight.convert_to_series()
-        if not self.is_existing_flight(new_flight):
-            self.df = pd.concat([self.df, new_flight], axis=0)
-            self.reorder_df()
-            print(colored("New flight added to dataset!", "yellow"))
-        else:
-            print(colored("Flight already exists in dataset!", "red"))
-
-    def get_new_cheapest(self) -> Flight:
-        cheapest = None
-        for flight in self.cheapest_flights:
-            if cheapest is None or flight.price < cheapest.price:
-                cheapest = flight
-        return cheapest
-
-    def save_df(self):
-        """
-        This method saves the dataset.
-        """
-        dataset_folder = get_datasets_reference()
-        ref = Path(dataset_folder, self.filename)
-        self.df.sort_values(by='price', inplace=True)
-        self.df.to_csv(ref, index=False, encoding='utf-8')
-        print(colored("Dataset saved!", "green"))
+        current_flight_color = 'red' if self.is_new_flight_cheaper else 'cyan'
+        new_flight_color = 'green' if self.is_new_flight_cheaper else 'magenta'
+        print(f"Current price: {colored(str(old_price), current_flight_color)}")
+        print(f"New flight price: {colored(str(new_price), new_flight_color)}")
+        print(f"Difference: {self.get_price_diff_tag(old_price, new_price)}")
 
 
 def flight_pipeline(input_fu: FlightUpdater):
     flight = get_flight_example()
     input_fu.set_new_flight(flight)
-    input_fu.append_new_flight()
+    print("done")
 
 
 def __main():
