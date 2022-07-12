@@ -9,6 +9,8 @@ class PostgresQueryCrud:
     def __init__(self, db: PostgresRunner):
         self.db = db
         self.table_name = "FlightQuery"
+
+    def __post_init__(self):
         self.query_amount = len(self.list_all_queries())
 
     def list_all_queries(self) -> list[dict[Any, Any]]:

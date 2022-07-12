@@ -6,6 +6,7 @@ import pandas as pd
 
 from queries.postgres_crud import postgres_get_flight_df, postgres_create_flight, postgres_update_flight
 from references.paths import get_datasets_reference
+from travel_analysis.dict_filler import flight_dict_filler
 from travel_analysis.flight import get_flight_example, Flight
 
 
@@ -22,6 +23,8 @@ class FlightUpdater:
     query_tag: str = "fortaleza_rio"
     cheapest_price: int = 50000
     cheapest_flight: Flight = None
+    found_new_cheapest: bool = False
+    repeated_flight: bool = False
 
     # cheapest_flights: list = dataclasses.field(default_factory=list)
 
@@ -46,6 +49,7 @@ class FlightUpdater:
             self.insert_new_flight(old_flight, input_flight)
         new_price = input_flight.price
         self.print_flight_price_diff(old_price, new_price)
+        self.refresh_for_new_flight()
 
     def insert_new_flight(self, old_flight: Flight, input_flight: Flight):
         """
@@ -57,7 +61,16 @@ class FlightUpdater:
         self.new_flight_comparison(old_flight, input_flight)
         if self.is_new_flight_cheaper:
             self.cheapest_flight = input_flight
+            self.cheapest_price = input_flight.price
+            self.is_new_flight_cheaper = True
+            self.found_new_cheapest = True
         postgres_create_flight(new_flight_dict)
+
+    def export_new_cheapest(self) -> Flight or None:
+        return self.cheapest_flight if self.found_new_cheapest else None
+
+    def refresh_for_new_flight(self):
+        self.repeated_flight = False
 
     def update_existing_flight(self, old_flight: Flight, new_flight: Flight):
         """
@@ -69,6 +82,8 @@ class FlightUpdater:
         self.new_flight_comparison(old_flight, new_flight)
         if self.is_new_flight_cheaper:
             postgres_update_flight(new_flight_dict)
+        else:
+            self.repeated_flight = True
 
     def new_flight_comparison(self, old_flight: Flight, new_flight: Flight):
         """
@@ -100,7 +115,8 @@ class FlightUpdater:
         cheapest_dict = cheapest_row.to_dict()
         del cheapest_dict["id"]
         cheapest_price = cheapest_dict["price"]
-        # cheapest_flight = Flight(cheapest_dict)
+        flight_dict_filler(cheapest_dict)
+        self.cheapest_flight = Flight(cheapest_dict)
         self.cheapest_price = cheapest_price
         # self.cheapest_flight = cheapest_flight
 
@@ -118,7 +134,13 @@ class FlightUpdater:
         """
         current_flight_color = 'red' if self.is_new_flight_cheaper else 'cyan'
         new_flight_color = 'green' if self.is_new_flight_cheaper else 'magenta'
-        print(f"Current price: {colored(str(old_price), current_flight_color)}")
+        if self.repeated_flight:
+            print(colored("Repeated flight. Not doing anything", "yellow"))
+            return
+        if self.existing_flight:
+            print(f"Old price: {colored(str(old_price), current_flight_color)}")
+        else:
+            print(f"Current cheapest price: {colored(str(old_price), new_flight_color)}")
         print(f"New flight price: {colored(str(new_price), new_flight_color)}")
         print(f"Difference: {self.get_price_diff_tag(old_price, new_price)}")
 
@@ -130,7 +152,8 @@ def flight_pipeline(input_fu: FlightUpdater):
 
 
 def __main():
-    flight_pipeline(FlightUpdater())
+    q = FlightUpdater()
+    flight_pipeline(q)
     # filename = "1.csv"
     # dataset = pd.read_csv(Path(get_datasets_reference(), filename))
     # dataset.tag = filename

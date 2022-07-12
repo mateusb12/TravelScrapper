@@ -7,6 +7,8 @@ class PostgresFlightCrud:
     def __init__(self, db: PostgresRunner):
         self.db = db
         self.table_name = "FlightData"
+
+    def __post_init__(self):
         self.query_amount = len(self.list_all_flights())
 
     def list_all_flights(self) -> list[tuple]:
@@ -27,7 +29,7 @@ class PostgresFlightCrud:
 
     @staticmethod
     def get_flight_example():
-        return {'price': 116, 'quality': 153, 'cityFrom': 'Fortaleza',
+        return {'price': 1200, 'quality': 153, 'cityFrom': 'Fortaleza',
                 'cityTo': 'Rio de Janeiro', 'departure': '14:20', 'arrival': '17:30',
                 'dateDeparture': '14-10-2022', 'dateArrival': '14-10-2022', 'flightDuration': '3:10',
                 'directFlight': True, 'flightDurationSeconds': 11400, 'longLayover': False,

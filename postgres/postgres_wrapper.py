@@ -16,6 +16,7 @@ class PostgresWrapper:
     def refresh_db(self):
         self.delete_all_tables()
         self.create_all_tables()
+        self.register_first_filler()
 
     def create_all_tables(self):
         for table in self.table_names:
@@ -26,6 +27,10 @@ class PostgresWrapper:
         for table in self.table_names:
             self.table_handler.set_table_name(table)
             self.table_handler.delete_table()
+
+    def register_first_filler(self):
+        flight_example = self.flight_handler.get_flight_example()
+        self.flight_handler.flight_data_create(flight_example)
 
 
 def __main():
