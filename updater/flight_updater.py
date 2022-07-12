@@ -4,6 +4,7 @@ from pathlib import Path
 from termcolor import colored
 import pandas as pd
 
+from queries.postgres_crud import postgres_get_flight_df
 from references.paths import get_datasets_reference
 from travel_analysis.flight import get_flight_example, Flight
 
@@ -13,30 +14,47 @@ class FlightUpdater:
     """
     This class is used to update a dataset with new flights.
     """
-    df: pd.DataFrame
+    df: pd.DataFrame = postgres_get_flight_df()
     query: pd.DataFrame = None
     new_flight: Flight = None
     existing_flight: bool = None
-    filename: str = None
-    cheapest_flights: list = dataclasses.field(default_factory=list)
+    query_tag: str = "fortaleza_rio"
+    cheapest_price: int = 50000
+    cheapest_flight: Flight = None
+    # cheapest_flights: list = dataclasses.field(default_factory=list)
 
     def set_new_flight(self, input_flight: Flight) -> None:
         """
         This method sets the new flight.
         """
-        if self.filename is None:
-            self.filename = self.df.filename
         self.new_flight = input_flight
-        self.query = self.query_existing_flight(input_flight)
+        query = self.query_existing_flight(input_flight)
         self.existing_flight = len(self.query) > 0
+        self.flight_comparison(input_flight)
+        if self.existing_flight:
+            self.flight_comparison(input_flight)
+
+    def register_new_flight(self):
+        pass
+
+    def flight_comparison(self, new_flight: Flight):
+        new_price = new_flight.price
+        if new_price < self.cheapest_price:
+            self.cheapest_price = new_price
+            self.cheapest_flight = new_flight
+
+    def trim_df(self):
+        """
+        This method trims the dataset according to the query_tag
+        """
+        self.df = self.df[self.df['flight_tag'] == self.query_tag]
 
     def query_existing_flight(self, input_flight: Flight) -> pd.DataFrame:
         """
         This method checks if a flight already exists in the dataset.
         """
-        city_from = input_flight.flight_from
-        city_to = input_flight.flight_to
-        return self.df.loc[(self.df['cityFrom'] == city_from) & (self.df['cityTo'] == city_to)]
+        link = input_flight.link
+        return self.df[self.df['link'] == link]
 
     def get_cheapest_price(self) -> float:
         """
@@ -126,14 +144,15 @@ def flight_pipeline(input_fu: FlightUpdater):
 
 
 def __main():
-    filename = "1.csv"
-    dataset = pd.read_csv(Path(get_datasets_reference(), filename))
-    dataset.tag = filename
-    fu = FlightUpdater(df=dataset)
-    for _ in range(10):
-        flight_pipeline(fu)
-    fu.reorder_df()
-    print("done")
+    flight_pipeline(FlightUpdater())
+    # filename = "1.csv"
+    # dataset = pd.read_csv(Path(get_datasets_reference(), filename))
+    # dataset.tag = filename
+    # fu = FlightUpdater(df=dataset)
+    # for _ in range(10):
+    #     flight_pipeline(fu)
+    # fu.reorder_df()
+    # print("done")
     # fu.save_df()
 
 

@@ -35,7 +35,7 @@ def set_kiwi_call(config: dict) -> dict:
     fly_to = config.get('fly_to')
     date_from = config.get('date_from')
     date_to = config.get('date_to')
-    limit = config.get('limit')
+    limit = config.get('query_limit')
     return kiwi_call(fly_from=fly_from, fly_to=fly_to, date_from=date_from, date_to=date_to, limit=limit)
 
 

@@ -34,7 +34,6 @@ class UpdateFlight:
         aux = set_kiwi_call(self.kiwi_dict)
         flight_api_data = aux['data']
         shuffle(flight_api_data)
-        self.dataset = load_df(self.tag)
         fu = FlightUpdater(df=self.dataset)
         for flight_dict in flight_api_data:
             flight = Flight(flight_dict)

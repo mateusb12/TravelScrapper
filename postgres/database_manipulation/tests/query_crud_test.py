@@ -1,6 +1,6 @@
 import unittest
 
-from postgres.database_creation.query_crud import PostgresQueryCrud
+from postgres.database_manipulation.query_crud import PostgresQueryCrud
 from postgres.postgres_database_runner import PostgresRunner
 
 

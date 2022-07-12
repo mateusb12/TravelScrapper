@@ -5,6 +5,7 @@ from travel_analysis.price_monitor import UpdateFlight
 def __main():
     query = get_flight_query("fortaleza_rio")
     ufd = UpdateFlight(kiwi_dict=query)
+    ufd.update_flight_db()
     print(query)
 
 

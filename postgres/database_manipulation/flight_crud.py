@@ -1,4 +1,4 @@
-from postgres.database_creation.sql_lines_generator import generate_sql_update_line, \
+from postgres.database_manipulation.sql_lines_generator import generate_sql_update_line, \
     get_sql_line_create
 from postgres.postgres_database_runner import PostgresRunner
 
@@ -28,11 +28,14 @@ class PostgresFlightCrud:
     @staticmethod
     def get_flight_example():
         return {'price': 116, 'quality': 153, 'cityFrom': 'Fortaleza',
-                'city_to': 'Rio de Janeiro', 'departure': '14:20', 'arrival': '17:30',
-                'date_departure': '14-10-2022', 'date_arrival': '14-10-2022', 'flightDuration': '3:10',
-                'direct_flight': True, 'flightDurationSeconds': 11400, 'longLayover': False,
+                'cityTo': 'Rio de Janeiro', 'departure': '14:20', 'arrival': '17:30',
+                'dateDeparture': '14-10-2022', 'dateArrival': '14-10-2022', 'flightDuration': '3:10',
+                'directFlight': True, 'flightDurationSeconds': 11400, 'longLayover': False,
                 'seatsAvailable': 1, 'connection_1': '0:00', 'connection_2': '0:00',
                 'connection_3': '0:00', 'link': 'https://www.google.com', 'flight_tag': 'fortaleza_rio'}
+
+    def get_keys(self):
+        return list(self.get_flight_example().keys())
 
     def get_sql_line_create(self, values: tuple):
         columns = list(self.get_flight_example().keys())
@@ -79,9 +82,9 @@ class PostgresFlightCrud:
 
 def __main():
     db = PostgresFlightCrud(PostgresRunner())
-    # db.flight_data_create(db.get_flight_example())
+    db.flight_data_create(db.get_flight_example())
     # print(db.list_all_flights())
-    print(db.flight_data_read('fortaleza_rio'))
+    # print(db.flight_data_read('fortaleza_rio'))
     # print(db.flight_data_update(db.get_flight_example()))
     # print(db.flight_data_delete('fortaleza_rio'))
 

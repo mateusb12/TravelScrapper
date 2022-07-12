@@ -26,9 +26,9 @@ class PostgresTableCreation:
     @staticmethod
     def get_flight_table_format():
         return {'id': 'serial primary key', 'price': 'INT', 'quality': 'INT', 'cityFrom': 'varchar(20)',
-                'city_to': 'varchar(20)', 'departure': 'varchar(20)', 'arrival': 'varchar(20)',
-                'date_departure': 'varchar(20)', 'date_arrival': 'varchar(20)', 'flightDuration': 'varchar(20)',
-                'direct_flight': 'boolean', 'flightDurationSeconds': 'INT', 'longLayover': 'BOOL',
+                'cityTo': 'varchar(20)', 'departure': 'varchar(20)', 'arrival': 'varchar(20)',
+                'dateDeparture': 'varchar(20)', 'dateArrival': 'varchar(20)', 'flightDuration': 'varchar(20)',
+                'directFlight': 'boolean', 'flightDurationSeconds': 'INT', 'longLayover': 'BOOL',
                 'seatsAvailable': 'INT', 'connection_1': 'varchar(20)', 'connection_2': 'varchar(20)',
                 'connection_3': 'varchar(20)', 'link': 'varchar(1000)', 'flight_tag': 'varchar(20)'}
 

@@ -1,5 +1,7 @@
 from typing import Union, Tuple, Dict, Any
 
+import pandas as pd
+
 from postgres.postgres_database_runner import PostgresRunner
 from postgres.postgres_wrapper import PostgresWrapper
 
@@ -34,7 +36,6 @@ def postgres_read_query(tag: str) -> Union[tuple[str, int], tuple[dict[str, Any]
     result = get_flight_query(tag)
     if not result:
         return f"Query {tag} does not exist", 404
-    # res_dict = jsonify_flight_query(result[0])
     return result, 200
 
 
@@ -57,3 +58,35 @@ def postgres_list_all_queries():
     result = runner.query_handler.list_all_queries()
     result_dict = {item["query_name"]: item for item in result}
     return result_dict, 200
+
+
+def postgres_list_all_flights() -> list[tuple]:
+    return runner.flight_handler.list_all_flights()
+
+
+def postgres_get_flight_keys() -> list[str]:
+    keys = runner.flight_handler.get_keys()
+    keys.insert(0, "id")
+    return keys
+
+
+def postgres_get_flight_df() -> pd.DataFrame:
+    flight_data = postgres_list_all_flights()
+    flight_keys = postgres_get_flight_keys()
+    return pd.DataFrame(flight_data, columns=flight_keys)
+
+
+def postgres_create_flight(flight_dict: dict):
+    return runner.flight_handler.create_flight(flight_dict)
+
+
+def postgres_read_flight(flight_tag: str):
+    return runner.flight_handler.read_flight(flight_tag)
+
+
+def postgres_update_flight(flight_dict: dict):
+    return runner.flight_handler.update_flight(flight_dict)
+
+
+def postgres_delete_flight(flight_tag: str):
+    return runner.flight_handler.delete_flight(flight_tag)

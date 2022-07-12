@@ -1,6 +1,6 @@
 import unittest
 
-from postgres.database_creation.flight_crud import PostgresFlightCrud
+from postgres.database_manipulation.flight_crud import PostgresFlightCrud
 from postgres.postgres_database_runner import PostgresRunner
 
 

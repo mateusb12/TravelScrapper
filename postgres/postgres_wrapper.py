@@ -1,6 +1,6 @@
-from postgres.database_creation.flight_crud import PostgresFlightCrud
-from postgres.database_creation.query_crud import PostgresQueryCrud
-from postgres.database_creation.table_creation import PostgresTableCreation
+from postgres.database_manipulation.flight_crud import PostgresFlightCrud
+from postgres.database_manipulation.query_crud import PostgresQueryCrud
+from postgres.database_manipulation.table_creation import PostgresTableCreation
 from postgres.postgres_database_runner import PostgresRunner
 from postgres.flight_query.query_table import PostgresFlightTables
 
@@ -30,6 +30,7 @@ class PostgresWrapper:
 
 def __main():
     db = PostgresWrapper()
+    db.refresh_db()
 
 
 if __name__ == "__main__":
