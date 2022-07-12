@@ -1,8 +1,8 @@
 import os
 
 from flask import Flask, jsonify, request
-from queries.json_query_runner import run_all_queries
-from queries.postgres_crud import postgres_create_query, postgres_read_query, postgres_update_query, \
+from database.queries.json_query_runner import run_all_queries
+from apis.cruds.postgres_crud import postgres_create_query, postgres_read_query, postgres_update_query, \
     postgres_delete_query, postgres_list_all_queries
 
 application = Flask(__name__)

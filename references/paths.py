@@ -27,7 +27,7 @@ def get_airports_reference():
 
 
 def get_datasets_reference():
-    return get_main_folder_reference() / "datasets"
+    return get_main_folder_reference() / "database"
 
 
 def get_notifications_reference():

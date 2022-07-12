@@ -1,6 +1,6 @@
 import psycopg2
 
-from postgres.credentials import get_credentials
+from tokens.credentials import get_credentials
 
 
 class PostgresRunner:

@@ -1,9 +1,8 @@
-from typing import Union, Tuple, Dict, Any
+from typing import Union, Any
 
 import pandas as pd
 
-from postgres.postgres_database_runner import PostgresRunner
-from postgres.postgres_wrapper import PostgresWrapper
+from database.postgres.postgres_wrapper import PostgresWrapper
 
 runner = PostgresWrapper()
 

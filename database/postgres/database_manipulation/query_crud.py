@@ -1,8 +1,8 @@
-from typing import List, Dict, Any
+from typing import Any
 
-from fillers.query_examples import get_rio_example
-from postgres.database_manipulation.sql_lines_generator import get_sql_line_create
-from postgres.postgres_database_runner import PostgresRunner
+from database.fillers.query_examples import get_rio_example
+from database.postgres.database_manipulation.sql_lines_generator import get_sql_line_create
+from database.postgres.postgres_database_runner import PostgresRunner
 
 
 class PostgresQueryCrud:

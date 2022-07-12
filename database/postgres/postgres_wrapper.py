@@ -1,8 +1,7 @@
-from postgres.database_manipulation.flight_crud import PostgresFlightCrud
-from postgres.database_manipulation.query_crud import PostgresQueryCrud
-from postgres.database_manipulation.table_creation import PostgresTableCreation
-from postgres.postgres_database_runner import PostgresRunner
-from postgres.flight_query.query_table import PostgresFlightTables
+from database.postgres.database_manipulation.flight_crud import PostgresFlightCrud
+from database.postgres.database_manipulation.query_crud import PostgresQueryCrud
+from database.postgres.database_manipulation.table_creation import PostgresTableCreation
+from database.postgres.postgres_database_runner import PostgresRunner
 
 
 class PostgresWrapper:

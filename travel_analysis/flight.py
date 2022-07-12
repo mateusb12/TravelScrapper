@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 
 from apis.api_consumer.kiwi_api_call import kiwi_call_example
-from fillers.time_manipulations import timedelta_format, seconds_to_hours_and_minutes
+from database.fillers.time_manipulations import timedelta_format, seconds_to_hours_and_minutes
 
 
 class Flight:

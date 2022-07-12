@@ -1,15 +1,11 @@
 from dataclasses import dataclass
-from pathlib import Path
 
 import pandas as pd
-from random import shuffle
 
 from termcolor import colored
 
 from apis.api_consumer.kiwi_api_call import set_kiwi_call
-from datasets.empy_df_creator import create_empty_df
-from fillers.query_examples import get_rio_example
-from references.paths import get_datasets_reference
+from database.fillers.query_examples import get_rio_example
 from travel_analysis.flight import Flight
 from updater.flight_updater import FlightUpdater
 from notifications.telegram_bot.bot import telegram_bot_instance
