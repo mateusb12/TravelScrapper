@@ -2,7 +2,7 @@ from typing import Union, Any
 
 import pandas as pd
 
-from database.postgres.postgres_wrapper import PostgresWrapper
+from database.postgres.runners.postgres_wrapper import PostgresWrapper
 
 runner = PostgresWrapper()
 

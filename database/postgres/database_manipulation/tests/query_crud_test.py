@@ -1,7 +1,7 @@
 import unittest
 
 from database.postgres.database_manipulation.query_crud import PostgresQueryCrud
-from database.postgres.postgres_database_runner import PostgresRunner
+from database.postgres.runners.postgres_database_runner import PostgresRunner
 
 
 class PostgresCrudTest(unittest.TestCase):

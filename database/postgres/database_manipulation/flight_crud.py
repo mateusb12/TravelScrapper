@@ -1,6 +1,6 @@
 from database.postgres.database_manipulation.sql_lines_generator import generate_sql_update_line, \
     get_sql_line_create
-from database.postgres.postgres_database_runner import PostgresRunner
+from database.postgres.runners.postgres_database_runner import PostgresRunner
 
 
 class PostgresFlightCrud:

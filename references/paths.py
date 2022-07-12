@@ -39,7 +39,7 @@ def get_telegram_bot_reference():
 
 
 def get_queries_reference():
-    return get_main_folder_reference() / "queries"
+    return get_main_folder_reference() / "query_execution"
 
 
 def get_tokens_reference():

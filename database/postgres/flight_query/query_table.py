@@ -1,4 +1,4 @@
-from database.postgres.postgres_database_runner import PostgresRunner
+from database.postgres.runners.postgres_database_runner import PostgresRunner
 
 
 class PostgresFlightTables:

@@ -1,7 +1,7 @@
 import unittest
 
 from database.postgres.database_manipulation.flight_crud import PostgresFlightCrud
-from database.postgres.postgres_database_runner import PostgresRunner
+from database.postgres.runners.postgres_database_runner import PostgresRunner
 
 
 class PostgresFlightTest(unittest.TestCase):
