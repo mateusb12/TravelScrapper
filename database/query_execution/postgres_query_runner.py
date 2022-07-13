@@ -1,5 +1,5 @@
 from apis.api_cruds.postgres_crud import get_flight_query
-from travel_analysis.price_monitor import UpdateFlight
+from updater.price_monitor import UpdateFlight
 
 
 def __main():

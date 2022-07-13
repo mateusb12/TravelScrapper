@@ -82,8 +82,9 @@ def postgres_get_flight_keys() -> list[str]:
 
 def postgres_get_flight_df() -> pd.DataFrame:
     flight_data = postgres_list_all_flights()
+    flight_tuples = [value.values() for value in flight_data.values()]
     flight_keys = postgres_get_flight_keys()
-    return pd.DataFrame(flight_data, columns=flight_keys)
+    return pd.DataFrame(flight_tuples, columns=flight_keys)
 
 
 def postgres_create_flight(flight_dict: dict):

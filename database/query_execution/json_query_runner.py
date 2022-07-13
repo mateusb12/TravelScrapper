@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from references.paths import get_queries_reference
-from travel_analysis.price_monitor import UpdateFlight
+from updater.price_monitor import UpdateFlight
 
 
 def get_query(tag: str):
