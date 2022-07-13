@@ -2,8 +2,9 @@ import os
 
 from flask import Flask, jsonify, request
 from database.query_execution.json_query_runner import run_all_queries
-from apis.cruds.postgres_crud import postgres_create_query, postgres_read_query, postgres_update_query, \
-    postgres_delete_query, postgres_list_all_queries
+from apis.api_cruds.postgres_crud import postgres_create_query, postgres_read_query, postgres_update_query, \
+    postgres_delete_query, postgres_list_all_queries, postgres_create_flight, postgres_list_all_flights, \
+    postgres_read_flight
 
 application = Flask(__name__)
 
@@ -56,6 +57,22 @@ def list_all_query():
     content = res[0]
     http_result = res[1]
     return content, http_result
+
+
+@application.route("/create_flight", methods=["POST"])
+def create_flight():
+    flight_dict = request.json
+    return postgres_create_flight(flight_dict)
+
+
+@application.route("/read_flight/<tag>", methods=["GET"])
+def read_flight(tag: str):
+    return postgres_read_flight(tag)
+
+
+@application.route("/read_all_flights", methods=["GET"])
+def read_all_flights():
+    return postgres_list_all_flights()
 
 
 @application.route("/run_all_queries", methods=["POST"])

@@ -2,7 +2,7 @@ from typing import Union, Any
 
 import pandas as pd
 
-from database.postgres.runners.postgres_wrapper import PostgresWrapper
+from database.postgres.wrappers.postgres_wrapper import PostgresWrapper
 
 runner = PostgresWrapper()
 
@@ -14,6 +14,16 @@ def insert_tag(input_dict: dict, input_tag: str):
 def jsonify_flight_query(input_tuple: tuple) -> dict:
     return {"fly_from": input_tuple[1], "fly_to": input_tuple[2], "date_from": input_tuple[3],
             "date_to": input_tuple[4], "query_limit": input_tuple[5], "query_name": input_tuple[6]}
+
+
+def jsonify_flight_data(input_tuple: tuple) -> dict:
+    return {"id": input_tuple[0], "price": input_tuple[1], "quality": input_tuple[2],
+            "city_from": input_tuple[3], "city_to": input_tuple[4], "departure": input_tuple[5],
+            "arrival": input_tuple[6], "dateDeparture": input_tuple[7], "dateArrival": input_tuple[8],
+            "flightDuration": input_tuple[9], "directFlight": input_tuple[10], "flightDurationSeconds": input_tuple[11],
+            "longLayover": input_tuple[12], "seatsAvailable": input_tuple[13], "connection_1": input_tuple[14],
+            "connection_2": input_tuple[15], "connection_3": input_tuple[16], "link": input_tuple[17],
+            "flight_tag": input_tuple[18]}
 
 
 def get_flight_query(tag: str) -> Union[bool, dict]:
@@ -59,8 +69,9 @@ def postgres_list_all_queries():
     return result_dict, 200
 
 
-def postgres_list_all_flights() -> list[tuple]:
-    return runner.flight_handler.list_all_flights()
+def postgres_list_all_flights() -> dict:
+    postgres_output = runner.flight_handler.list_all_flights()
+    return {int(item[0]): jsonify_flight_data(item) for item in postgres_output}
 
 
 def postgres_get_flight_keys() -> list[str]:

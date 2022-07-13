@@ -3,7 +3,7 @@ import dataclasses
 from termcolor import colored
 import pandas as pd
 
-from apis.cruds.postgres_crud import postgres_get_flight_df, postgres_create_flight, postgres_update_flight
+from apis.api_cruds.postgres_crud import postgres_get_flight_df, postgres_create_flight, postgres_update_flight
 from travel_analysis.dict_filler import flight_dict_filler
 from travel_analysis.flight import get_flight_example, Flight
 

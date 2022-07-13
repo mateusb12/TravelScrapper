@@ -10,14 +10,23 @@ class PostgresTableCreation:
         self.table_name: str = table_name
         self.table_format: dict = self.get_table_format(table_name)
 
+    @staticmethod
+    def clean_query_table_results(input_query_results: list):
+        if input_query_results is None:
+            return []
+        lower_results = [x.lower() for x in input_query_results if x is not None]
+        valid_results = [x for x in lower_results if x]
+        trash_info = ['d62utkp249rp3q', 'public', 'base table', 'yes', 'no']
+        return [x for x in valid_results if x not in trash_info][0]
+
     def list_all_tables(self):
         sql = "SELECT * FROM information_schema.tables WHERE table_schema='public';"
         self.db.run_sql_query(sql)
         query_res = self.db.show_query_results()
-        if not query_res:
+        clean_query_res = [self.clean_query_table_results(x) for x in query_res]
+        if not clean_query_res:
             return []
-        query_res = [x if x is not None else '' for x in query_res][0]
-        return [table.lower() for table in query_res if table]
+        return clean_query_res
 
     def existing_table(self, input_table_name: str):
         all_tables = self.list_all_tables()
@@ -69,6 +78,11 @@ class PostgresTableCreation:
         self.db.run_sql_query(sql)
         print(f"Table {self.table_name} was deleted.")
 
+    def get_table_contents(self, table_name: str):
+        sql = f"SELECT * FROM {table_name}"
+        self.db.run_sql_query(sql)
+        return self.db.show_query_results()
+
 
 def __get_pgt():
     db = PostgresRunner()
@@ -90,8 +104,12 @@ def __list_all_tables():
 
 
 def __main():
+    pgt = __get_pgt()
+    pgt.set_table_name("flightdata")
+    pgt.delete_table()
+    print(pgt.get_table_contents("flightdata"))
     # __list_all_tables()
-    __create_all_tables()
+    # __create_all_tables()
 
 
 if __name__ == "__main__":
