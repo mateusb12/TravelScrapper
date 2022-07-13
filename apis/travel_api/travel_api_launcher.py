@@ -1,10 +1,9 @@
 import os
 
 from flask import Flask, jsonify, request
-from database.query_execution.json_query_runner import run_all_queries
 from apis.api_cruds.postgres_crud import postgres_create_query, postgres_read_query, postgres_update_query, \
     postgres_delete_query, postgres_list_all_queries, postgres_create_flight, postgres_list_all_flights, \
-    postgres_read_flight
+    postgres_read_flight, postgres_refresh_db
 from database.query_execution.postgres_query_runner import run_all_postgres_queries
 
 application = Flask(__name__)
@@ -79,6 +78,11 @@ def read_all_flights():
 @application.route("/run_all_queries", methods=["POST"])
 def run_all():
     return run_all_postgres_queries()
+
+
+@application.route("/refresh_db", methods=["DELETE"])
+def refresh_db():
+    return postgres_refresh_db()
 
 
 if __name__ == "__main__":

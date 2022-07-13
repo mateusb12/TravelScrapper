@@ -3,9 +3,11 @@ import dataclasses
 from termcolor import colored
 import pandas as pd
 
-from apis.api_cruds.postgres_crud import postgres_get_flight_df, postgres_create_flight, postgres_update_flight
+from apis.api_cruds.postgres_crud import postgres_get_flight_df, postgres_create_flight, postgres_update_flight, \
+    postgres_add_filler_flight
+from database.fillers.query_examples import get_flight_dict_example
 from travel_analysis.dict_filler import flight_dict_filler
-from travel_analysis.flight import get_flight_example, Flight
+from travel_analysis.flight import get_flight_object_example, Flight
 
 
 @dataclasses.dataclass
@@ -27,9 +29,20 @@ class FlightUpdater:
     # cheapest_flights: list = dataclasses.field(default_factory=list)
 
     def __post_init__(self):
-        self.df = postgres_get_flight_df()
+        self.df = self.get_df_from_postgres()
         self.trim_df()
         self.refresh_cheapest()
+
+    def get_df_from_postgres(self) -> pd.DataFrame:
+        output_df = postgres_get_flight_df()
+        if output_df.empty:
+            return self.append_filler_flight(output_df)
+        return output_df
+
+    def append_filler_flight(self, input_df: pd.DataFrame):
+        filler_flight: dict = get_flight_dict_example()
+        filler_flight["flight_tag"] = self.query_tag
+        return input_df.append(filler_flight, ignore_index=True)
 
     def set_new_flight(self, input_flight: Flight) -> None:
         """
@@ -96,6 +109,8 @@ class FlightUpdater:
         This method trims the dataset according to the query_tag
         """
         self.df = self.df[self.df['flight_tag'] == self.query_tag]
+        if self.df.empty:
+            self.df = self.append_filler_flight(self.df)
 
     def query_existing_flight(self, input_flight: Flight) -> bool:
         """
@@ -144,7 +159,7 @@ class FlightUpdater:
 
 
 def flight_pipeline(input_fu: FlightUpdater):
-    flight = get_flight_example()
+    flight = get_flight_object_example()
     input_fu.set_new_flight(flight)
     print("done")
 

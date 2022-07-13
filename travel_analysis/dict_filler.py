@@ -1,4 +1,4 @@
-from travel_analysis.flight import get_flight_example
+from travel_analysis.flight import get_flight_object_example
 
 
 def flight_dict_filler(flight_dict: dict) -> None:
@@ -18,7 +18,7 @@ def flight_dict_filler(flight_dict: dict) -> None:
 
 
 def __main():
-    flight = get_flight_example()
+    flight = get_flight_object_example()
 
 
 if __name__ == "__main__":

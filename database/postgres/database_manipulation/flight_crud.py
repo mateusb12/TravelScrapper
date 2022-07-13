@@ -1,3 +1,4 @@
+from database.fillers.query_examples import get_flight_dict_example
 from database.postgres.database_manipulation.sql_lines_generator import generate_sql_update_line, \
     get_sql_line_create
 from database.postgres.runners.postgres_database_runner import PostgresRunner
@@ -22,25 +23,18 @@ class PostgresFlightCrud:
         all_links = [item[-2] for item in all_flights]
         return current_link in all_links
 
-    def jsonify_results(self, result_tuple: tuple):
-        keys = list(self.get_flight_example().keys())
+    @staticmethod
+    def jsonify_results(result_tuple: tuple):
+        keys = list(get_flight_dict_example().keys())
         values = result_tuple[1:]
         return dict(zip(keys, values))
 
     @staticmethod
-    def get_flight_example():
-        return {'price': 1200, 'quality': 153, 'cityFrom': 'Fortaleza',
-                'cityTo': 'Rio de Janeiro', 'departure': '14:20', 'arrival': '17:30',
-                'dateDeparture': '14-10-2022', 'dateArrival': '14-10-2022', 'flightDuration': '3:10',
-                'directFlight': True, 'flightDurationSeconds': 11400, 'longLayover': False,
-                'seatsAvailable': 1, 'connection_1': '0:00', 'connection_2': '0:00',
-                'connection_3': '0:00', 'link': 'https://www.google.com', 'flight_tag': 'fortaleza_rio'}
-
-    def get_keys(self):
-        return list(self.get_flight_example().keys())
+    def get_keys():
+        return list(get_flight_dict_example().keys())
 
     def get_sql_line_create(self, values: tuple):
-        columns = list(self.get_flight_example().keys())
+        columns = list(get_flight_dict_example().keys())
         column_str = "".join(f"{item}, " for item in columns)[:-2]
         header = f"insert into {self.table_name} ({column_str}) values ("
         for value in values:
@@ -50,7 +44,7 @@ class PostgresFlightCrud:
     def flight_data_create(self, flight_dict: dict) -> bool:
         if self.existing_flight(flight_dict):
             return False
-        dict_example = self.get_flight_example()
+        dict_example = get_flight_dict_example()
         values = tuple(flight_dict.values())
         table_name = self.table_name
         full_sql = get_sql_line_create(dict_example, values, table_name)
@@ -84,7 +78,7 @@ class PostgresFlightCrud:
 
 def __main():
     db = PostgresFlightCrud(PostgresRunner())
-    db.flight_data_create(db.get_flight_example())
+    db.flight_data_create(get_flight_dict_example())
     # print(db.list_all_flights())
     # print(db.flight_data_read('fortaleza_rio'))
     # print(db.flight_data_update(db.get_flight_example()))

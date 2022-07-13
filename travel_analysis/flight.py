@@ -91,12 +91,12 @@ class Flight:
         return pd.DataFrame(aux_dict)
 
 
-def get_flight_example():
+def get_flight_object_example() -> Flight:
     flight_data = kiwi_call_example()
     example = random.choice(flight_data["data"])
     return Flight(example)
 
 
 if __name__ == "__main__":
-    flight = get_flight_example()
+    flight = get_flight_object_example()
     print(flight.convert_to_series())

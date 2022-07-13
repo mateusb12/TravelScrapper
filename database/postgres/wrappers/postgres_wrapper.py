@@ -1,3 +1,4 @@
+from database.fillers.query_examples import get_flight_dict_example
 from database.postgres.database_manipulation.flight_crud import PostgresFlightCrud
 from database.postgres.database_manipulation.query_crud import PostgresQueryCrud
 from database.postgres.database_manipulation.table_creation import PostgresTableCreation
@@ -28,7 +29,7 @@ class PostgresWrapper:
             self.table_handler.delete_table()
 
     def register_first_filler(self):
-        flight_example = self.flight_handler.get_flight_example()
+        flight_example = get_flight_dict_example()
         self.flight_handler.flight_data_create(flight_example)
 
 

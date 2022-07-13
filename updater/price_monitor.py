@@ -5,7 +5,7 @@ import pandas as pd
 from termcolor import colored
 
 from apis.api_consumer.kiwi_api_call import set_kiwi_call
-from database.fillers.query_examples import get_rio_example
+from database.fillers.query_examples import get_rio_example, get_sp_example
 from travel_analysis.flight import Flight
 from updater.flight_updater import FlightUpdater
 from notifications.telegram_bot.bot import telegram_bot_instance
@@ -21,8 +21,7 @@ class UpdateFlight:
         self.tag = self.kiwi_dict["query_name"]
         api_data = set_kiwi_call(self.kiwi_dict)
         flight_api_data = api_data['data']
-        # shuffle(flight_api_data)
-        fu = FlightUpdater()
+        fu = FlightUpdater(query_tag=self.tag)
         for index, flight_dict in enumerate(flight_api_data, 1):
             current = index
             last = len(flight_api_data)
@@ -66,7 +65,7 @@ class UpdateFlight:
 
 
 def __main():
-    ufd = UpdateFlight(kiwi_dict=get_rio_example())
+    ufd = UpdateFlight(kiwi_dict=get_sp_example())
     ufd.update_flight_db()
 
 

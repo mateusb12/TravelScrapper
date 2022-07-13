@@ -2,6 +2,7 @@ from typing import Union, Any
 
 import pandas as pd
 
+from database.fillers.query_examples import get_flight_dict_example
 from database.postgres.wrappers.postgres_wrapper import PostgresWrapper
 
 runner = PostgresWrapper()
@@ -63,7 +64,7 @@ def postgres_delete_query(tag: str) -> tuple[str, int]:
     return f"Query {tag} deleted successfully", 200
 
 
-def postgres_list_all_queries():
+def postgres_list_all_queries() -> tuple[dict, int]:
     result = runner.query_handler.list_all_queries()
     result_dict = {item["query_name"]: item for item in result}
     return result_dict, 200
@@ -101,3 +102,12 @@ def postgres_update_flight(flight_dict: dict):
 
 def postgres_delete_flight(flight_tag: str):
     return runner.flight_handler.flight_data_delete(flight_tag)
+
+
+def postgres_add_filler_flight():
+    return runner.flight_handler.flight_data_create(get_flight_dict_example())
+
+
+def postgres_refresh_db() -> tuple[str, int]:
+    runner.refresh_db()
+    return "Database refreshed successfully", 200
