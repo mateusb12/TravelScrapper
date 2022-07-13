@@ -1,12 +1,26 @@
-from apis.api_cruds.postgres_crud import get_flight_query
+from termcolor import colored
+
+from apis.api_cruds.postgres_crud import postgres_list_all_queries
 from updater.price_monitor import UpdateFlight
 
 
+def run_all_postgres_queries():
+    all_queries = postgres_list_all_queries()[0].values()
+    result_pot = []
+    for query in all_queries:
+        query_name = query["query_name"]
+        ufd = UpdateFlight(kiwi_dict=query)
+        print(colored(f"Updating query {query_name}", "green"))
+        result = ufd.update_flight_db()
+        result_pot.append(result)
+    if new_cheapest := [item for item in result_pot if item[1] == 200]:
+        return new_cheapest[0]
+    else:
+        return "No new cheapest flight found!", 206
+
+
 def __main():
-    query = get_flight_query("fortaleza_rio")
-    ufd = UpdateFlight(kiwi_dict=query)
-    ufd.update_flight_db()
-    print(query)
+    run_all_postgres_queries()
 
 
 if __name__ == "__main__":
