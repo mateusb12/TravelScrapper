@@ -104,10 +104,6 @@ def postgres_delete_flight(flight_tag: str):
     return runner.flight_handler.flight_data_delete(flight_tag)
 
 
-def postgres_add_filler_flight():
-    return runner.flight_handler.flight_data_create(get_flight_dict_example())
-
-
 def postgres_refresh_db() -> tuple[str, int]:
     runner.refresh_db()
     return "Database refreshed successfully", 200

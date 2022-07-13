@@ -1,7 +1,7 @@
 from termcolor import colored
 
 from apis.api_cruds.postgres_crud import postgres_list_all_queries
-from updater.price_monitor import UpdateFlight
+from update_flight_prices.price_monitor import UpdateFlight
 
 
 def run_all_postgres_queries():

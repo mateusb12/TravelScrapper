@@ -1,9 +1,6 @@
-from pathlib import Path
-
 import requests as requests
 
-from references.paths import get_api_consumer_path
-from tokens.token_loader import load_kiwi_token, load_all_tokens
+from tokens.token_loader import load_kiwi_token
 
 
 def kiwi_call(**kwargs) -> dict:
@@ -14,7 +11,6 @@ def kiwi_call(**kwargs) -> dict:
     limit = kwargs.get('limit')
     param_tag = f"fly_from={fly_from}&fly_to={fly_to}&dateFrom={date_from}&dateTo={date_to}&limit={limit}"
     url = f"https://tequila-api.kiwi.com/v2/search?{param_tag}"
-    # load_all_tokens()
     api_key = load_kiwi_token()
     header_dict = {
         "apikey": api_key,
