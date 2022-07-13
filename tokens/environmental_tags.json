@@ -1,0 +1,10 @@
+{"tags":
+  [
+    "KIWI_TOKEN",
+    "TELEGRAM_TOKEN",
+    "POSTGRES_HOST",
+    "POSTGRES_DATABASE",
+    "POSTGRES_USER",
+    "POSTGRES_PASSWORD"
+  ]
+}

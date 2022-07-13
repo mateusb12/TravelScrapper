@@ -1,3 +1,4 @@
+import json
 import os
 from pathlib import Path
 from typing import Optional
@@ -21,10 +22,23 @@ def load_env_file() -> dict[str, Optional[str]]:
         raise TokenLoadErrorException(f"Error: could not find .env file in {get_tokens_reference()}")
 
 
+def load_env_tags():
+    ref = get_tokens_reference()
+    env_tag_file_ref = Path(ref, "environmental_tags.json")
+    with open(env_tag_file_ref, "r") as env_tag_file:
+        return json.load(env_tag_file)["tags"]
+
+
 def load_environment_tokens() -> None:
     env_config = load_env_file()
-    os.environ["KIWI_TOKEN"] = env_config["KIWI_TOKEN"]
-    os.environ["TELEGRAM_TOKEN"] = env_config["TELEGRAM_TOKEN"]
+    env_tags = load_env_tags()
+    for tag in env_tags:
+        if tag in env_config:
+            os.environ[tag] = env_config[tag]
+        else:
+            raise TokenLoadErrorException(f"Error: could not find {tag} in .env file")
+    # os.environ["KIWI_TOKEN"] = env_config["KIWI_TOKEN"]
+    # os.environ["TELEGRAM_TOKEN"] = env_config["TELEGRAM_TOKEN"]
 
 
 def existing_env_file() -> bool:
@@ -33,7 +47,10 @@ def existing_env_file() -> bool:
 
 
 def __main():
-    print(existing_env_file())
+    # print(existing_env_file())
+    print(load_environment_tokens())
+    for item in os.environ:
+        print(item)
     # env_c = load_env_file()
     # print(env_c)
 

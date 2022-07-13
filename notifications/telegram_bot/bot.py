@@ -1,13 +1,8 @@
-from pathlib import Path
-
 from telegram import Bot
 
-from references.paths import get_telegram_bot_reference
-from tokens.token_loader import load_all, load_telegram_token
+from tokens.token_loader import load_all_tokens, load_telegram_token
 
-token_ref = Path(get_telegram_bot_reference(), "telegram_api_token.txt")
-# TOKEN = open(token_ref, "r").read()
-load_all()
+# load_all_tokens()
 TOKEN = load_telegram_token()
 telegram_bot_instance = Bot(token=TOKEN)
 

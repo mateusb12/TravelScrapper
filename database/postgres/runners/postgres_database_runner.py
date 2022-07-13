@@ -1,11 +1,11 @@
 import psycopg2
 
-from tokens.credentials import get_credentials
+from tokens.token_loader import get_postgres_credentials
 
 
 class PostgresRunner:
     def __init__(self):
-        db_dict = get_credentials()
+        db_dict = get_postgres_credentials()
         self.con = psycopg2.connect(host=db_dict["host"], database=db_dict["database"],
                                     user=db_dict["user"], password=db_dict["password"])
         self.cursor = self.con.cursor()
