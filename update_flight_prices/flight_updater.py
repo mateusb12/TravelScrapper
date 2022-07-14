@@ -4,7 +4,7 @@ from termcolor import colored
 import pandas as pd
 
 from apis.api_cruds.postgres_crud import postgres_get_all_flights_df, postgres_create_flight, postgres_update_flight
-from database.fillers.data_skeleton import get_flight_dict_example
+from database.fillers.data_skeleton import get_flight_dict_example, convert_flight_to_dict
 from travel_analysis.dict_filler import flight_dict_filler
 from travel_analysis.flight import get_flight_object_example, Flight
 
@@ -66,7 +66,7 @@ class FlightUpdater:
         This method inserts the new flight in the database.
         This method sets the new cheapest flight across the database.
         """
-        new_flight_dict = input_flight.convert_to_dict()
+        new_flight_dict = convert_flight_to_dict(input_flight)
         new_flight_dict["flight_tag"] = self.query_tag
         self.new_flight_comparison(old_flight, input_flight)
         if self.is_new_flight_cheaper:
@@ -87,7 +87,7 @@ class FlightUpdater:
         If the new flight has a cheaper value than the current one, then the current one
          is updated at the postgres database.
         """
-        new_flight_dict = new_flight.convert_to_dict()
+        new_flight_dict = convert_flight_to_dict(new_flight)
         new_flight_dict["flight_tag"] = self.query_tag
         self.new_flight_comparison(old_flight, new_flight)
         if self.is_new_flight_cheaper:
