@@ -33,7 +33,8 @@ class PostgresTableCreation:
         all_tables = self.list_all_tables()
         return input_table_name.lower() in all_tables
 
-    def get_table_format(self, table_tag: str):
+    @staticmethod
+    def get_table_format(table_tag: str):
         if table_tag.lower() == "flightdata":
             return get_flight_table_format()
         elif table_tag.lower() == "flightquery":

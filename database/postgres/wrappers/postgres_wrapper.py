@@ -1,7 +1,7 @@
 from database.fillers.data_skeleton import get_flight_dict_example
 from database.postgres.database_manipulation.flight_crud import PostgresFlightCrud
 from database.postgres.database_manipulation.query_crud import PostgresQueryCrud
-from database.postgres.database_manipulation.table_creation import PostgresTableCreation
+from database.postgres.database_manipulation.db_creation.table_creation import PostgresTableCreation
 from database.postgres.runners.postgres_database_runner import PostgresRunner
 
 

@@ -1,7 +1,7 @@
 from typing import Any
 
 from database.fillers.data_skeleton import get_rio_example
-from database.postgres.database_manipulation.sql_lines_generator import get_sql_line_create
+from database.postgres.database_manipulation.db_creation.sql_lines_generator import get_sql_line_create
 from database.postgres.runners.postgres_database_runner import PostgresRunner
 
 

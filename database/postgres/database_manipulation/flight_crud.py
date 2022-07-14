@@ -1,5 +1,5 @@
 from database.fillers.data_skeleton import get_flight_dict_example
-from database.postgres.database_manipulation.sql_lines_generator import generate_sql_update_line, \
+from database.postgres.database_manipulation.db_creation.sql_lines_generator import generate_sql_update_line, \
     get_sql_line_create
 from database.postgres.runners.postgres_database_runner import PostgresRunner
 
