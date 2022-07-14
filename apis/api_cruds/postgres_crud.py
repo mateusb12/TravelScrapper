@@ -2,7 +2,7 @@ from typing import Union, Any
 
 import pandas as pd
 
-from database.fillers.data_skeleton import get_flight_dict_example
+from database.fillers.data_skeleton import jsonify_flight_data
 from database.postgres.wrappers.postgres_wrapper import PostgresWrapper
 
 runner = PostgresWrapper()
@@ -15,16 +15,6 @@ def insert_tag(input_dict: dict, input_tag: str):
 def jsonify_flight_query(input_tuple: tuple) -> dict:
     return {"fly_from": input_tuple[1], "fly_to": input_tuple[2], "date_from": input_tuple[3],
             "date_to": input_tuple[4], "query_limit": input_tuple[5], "query_name": input_tuple[6]}
-
-
-def jsonify_flight_data(input_tuple: tuple) -> dict:
-    return {"id": input_tuple[0], "price": input_tuple[1], "quality": input_tuple[2],
-            "city_from": input_tuple[3], "city_to": input_tuple[4], "departure": input_tuple[5],
-            "arrival": input_tuple[6], "dateDeparture": input_tuple[7], "dateArrival": input_tuple[8],
-            "flightDuration": input_tuple[9], "directFlight": input_tuple[10], "flightDurationSeconds": input_tuple[11],
-            "longLayover": input_tuple[12], "seatsAvailable": input_tuple[13], "connection_1": input_tuple[14],
-            "connection_2": input_tuple[15], "connection_3": input_tuple[16], "link": input_tuple[17],
-            "flight_tag": input_tuple[18]}
 
 
 def get_flight_query(tag: str) -> Union[bool, dict]:
@@ -77,13 +67,14 @@ def postgres_list_all_flights() -> dict:
 
 def postgres_get_flight_keys() -> list[str]:
     keys = runner.flight_handler.get_keys()
-    keys.insert(0, "id")
+    if "id" not in keys:
+        keys.insert(0, "id")
     return keys
 
 
 def postgres_get_all_flights_df() -> pd.DataFrame:
     flight_data = postgres_list_all_flights()
-    flight_tuples = [value.values() for value in flight_data.values()]
+    flight_tuples = [list(value.values()) for value in flight_data.values()]
     flight_keys = postgres_get_flight_keys()
     return pd.DataFrame(flight_tuples, columns=flight_keys)
 

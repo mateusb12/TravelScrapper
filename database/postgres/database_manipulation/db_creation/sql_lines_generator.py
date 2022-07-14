@@ -7,6 +7,8 @@ def generate_sql_update_line(input_values: dict, table_name: str) -> str:
 
 def get_sql_line_create(dict_example: dict, values: tuple, table_name: str) -> str:
     columns = list(dict_example.keys())
+    if "id" in columns:
+        columns.remove("id")
     column_str = "".join(f"{item}, " for item in columns)[:-2]
     header = f"insert into {table_name} ({column_str}) values ("
     for value in values:

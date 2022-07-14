@@ -1,3 +1,4 @@
+import datetime
 import random
 from datetime import timedelta
 
@@ -71,9 +72,15 @@ def seconds_to_hours_and_minutes(seconds):
     return f"{int(hours):02d}:{int(minutes):02d}"
 
 
+def get_today_date():
+    today = datetime.datetime.now()
+    return f"{today.day:02d}-{today.month:02d}-{today.year:04d}"
+
+
 def __main():
     test = 11400
     print(seconds_to_hours_and_minutes(test))
+    print(get_today_date())
 
 
 if __name__ == "__main__":

@@ -7,6 +7,7 @@ from apis.api_cruds.postgres_crud import postgres_create_query, postgres_read_qu
 from database.query_execution.postgres_query_runner import run_all_postgres_queries
 
 application = Flask(__name__)
+application.config['JSON_SORT_KEYS'] = False
 
 
 @application.route("/")
