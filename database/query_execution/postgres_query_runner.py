@@ -6,6 +6,8 @@ from update_flight_prices.price_monitor import UpdateFlight
 
 def run_all_postgres_queries():
     all_queries = postgres_list_all_queries()[0].values()
+    if not all_queries:
+        return "No queries found", 404
     result_pot = []
     for query in all_queries:
         result = run_query(query)

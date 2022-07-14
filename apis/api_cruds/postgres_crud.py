@@ -2,7 +2,7 @@ from typing import Union, Any
 
 import pandas as pd
 
-from database.fillers.query_examples import get_flight_dict_example
+from database.fillers.data_skeleton import get_flight_dict_example
 from database.postgres.wrappers.postgres_wrapper import PostgresWrapper
 
 runner = PostgresWrapper()
@@ -81,7 +81,7 @@ def postgres_get_flight_keys() -> list[str]:
     return keys
 
 
-def postgres_get_flight_df() -> pd.DataFrame:
+def postgres_get_all_flights_df() -> pd.DataFrame:
     flight_data = postgres_list_all_flights()
     flight_tuples = [value.values() for value in flight_data.values()]
     flight_keys = postgres_get_flight_keys()
@@ -107,3 +107,12 @@ def postgres_delete_flight(flight_tag: str):
 def postgres_refresh_db() -> tuple[str, int]:
     runner.refresh_db()
     return "Database refreshed successfully", 200
+
+
+def __main():
+    all_flights = postgres_get_all_flights_df()
+    print(all_flights)
+
+
+if __name__ == "__main__":
+    __main()

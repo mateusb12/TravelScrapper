@@ -1,4 +1,4 @@
-from database.fillers.query_examples import get_flight_dict_example
+from database.fillers.data_skeleton import get_flight_dict_example
 from database.postgres.database_manipulation.flight_crud import PostgresFlightCrud
 from database.postgres.database_manipulation.query_crud import PostgresQueryCrud
 from database.postgres.database_manipulation.table_creation import PostgresTableCreation

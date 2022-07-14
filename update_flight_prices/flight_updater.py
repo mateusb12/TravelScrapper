@@ -3,8 +3,8 @@ import dataclasses
 from termcolor import colored
 import pandas as pd
 
-from apis.api_cruds.postgres_crud import postgres_get_flight_df, postgres_create_flight, postgres_update_flight
-from database.fillers.query_examples import get_flight_dict_example
+from apis.api_cruds.postgres_crud import postgres_get_all_flights_df, postgres_create_flight, postgres_update_flight
+from database.fillers.data_skeleton import get_flight_dict_example
 from travel_analysis.dict_filler import flight_dict_filler
 from travel_analysis.flight import get_flight_object_example, Flight
 
@@ -33,7 +33,7 @@ class FlightUpdater:
         self.refresh_cheapest()
 
     def get_df_from_postgres(self) -> pd.DataFrame:
-        output_df = postgres_get_flight_df()
+        output_df = postgres_get_all_flights_df()
         if output_df.empty:
             return self.append_filler_flight(output_df)
         return output_df
