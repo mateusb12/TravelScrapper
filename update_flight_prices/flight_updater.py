@@ -5,6 +5,7 @@ import pandas as pd
 
 from apis.api_cruds.postgres_crud import postgres_get_all_flights_df, postgres_create_flight, postgres_update_flight
 from database.fillers.data_skeleton import get_flight_dict_example, convert_flight_to_dict
+from database.fillers.time_manipulations import get_today_date
 from travel_analysis.dict_filler import flight_dict_filler
 from travel_analysis.flight import get_flight_object_example, Flight
 
@@ -51,8 +52,12 @@ class FlightUpdater:
         self.existing_flight = self.query_existing_flight(input_flight)
         if self.existing_flight:
             old_flight = self.query.iloc[0]
+            old_flight_query_date = old_flight["queryDate"]
             old_price = old_flight.price
-            self.update_existing_flight(old_flight, input_flight)
+            today = get_today_date()
+            if old_flight_query_date != today:
+                self.insert_new_flight(old_flight, input_flight)
+            # self.update_existing_flight(old_flight, input_flight)
         else:
             old_flight = self.cheapest_flight
             old_price = self.cheapest_price
@@ -116,7 +121,19 @@ class FlightUpdater:
         This method checks if a flight already exists in the dataset.
         """
         link = input_flight.link
-        self.query = self.df[self.df['link'] == link]
+        new_flight_row = convert_flight_to_dict(input_flight)
+        new_price = new_flight_row["price"]
+        new_departure = new_flight_row["departure"]
+        new_arrival = new_flight_row["arrival"]
+        new_date_departure = new_flight_row["dateDeparture"]
+        new_date_arrival = new_flight_row["dateArrival"]
+        self.query = self.df[
+            (self.df['price'] == new_price) &
+            (self.df['departure'] == new_departure) &
+            (self.df['arrival'] == new_arrival) &
+            (self.df['dateDeparture'] == new_date_departure) &
+            (self.df['dateArrival'] == new_date_arrival)
+            ]
         return len(self.query) > 0
 
     def get_cheapest_flight(self):

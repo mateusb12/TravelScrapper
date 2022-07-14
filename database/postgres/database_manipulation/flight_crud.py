@@ -45,6 +45,8 @@ class PostgresFlightCrud:
         if self.existing_flight(flight_dict):
             return False
         dict_example = get_flight_dict_example()
+        if "id" in flight_dict:
+            del flight_dict["id"]
         values = tuple(flight_dict.values())
         table_name = self.table_name
         full_sql = get_sql_line_create(dict_example, values, table_name)

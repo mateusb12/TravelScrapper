@@ -9,8 +9,9 @@ def run_all_postgres_queries():
     if not all_queries:
         return "No queries found", 404
     result_pot = []
+    ufd = UpdateFlight()
     for query in all_queries:
-        result = run_query(query)
+        result = run_query(ufd, query)
         result_pot.append(result)
     if new_cheapest := [item for item in result_pot if item[1] == 200]:
         return new_cheapest[0]
@@ -18,11 +19,11 @@ def run_all_postgres_queries():
         return "No new cheapest flight found!", 206
 
 
-def run_query(query: dict) -> tuple[str, int]:
+def run_query(flight_updater: UpdateFlight, query: dict) -> tuple[str, int]:
     query_name = query["query_name"]
-    ufd = UpdateFlight(kiwi_dict=query)
+    flight_updater.set_query(query)
     print(colored(f"Updating query {query_name}", "green"))
-    return ufd.update_flight_db()
+    return flight_updater.update_flight_db()
 
 
 def __main():

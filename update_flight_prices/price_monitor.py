@@ -13,18 +13,22 @@ from notifications.telegram_bot.bot import telegram_bot_instance
 
 @dataclass
 class UpdateFlight:
-    kiwi_dict: dict
+    kiwi_dict: dict = None
     tag: str = None
     df: pd.DataFrame = None
+    flight_api_data: list[dict] = None
 
-    def update_flight_db(self) -> tuple[str, int]:
+    def set_query(self, input_kiwi_dict: dict):
+        self.kiwi_dict = input_kiwi_dict
         self.tag = self.kiwi_dict["query_name"]
         api_data = set_kiwi_call(self.kiwi_dict)
-        flight_api_data = api_data['data']
+        self.flight_api_data = api_data['data']
+
+    def update_flight_db(self) -> tuple[str, int]:
         fu = FlightUpdater(query_tag=self.tag)
-        for index, flight_dict in enumerate(flight_api_data, 1):
+        for index, flight_dict in enumerate(self.flight_api_data, 1):
             current = index
-            last = len(flight_api_data)
+            last = len(self.flight_api_data)
             ratio = f"{round(100 * current / last, 2)}%"
             log = f"{current}/{last} ({ratio})"
             print(colored(log, "yellow"))
