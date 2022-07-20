@@ -27,3 +27,32 @@ apis/travel_api/travel_api_launcher.py
 | http://localhost:8080/| list_all_flights | _ | GET
 | http://localhost:8080/ | refresh_db | _ | DELETE
 | http://localhost:8080/ | run_all_queries | _ | POST
+
+#### Create query
+Creates a query that will be run by the run_all_queries function. Example below
+```
+{
+	"fly_from": "FOR",
+	"fly_to": "RIO",
+	"date_from": "01/10/2022",
+	"date_to": "12/12/2022",
+	"query_limit": 5
+}
+```
+
+#### Run all Queries
+This function runs the whole pipeline described above on the current queries (tequilla HTTP request → postgresSQL database operations → telegram notifications) 
+
+#### Refresh DB
+This function recreates the columns and erases all data in the database
+
+# HEROKU
+After testing the endpoints locally, you should
+- Upload the code on Heroku
+- Setup the environment variables on Heroku
+- Install the Heroku Scheduler addon and run the job below every day
+```
+$ python apis/api_execution/self_execution.py
+```
+
+
