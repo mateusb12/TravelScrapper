@@ -1,5 +1,5 @@
 # Travel Scrapper
-Travel scrapper is an algorithm made for automatically checking for new flight prices. makes a HTTP request for Tequilla API (Kiwi) and adds the new flight prices to a PostgresSQL database. Whenever the algorithm sees that a cheaper price arrived on the radar, it sends a telegram message for the user.
+Travel scrapper is an algorithm made for automatically checking for new flight prices. 
 
 **Main pipeline**
 - HTTP request for the Tequilla API is sent (kiwi.com)
