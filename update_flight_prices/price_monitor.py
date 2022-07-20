@@ -6,6 +6,7 @@ from termcolor import colored
 
 from apis.api_consumer.kiwi_api_call import set_kiwi_call
 from database.fillers.data_skeleton import get_rio_example, get_sp_example
+from tokens.token_loader import load_telegram_user_id
 from travel_analysis.flight import Flight
 from update_flight_prices.flight_updater import FlightUpdater
 from notifications.telegram_bot.bot import telegram_bot_instance
@@ -17,6 +18,9 @@ class UpdateFlight:
     tag: str = None
     df: pd.DataFrame = None
     flight_api_data: list[dict] = None
+
+    def __post_init__(self):
+        self.TELEGRAM_USER_ID = load_telegram_user_id()
 
     def set_query(self, input_kiwi_dict: dict):
         self.kiwi_dict = input_kiwi_dict
@@ -38,7 +42,8 @@ class UpdateFlight:
         if cheapest is not None:
             self.df = fu.df
             full_msg = self.setup_bot_msg(cheapest)
-            self.handle_telegram(user_id=405202204, message=full_msg)
+            # self.handle_telegram(user_id=405202204, message=full_msg)
+            self.handle_telegram(user_id=self.TELEGRAM_USER_ID, message=full_msg)
         if cheapest is not None:
             return "New cheapest flight found!", 200
         else:

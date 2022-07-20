@@ -37,6 +37,14 @@ def load_telegram_token() -> str:
         raise TokenErrorException(tag)
 
 
+def load_telegram_user_id() -> int:
+    tag = "TELEGRAM_USER_ID"
+    if tag in os.environ:
+        return int(os.environ[tag])
+    else:
+        raise TokenErrorException(tag)
+
+
 def get_postgres_credentials() -> dict:
     tags = ["POSTGRES_HOST", "POSTGRES_DATABASE", "POSTGRES_USER", "POSTGRES_PASSWORD"]
     for tag in tags:
