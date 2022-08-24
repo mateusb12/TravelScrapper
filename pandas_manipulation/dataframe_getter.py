@@ -17,7 +17,7 @@ def get_recent_flights(destination: str):
     flights = get_flights()
     flights = flights[flights["cityTo"] == destination]
     flights = flights.groupby(["queryDate", "price"]).first().reset_index()
-    flights.sort_values(by=["queryDate"], inplace=True, ascending=[False])
+    flights.sort_values(by=["queryDate"], inplace=True, ascending=True)
     return flights
 
 
@@ -34,7 +34,8 @@ def plot_graph(input_df: pd.DataFrame):
     plt.figure()
     plt.rcParams.update({'font.size': 16})
     ax = input_df.plot(x="formatDate", y="price", kind="line", figsize=(15, 8), fontsize=16)
-    ax.set_xticklabels(map(line_format, input_df["formatDate"]))
+    labels = input_df["formatDate"].apply(line_format)
+    # ax.set_xticklabels(map(line_format, input_df["formatDate"]))
     plt.show()
 
 
