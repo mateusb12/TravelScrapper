@@ -80,7 +80,6 @@ def read_all_flights():
 
 @application.route("/run_all_queries", methods=["POST"])
 def run_all():
-    print(os.environ.keys())
     return run_all_postgres_queries()
 
 

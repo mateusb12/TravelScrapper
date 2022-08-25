@@ -40,8 +40,7 @@ def plot_graph(input_df: pd.DataFrame):
 
 
 def __main():
-    aux = get_recent_flights("Rio de Janeiro")
-    plot_graph(aux)
+    aux = get_flights()
     print("nice")
 
 

@@ -23,8 +23,10 @@ class FlightUpdater:
     query_tag: str = "fortaleza_rio"
     cheapest_price: int = 50000
     cheapest_flight: Flight = None
+    cheapest_pot: list = None
     found_new_cheapest: bool = False
     repeated_flight: bool = False
+    price_tag: int = 0
 
     # cheapest_flights: list = dataclasses.field(default_factory=list)
 
@@ -32,6 +34,7 @@ class FlightUpdater:
         self.df = self.get_df_from_postgres()
         self.trim_df()
         self.refresh_cheapest()
+        self.cheapest_pot = []
 
     def get_df_from_postgres(self) -> pd.DataFrame:
         output_df = postgres_get_all_flights_df()
@@ -73,15 +76,25 @@ class FlightUpdater:
         """
         new_flight_dict = convert_flight_to_dict(input_flight)
         new_flight_dict["flight_tag"] = self.query_tag
+        price_tag = new_flight_dict["less_than"]
+        if price_tag != 0:
+            old_flight.price = price_tag
+            self.price_tag = price_tag
         self.new_flight_comparison(old_flight, input_flight)
         if self.is_new_flight_cheaper:
             self.cheapest_flight = input_flight
             self.cheapest_price = input_flight.price
+            cheapest_dict = {"price": input_flight.price, "details": input_flight}
+            self.cheapest_pot.append(cheapest_dict)
             self.is_new_flight_cheaper = True
             self.found_new_cheapest = True
         postgres_create_flight(new_flight_dict)
 
     def export_new_cheapest(self) -> Flight or None:
+        if self.price_tag != 0:
+            for flight in self.cheapest_pot:
+                flight["details"].price = flight["price"]
+            return self.cheapest_pot[0]["details"]
         return self.cheapest_flight if self.found_new_cheapest else None
 
     def refresh_for_new_flight(self):

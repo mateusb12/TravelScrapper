@@ -32,6 +32,7 @@ class UpdateFlight:
         fu = FlightUpdater(query_tag=self.tag)
         for index, flight_dict in enumerate(self.flight_api_data, 1):
             current = index
+            flight_dict.update(self.kiwi_dict)
             last = len(self.flight_api_data)
             ratio = f"{round(100 * current / last, 2)}%"
             log = f"{current}/{last} ({ratio})"
@@ -42,7 +43,6 @@ class UpdateFlight:
         if cheapest is not None:
             self.df = fu.df
             full_msg = self.setup_bot_msg(cheapest)
-            # self.handle_telegram(user_id=405202204, message=full_msg)
             self.handle_telegram(user_id=self.TELEGRAM_USER_ID, message=full_msg)
         if cheapest is not None:
             return "New cheapest flight found!", 200
