@@ -33,8 +33,9 @@ def load_environment_tokens() -> None:
     env_config = load_env_file()
     env_tags = load_env_tags()
     for tag in env_tags:
-        if tag in env_config:
-            os.environ[tag] = env_config[tag]
+        tag_value = env_config[tag] if tag in env_config else None
+        if tag_value is not None:
+            os.environ[tag] = tag_value
         else:
             raise TokenLoadErrorException(f"Error: could not find {tag} in .env file")
     # os.environ["KIWI_TOKEN"] = env_config["KIWI_TOKEN"]
