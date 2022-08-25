@@ -14,44 +14,35 @@ def insert_tag(input_dict: dict, input_tag: str):
 
 def jsonify_flight_query(input_tuple: tuple) -> dict:
     return {"fly_from": input_tuple[1], "fly_to": input_tuple[2], "date_from": input_tuple[3],
-            "date_to": input_tuple[4], "query_limit": input_tuple[5], "query_name": input_tuple[6]}
+            "date_to": input_tuple[4], "query_limit": input_tuple[5], "less_than": input_tuple[6],
+            "query_name": input_tuple[7]}
 
 
 def get_flight_query(tag: str) -> Union[bool, dict]:
     result = runner.query_handler.flight_query_read(tag)
-    if not result:
-        return False
-    return jsonify_flight_query(result[0])
+    return jsonify_flight_query(result[0]) if result else False
 
 
 def postgres_create_query(dictionary: dict, tag: str) -> tuple[str, int]:
     insert_tag(dictionary, tag)
     result = runner.query_handler.flight_query_create(dictionary)
-    if not result:
-        return f"Query {tag} already exists", 406
-    return f"Query {tag} created successfully", 200
+    return (f"Query {tag} created successfully", 200) if result else (f"Query {tag} already exists", 406)
 
 
 def postgres_read_query(tag: str) -> Union[tuple[str, int], tuple[dict[str, Any], int]]:
     result = get_flight_query(tag)
-    if not result:
-        return f"Query {tag} does not exist", 404
-    return result, 200
+    return (result, 200) if result else (f"Query {tag} does not exist", 404)
 
 
 def postgres_update_query(dictionary: dict, tag: str) -> tuple[str, int]:
     insert_tag(dictionary, tag)
     result = runner.query_handler.flight_query_update(dictionary)
-    if not result:
-        return f"Query {tag} does not exist", 404
-    return f"Query {tag} updated successfully", 200
+    return (f"Query {tag} updated successfully", 200) if result else (f"Query {tag} does not exist", 404)
 
 
 def postgres_delete_query(tag: str) -> tuple[str, int]:
     result = runner.query_handler.flight_query_delete(tag)
-    if not result:
-        return f"Query {tag} does not exist", 404
-    return f"Query {tag} deleted successfully", 200
+    return (f"Query {tag} deleted successfully", 200) if result else (f"Query {tag} does not exist", 404)
 
 
 def postgres_list_all_queries() -> tuple[dict, int]:

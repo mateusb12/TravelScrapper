@@ -11,6 +11,8 @@ def get_sql_line_create(dict_example: dict, values: tuple, table_name: str) -> s
         columns.remove("id")
     column_str = "".join(f"{item}, " for item in columns)[:-2]
     header = f"insert into {table_name} ({column_str}) values ("
+    pot = []
     for value in values:
         header += f"'{value}', " if isinstance(value, str) else f"{value}, "
+        pot.append(f"'{value}', " if isinstance(value, str) else f"{value}, ")
     return f"{header[:-2]});"

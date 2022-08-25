@@ -20,8 +20,7 @@ class PostgresQueryCrud:
         return [self.jsonify_results(item) for item in raw_results]
 
     def existing_query(self, query_dict: dict) -> bool:
-        input_query_name: str = str(query_dict["query_name"])
-        input_query_name = input_query_name.lower()
+        input_query_name: str = str(query_dict["query_name"]).lower()
         all_queries = self.list_all_queries()
         if not all_queries:
             return False
@@ -36,14 +35,6 @@ class PostgresQueryCrud:
     @staticmethod
     def get_query_example() -> dict:
         return get_rio_example()
-
-    # def get_sql_line_create(self, values: tuple):
-    #     columns = list(self.get_query_example().keys())
-    #     column_str = "".join(f"{item}, " for item in columns)[:-2]
-    #     header = f"insert into {self.table_name} ({column_str}) values ("
-    #     for value in values:
-    #         header += f"'{value}', " if isinstance(value, str) else f"{value}, "
-    #     return f"{header[:-2]});"
 
     def flight_query_create(self, query_dict: dict) -> bool:
         if self.existing_query(query_dict):
@@ -70,7 +61,8 @@ class PostgresQueryCrud:
         sql = f"update {self.table_name} " \
               f"set fly_from='{query_dict['fly_from']}', fly_to='{query_dict['fly_to']}', " \
               f"date_from='{query_dict['date_from']}', date_to='{query_dict['date_to']}'," \
-              f"query_limit={query_dict['query_limit']} WHERE query_name='{query_name}'"
+              f"query_limit={query_dict['query_limit']}, less_than='{query_dict['less_than']}'" \
+              f" WHERE query_name='{query_name}'"
         self.db.run_sql_query(sql)
         return True
 

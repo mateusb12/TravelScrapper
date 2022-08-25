@@ -38,6 +38,7 @@ class Flight:
         self.flight_numbers = [route['flight_no'] for route in self.routes]
         self.identifier = f"{self.flight_from}_{self.flight_to}"
         self.fill_connection_times()
+        self.less_than = input_flight_data['less_than']
 
     def calculate_connection_time(self) -> list[timedelta]:
         # sourcery skip: for-append-to-extend, inline-immediately-returned-variable, list-comprehension

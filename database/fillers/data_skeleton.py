@@ -3,12 +3,14 @@ from travel_analysis.flight import Flight
 
 
 def get_rio_example() -> dict:
-    return {"fly_from": "FOR", "fly_to": "RIO", "date_from": "01/10/2022", "date_to": "12/12/2022", "query_limit": 5,
+    return {"fly_from": "FOR", "fly_to": "RIO", "date_from": "01/10/2022", "date_to": "12/12/2022",
+            "query_limit": 5, "less_than": 120,
             "query_name": "fortaleza_rio"}
 
 
 def get_sp_example() -> dict:
-    return {"fly_from": "FOR", "fly_to": "SAO", "date_from": "01/07/2022", "date_to": "30/07/2022", "query_limit": 5,
+    return {"fly_from": "FOR", "fly_to": "SAO", "date_from": "01/07/2022", "date_to": "30/07/2022",
+            "query_limit": 5, "less_than": 120,
             "query_name": "fortaleza_sp"}
 
 
@@ -27,6 +29,7 @@ def get_flight_dict_example():
             'connection_2': '00:00',
             'connection_3': '00:00',
             'link': 'https://www.google.com',
+            'less_than': 120,
             'flight_tag': 'fortaleza_rio'}
 
 
@@ -45,7 +48,9 @@ def get_flight_table_format():
             'connection_2': 'varchar(20)',
             'connection_3': 'varchar(20)',
             'link': 'varchar(1000)',
-            'flight_tag': 'varchar(20)'}
+            'less_than': 'INT',
+            'flight_tag': 'varchar(20)',
+            }
 
 
 def convert_flight_to_dict(input_flight: Flight) -> dict:
@@ -61,7 +66,8 @@ def convert_flight_to_dict(input_flight: Flight) -> dict:
             "connection_1": timedelta_format(input_flight.connection_times[0]),
             "connection_2": timedelta_format(input_flight.connection_times[1]),
             "connection_3": timedelta_format(input_flight.connection_times[2]),
-            "link": input_flight.link}
+            "link": input_flight.link,
+            "less_than": input_flight.less_than}
 
 
 def jsonify_flight_data(input_tuple: tuple) -> dict:
@@ -73,10 +79,10 @@ def jsonify_flight_data(input_tuple: tuple) -> dict:
             "flightDuration": input_tuple[10], "directFlight": input_tuple[11], "flightDurationSeconds": input_tuple[12],
             "longLayover": input_tuple[13], "seatsAvailable": input_tuple[14], "connection_1": input_tuple[15],
             "connection_2": input_tuple[16], "connection_3": input_tuple[17], "link": input_tuple[18],
-            "flight_tag": input_tuple[19]}
+            "less_than": input_tuple[19], "flight_tag": input_tuple[20]}
 
 
 def get_flight_query_format():
     return {'id': 'serial primary key', 'fly_from': 'varchar(20)', 'fly_to': 'varchar(20)',
             'date_from': 'varchar(20)', 'date_to': 'varchar(20)', 'query_limit': 'INT',
-            'query_name': 'varchar(20)'}
+            'less_than': 'INT', 'query_name': 'varchar(20)'}
