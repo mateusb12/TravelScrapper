@@ -46,6 +46,14 @@ def get_tokens_reference():
     return get_main_folder_reference() / "tokens"
 
 
+def get_webscrapping_reference():
+    return get_main_folder_reference() / "webscrapping"
+
+
+def geckodriver_reference():
+    return get_webscrapping_reference() / "geckodriver.exe"
+
+
 if __name__ == "__main__":
     aux = get_travel_analysis_path()
     print(aux)
