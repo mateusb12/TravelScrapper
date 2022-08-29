@@ -1,3 +1,5 @@
+import json
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -11,14 +13,30 @@ from webscrapping.date_tools import strip_date
 class SkyscannerScrapper:
     def __init__(self):
         self.firefox = BaseScrapper()
-        self.firefox.load_website("https://www.skyscanner.com.br/")
+        self.links = json.load(open("skyscanner_links.json", "r"))["links"]
+        self.full_pipeline()
+
+    def full_pipeline(self):
+        prices = {date: 0 for date in self.links.keys()}
+        for date, link in self.links.items():
+            prices[date] = self.get_prices(link)
+            self.firefox.restart_driver()
+        return 0
+
+    def get_prices(self, link: str) -> int:
+        self.firefox.load_website(link)
+        wait = WebDriverWait(self.firefox.driver, 10)
+        prices = [price.text for price in
+                  wait.until(expected_conditions.presence_of_all_elements_located((By.CLASS_NAME, "price")))]
+        min_price = min(prices)
+        return int(min_price.split(" ")[1].replace(".", ""))
 
     def query_ticket(self):
         self.input_destination("Rio de Janeiro")
         self.input_origin_date("18/10/2022", direction="depart")
         self.input_origin_date("25/10/2022", direction="return")
+        self.firefox.driver.implicitly_wait(2)
         self.search()
-        return 0
 
     def input_destination(self, origin_name: str):
         destination_box_xpath = "//input[@id='fsc-destination-search']"
@@ -58,7 +76,7 @@ class SkyscannerScrapper:
 
 def __main():
     ss = SkyscannerScrapper()
-    ss.query_ticket()
+    return 0
 
 
 if __name__ == "__main__":
