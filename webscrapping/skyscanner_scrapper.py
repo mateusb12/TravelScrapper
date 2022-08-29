@@ -17,6 +17,7 @@ class SkyscannerScrapper:
         self.input_destination("Rio de Janeiro")
         self.input_origin_date("18/10/2022", direction="depart")
         self.input_origin_date("25/10/2022", direction="return")
+        self.search()
         return 0
 
     def input_destination(self, origin_name: str):
@@ -46,6 +47,13 @@ class SkyscannerScrapper:
         rows_dict = {int(item.text): item for item in day_table.find_elements(by="tag name", value="td")}
         desired_day = rows_dict[int(day)]
         desired_day.click()
+
+    def search(self):
+        search_button_xpath = "//button[@class='BpkButtonBase_bpk-button__NTM4Y " \
+                              "BpkButtonBase_bpk-button--large__ZWQyM App_submit-button__NGFhZ " \
+                              "App_submit-button-oneline__MmU3N']"
+        search_button = self.firefox.driver.find_element(by="xpath", value=search_button_xpath)
+        search_button.click()
 
 
 def __main():
