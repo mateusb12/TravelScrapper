@@ -25,7 +25,7 @@ def kiwi_call_example() -> dict:
 
 
 def kiwi_call_sp_example() -> dict:
-    return kiwi_call(fly_from="FOR", fly_to="SAO", date_from="01/10/2022", date_to="12/12/2022", limit=500)
+    return kiwi_call(fly_from="FOR", fly_to="SAO", date_from="01/01/2023", date_to="01/03/2023", limit=500)
 
 
 def set_kiwi_call(config: dict) -> dict:
