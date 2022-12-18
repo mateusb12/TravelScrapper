@@ -21,7 +21,7 @@ def kiwi_call(**kwargs) -> dict:
 
 
 def kiwi_call_example() -> dict:
-    return kiwi_call(fly_from="FOR", fly_to="RIO", date_from="01/10/2022", date_to="12/12/2022", limit=500)
+    return kiwi_call(fly_from="FOR", fly_to="RIO", date_from="01/01/2023", date_to="01/03/2023", limit=500)
 
 
 def kiwi_call_sp_example() -> dict:
@@ -37,8 +37,10 @@ def set_kiwi_call(config: dict) -> dict:
     return kiwi_call(fly_from=fly_from, fly_to=fly_to, date_from=date_from, date_to=date_to, limit=limit)
 
 
-if __name__ == "__main__":
+def __main():
     call = kiwi_call_example()
-    print("done!")
-    # p = Path("api_consumer/kiwi_api_token.txt")
-    # print("oi")
+    return
+
+
+if __name__ == "__main__":
+    __main()
