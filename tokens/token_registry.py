@@ -32,8 +32,8 @@ def load_env_tags():
 def load_environment_tokens() -> None:
     env_config = load_env_file()
     env_tags = load_env_tags()
-    for tag in env_tags:
-        tag_value = env_config[tag] if tag in env_config else None
+    for tag in env_config:
+        tag_value = env_config[tag]
         if tag_value is not None:
             os.environ[tag] = tag_value
         else:
