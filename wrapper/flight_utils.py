@@ -28,7 +28,10 @@ def analyze_layover_durations(flights: List[Tuple[Dict[str, str], Dict[str, str]
 
 def beautify_date(date_string: str):
     # Parse the date string and create a datetime object
-    dt = datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%S.%fZ')
+    try:
+        dt = datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%S.%fZ')
+    except ValueError as e:
+        raise ValueError('Invalid date string format') from e
     day, month, year, hour, minute = dt.day, dt.month, dt.year, dt.hour, dt.minute
     month_names = {1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 7: 'July', 8: 'August',
                    9: 'September', 10: 'October', 11: 'November', 12: 'December'}
@@ -51,3 +54,13 @@ def beautify_date(date_string: str):
         am_pm = 'PM'
 
     return f"{day}{suffix} {month_names[month]} {year} at {hour:02d}:{minute:02d} {am_pm}"
+
+
+def __main():
+    date = "2023-02-12T02:40:00.000"
+    aux = beautify_date(date)
+    return
+
+
+if __name__ == "__main__":
+    __main()

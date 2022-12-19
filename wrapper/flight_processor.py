@@ -36,7 +36,9 @@ class FlightProcessor:
                 flight_times.append(flight_tuple)
             flight_durations = analyze_layover_durations(flight_times)
             flight_dict["layoverDurations"] = flight_durations
-            flight_dict["departureTime"] = beautify_date(flight_dict["departureTime"])
+            flight_dict["departureFormattedDateAndTime"] = beautify_date(flight_dict["departureTime"])
+            flight_dict["arrivalFormattedDateAndTime"] = beautify_date(flight_dict["arrivalTime"])
+            flight_dict = dict(sorted(flight_dict.items()))
             self.flights.append(flight_dict)
 
 
