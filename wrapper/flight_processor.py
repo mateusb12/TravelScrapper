@@ -39,6 +39,7 @@ class FlightProcessor:
             flight_dict["departureFormattedDateAndTime"] = beautify_date(flight_dict["departureTime"])
             flight_dict["arrivalFormattedDateAndTime"] = beautify_date(flight_dict["arrivalTime"])
             flight_dict = dict(sorted(flight_dict.items()))
+            del flight_dict["_route"]
             self.flights.append(flight_dict)
 
 
