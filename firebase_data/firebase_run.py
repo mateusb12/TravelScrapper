@@ -29,6 +29,8 @@ class FirebaseApp:
         self.db = firebase.database()
         self.auth = firebase.auth()
         self.user = self.__authenticate_using_email_and_password()
+        self.token = self.user["idToken"]
+        self.all_entries = self.get_all_flights().val()
 
     def __authenticate_using_email_and_password(self) -> dict:
         email = "user@example.com"
@@ -36,13 +38,31 @@ class FirebaseApp:
         return self.auth.sign_in_with_email_and_password(email, password)
 
     def add_entry(self, input_dict: dict):
-        token = self.user["idToken"]
-        self.db.child('/random_data').set({'key': 'value'}, token=token)
+        self.db.child('/flight_data').push(input_dict, token=self.token)
+
+    def get_all_flights(self):
+        return self.db.child('/flight_data').get(token=self.token)
+
+    def get_entry_by_key(self, desired_key: str) -> dict:  # sourcery skip: use-next
+        for unique_id, content in self.all_entries.items():
+            for key, value in content.items():
+                if key == desired_key:
+                    return value
+        return {}
+
+    def get_entry_by_unique_id(self, unique_id: str) -> dict:
+        return self.all_entries[unique_id]
+
+    def delete_entry_by_unique_id(self, unique_id: str):
+        self.db.child('/flight_data').child(unique_id).remove(token=self.token)
 
 
 def __main():
     fba = FirebaseApp()
-    fba.add_entry({"key1": "value1", "key2": "value2"})
+    data = get_flight_data_example()
+    single_data = data[0]
+    fba.add_entry(single_data)
+    # fba.get_entry("flight_data")
     return
 
 

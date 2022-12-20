@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from typing import List, Tuple, Dict
 
 
-def analyze_layover_durations(flights: List[Tuple[Dict[str, str], Dict[str, str]]]) -> List[timedelta]:
+def analyze_layover_durations(flights: List[Tuple[Dict[str, str], Dict[str, str]]]) -> List[str]:
     waiting_times = []
     time_format = '%Y-%m-%dT%H:%M:%S.%fZ'
     for index, flight in enumerate(flights):
@@ -23,7 +23,18 @@ def analyze_layover_durations(flights: List[Tuple[Dict[str, str], Dict[str, str]
             current_arrival += timedelta(days=1)
             waiting_time = next_departure - current_arrival
         waiting_times.append(waiting_time)
-    return waiting_times
+    return convert_timedelta_list_to_beautiful_string(waiting_times)
+
+
+def convert_timedelta_list_to_beautiful_string(timedelta_list: list[timedelta]):
+    formatted_list = []
+
+    for td in timedelta_list:
+        total_seconds = td.total_seconds()
+        hours, remainder = divmod(total_seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        formatted_list.append(f"{int(hours)} hours {int(minutes)} min")
+    return formatted_list
 
 
 def beautify_date(date_string: str):

@@ -3,7 +3,7 @@ from typing import List, Tuple, Dict
 from apis.api_consumer.kiwi_api_call import kiwi_call_example
 from datetime import datetime, timedelta
 
-from wrapper.flight_utils import analyze_layover_durations, beautify_date
+from wrapper.flight_utils import analyze_layover_durations, beautify_date, convert_timedelta_list_to_beautiful_string
 
 
 class FlightProcessor:
@@ -41,6 +41,12 @@ class FlightProcessor:
             flight_dict = dict(sorted(flight_dict.items()))
             del flight_dict["_route"]
             self.flights.append(flight_dict)
+
+
+def get_flight_data_example() -> list[dict]:
+    api_data = kiwi_call_example()
+    fp = FlightProcessor(api_data)
+    return fp.flights
 
 
 def __main():
