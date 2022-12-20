@@ -1,2 +1,3 @@
 /tokens/.env
 /.idea/
+/firebase_data/service_account_key.json
