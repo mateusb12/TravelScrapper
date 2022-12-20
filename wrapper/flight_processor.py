@@ -32,12 +32,17 @@ class FlightProcessor:
             flight_times = []
             for item in flight["route"]:
                 flight_tuple = {"type": "departure", "time": item["local_departure"]}, \
-                    {"type": "arrival", "time": item["local_arrival"]}
+                        {"type": "arrival", "time": item["local_arrival"]}
                 flight_times.append(flight_tuple)
             flight_durations = analyze_layover_durations(flight_times)
             flight_dict["layoverDurations"] = flight_durations
             flight_dict["departureFormattedDateAndTime"] = beautify_date(flight_dict["departureTime"])
             flight_dict["arrivalFormattedDateAndTime"] = beautify_date(flight_dict["arrivalTime"])
+            adjusted_luggage = [
+                f"{key} luggage costs {value}"
+                for key, value in flight_dict["luggagePrice"].items()
+            ]
+            flight_dict["luggagePrice"] = adjusted_luggage
             flight_dict = dict(sorted(flight_dict.items()))
             del flight_dict["_route"]
             self.flights.append(flight_dict)

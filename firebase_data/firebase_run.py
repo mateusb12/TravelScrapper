@@ -27,6 +27,7 @@ class FirebaseApp:
             "credential": service_account_key
         }
         firebase = pyrebase.initialize_app(config)
+        self.firebase_folder = "flight_data"
         self.db = firebase.database()
         self.auth = firebase.auth()
         self.user = self.__authenticate_using_email_and_password()
@@ -39,9 +40,12 @@ class FirebaseApp:
         return self.auth.sign_in_with_email_and_password(email, password)
 
     def add_entry(self, input_dict: dict):
-        self.db.child('/flight_data').push(input_dict, token=self.token)
+        self.db.child(f'/{self.firebase_folder}').push(input_dict, token=self.token)
 
-    def check_existing_flight(self, input_dict: dict) -> bool:  # sourcery skip: use-any, use-next
+    def check_existing_flight(self, input_dict: dict) -> bool:
+        # sourcery skip: use-any, use-next
+        if not self.all_entries:
+            return False
         for unique_id, content in self.all_entries.items():
             if content == input_dict:
                 return True
@@ -51,7 +55,7 @@ class FirebaseApp:
         return unique_id in self.all_entries
 
     def get_all_flights(self):
-        return self.db.child('/flight_data').get(token=self.token)
+        return self.db.child(f'/{self.firebase_folder}').get(token=self.token)
 
     def get_entry_by_key(self, desired_key: str) -> dict:  # sourcery skip: use-next
         for unique_id, content in self.all_entries.items():
@@ -63,15 +67,54 @@ class FirebaseApp:
     def get_entry_by_unique_id(self, unique_id: str) -> dict:
         return self.all_entries[unique_id]
 
+    def get_unique_id_by_entry(self, entry: dict) -> str:
+        # sourcery skip: use-next
+        for unique_id, content in self.all_entries.items():
+            different_values = [item for item in content.items() if item not in entry.items()]
+            if not different_values:
+                return unique_id
+        return ""
+
     def delete_entry_by_unique_id(self, unique_id: str):
-        self.db.child('/flight_data').child(unique_id).remove(token=self.token)
+        self.db.child(f'/{self.firebase_folder}').child(unique_id).remove(token=self.token)
+
+    def update_entry_by_unique_id(self, unique_id: str, new_info: dict):
+        self.db.child(f'/{self.firebase_folder}').child(unique_id).update(new_info, token=self.token)
+
+    def get_all_firebase_folders(self):
+        try:
+            return self.db.child("/").get(token=self.token).val().keys()
+        except AttributeError:
+            self.create_dummy_test_folder()
+            return self.db.child("/").get(token=self.token).val().keys()
+
+    def create_dummy_test_folder(self):
+        self.db.child('/tests').push("test", token=self.token)
+
+    def delete_all_entries(self):
+        all_folders = self.get_all_firebase_folders()
+        desired_folder = self.firebase_folder.replace("/", "")
+        if desired_folder not in all_folders:
+            return
+        self.db.child(f'/{self.firebase_folder}').remove(token=self.token)
+
+    def set_firebase_folder(self, new_location: str):
+        self.firebase_folder = new_location
+
+    def delete_firebase_folder(self, folder_name: str):
+        all_folders = self.get_all_firebase_folders()
+        desired_folder = folder_name.replace("/", "")
+        if desired_folder not in all_folders:
+            return
+        self.db.child(f'/{folder_name}').remove(token=self.token)
+
+    def refresh_all_entries(self):
+        self.all_entries = self.get_all_flights().val()
 
 
 def __main():
     fba = FirebaseApp()
-    data = get_flight_data_example()
-    single_data = data[0]
-    fba.add_entry(single_data)
+    fba.delete_all_entries()
     # fba.get_entry("flight_data")
     return
 
