@@ -15,15 +15,17 @@ class FirebaseCrud:
         return {"output": "success", "outputDetails": "Flight created"}
 
     def read_flight(self, flight_unique_id: str) -> dict:
+        # sourcery skip: use-named-expression
+        existing_flight = self.firebase_app.check_existing_unique_id(flight_unique_id)
         return (
-            self.firebase_app.get_entry_by_unique_id(flight_unique_id)
-            if self.firebase_app.check_existing_unique_id(flight_unique_id)
-            else {"error": "Flight not found"}
+            (self.firebase_app.get_entry_by_unique_id(flight_unique_id))
+            if existing_flight
+            else {"output": "error", "outputDetails": "Flight already exists"}
         )
 
     def update_flight(self, flight_unique_id: str, new_flight_data: dict) -> dict:
         if not self.firebase_app.check_existing_unique_id(flight_unique_id):
-            return {"output": "success", "outputDetails": f"Could not update [{flight_unique_id}]. Flight not found"}
+            return {"output": "error", "outputDetails": f"Could not update [{flight_unique_id}]. Flight not found"}
         current_flight = self.firebase_app.get_entry_by_unique_id(flight_unique_id)
         for key, value in new_flight_data.items():
             current_flight[key] = value

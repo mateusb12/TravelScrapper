@@ -52,6 +52,9 @@ class FirebaseApp:
         return False
 
     def check_existing_unique_id(self, unique_id: str) -> bool:
+        # sourcery skip: assign-if-exp, reintroduce-else
+        if self.all_entries is None:
+            return False
         return unique_id in self.all_entries
 
     def get_all_flights(self):

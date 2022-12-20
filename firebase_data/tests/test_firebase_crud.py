@@ -66,6 +66,7 @@ def test_firebase_update_flight(get_flight_data, get_firebase_crud_instance):
     assert not different_values
 
 
+@pytest.mark.run(order=4)
 def test_firebase_delete_flight(get_firebase_crud_instance):
     """This test uses the delete_flight method to delete the flight and verify that the flight was deleted."""
     firebase_crud = get_firebase_crud_instance
@@ -82,28 +83,28 @@ def test_firebase_delete_flight(get_firebase_crud_instance):
     assert flight_unique_id not in all_flights.keys()
 
 
-#
-# def test_firebase_create_invalid_flight(get_firebase_crud_instance):
-#     """This test passes invalid data to the create_flight method and verify that an error is raised."""
-#     return
-#
-#
-# def test_firebase_read_flight_not_found(get_firebase_crud_instance, flight_unique_id: str):
-#     """This test uses the read_flight method to retrieve a flight that does not exist and verify that
-#      an error is raised."""
-#     return
-#
-#
-# def test_firebase_update_flight_not_found(get_firebase_crud_instance, flight_unique_id: str, new_flight_data: dict):
-#     """This test uses the update_flight method to update a flight that does not exist and verify that
-#      an error is raised."""
-#     return
-#
-#
-# def test_firebase_delete_flight_not_found(get_firebase_crud_instance, flight_unique_id: str):
-#     """This test uses the delete_flight method to delete a flight that does not exist and verify that
-#      an error is raised."""
-#     return
+def test_firebase_read_flight_not_found(get_firebase_crud_instance):
+    """This test uses the read_flight method to retrieve a flight that does not exist and verify that
+     an error is raised."""
+    firebase_crud = get_firebase_crud_instance
+    result = firebase_crud.read_flight("abc")
+    assert result["output"] == "error"
+
+
+def test_firebase_update_flight_not_found(get_firebase_crud_instance):
+    """This test uses the update_flight method to update a flight that does not exist and verify that
+     an error is raised."""
+    firebase_crud = get_firebase_crud_instance
+    update_result = firebase_crud.update_flight("abc", {"flight": "data"})
+    assert update_result["output"] == "error"
+
+
+def test_firebase_delete_flight_not_found(get_firebase_crud_instance):
+    """This test uses the delete_flight method to delete a flight that does not exist and verify that
+     an error is raised."""
+    firebase_crud = get_firebase_crud_instance
+    delete_result = firebase_crud.delete_flight("abc")
+    assert delete_result["output"] == "error"
 
 
 def __main():
