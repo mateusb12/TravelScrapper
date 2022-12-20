@@ -62,6 +62,7 @@ def get_service_account_json_reference():
     return get_firebase_folder() / "service_account_key.json"
 
 
+
 if __name__ == "__main__":
     aux = get_travel_analysis_path()
     print(aux)

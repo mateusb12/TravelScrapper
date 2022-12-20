@@ -6,8 +6,8 @@ import pandas as pd
 from apis.api_cruds.postgres_crud import postgres_get_all_flights_df, postgres_create_flight, postgres_update_flight
 from deprecated.database.fillers.data_skeleton import get_flight_dict_example, convert_flight_to_dict
 from deprecated.database import get_today_date
-from travel_analysis.dict_filler import flight_dict_filler
-from travel_analysis.flight import get_flight_object_example, Flight
+from deprecated.travel_analysis import flight_dict_filler
+from deprecated.travel_analysis.flight import get_flight_object_example, Flight
 
 
 @dataclasses.dataclass

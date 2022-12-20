@@ -57,6 +57,7 @@ def get_flight_data_example() -> list[dict]:
 def __main():
     flight_data = kiwi_call_example()
     fp = FlightProcessor(flight_data)
+    flight = fp.flights[0]
     return
 
 

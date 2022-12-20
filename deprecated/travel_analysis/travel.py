@@ -1,7 +1,7 @@
 from typing import List
 
 from apis.api_consumer import kiwi_call_example
-from travel_analysis.flight import Flight
+from deprecated.travel_analysis.flight import Flight
 
 import pandas as pd
 

@@ -1,4 +1,4 @@
-from travel_analysis.flight import get_flight_object_example
+from deprecated.travel_analysis.flight import get_flight_object_example
 
 
 def flight_dict_filler(flight_dict: dict) -> None:

@@ -1,5 +1,5 @@
 from deprecated.database.fillers.time_manipulations import timedelta_format, get_today_date
-from travel_analysis.flight import Flight
+from deprecated.travel_analysis.flight import Flight
 
 
 def get_rio_example() -> dict:
