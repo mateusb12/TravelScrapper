@@ -41,6 +41,15 @@ class FirebaseApp:
     def add_entry(self, input_dict: dict):
         self.db.child('/flight_data').push(input_dict, token=self.token)
 
+    def check_existing_flight(self, input_dict: dict) -> bool:  # sourcery skip: use-any, use-next
+        for unique_id, content in self.all_entries.items():
+            if content == input_dict:
+                return True
+        return False
+
+    def check_existing_unique_id(self, unique_id: str) -> bool:
+        return unique_id in self.all_entries
+
     def get_all_flights(self):
         return self.db.child('/flight_data').get(token=self.token)
 
