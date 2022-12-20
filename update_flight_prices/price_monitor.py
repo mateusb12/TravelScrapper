@@ -5,7 +5,7 @@ import pandas as pd
 from termcolor import colored
 
 from apis.api_consumer.kiwi_api_call import set_kiwi_call
-from database.fillers.data_skeleton import get_rio_example, get_sp_example
+from deprecated.database.fillers.data_skeleton import get_sp_example
 from tokens.token_loader import load_telegram_user_id
 from travel_analysis.flight import Flight
 from update_flight_prices.flight_updater import FlightUpdater

@@ -20,6 +20,9 @@ prices meet certain criteria (e.g. when prices drop below a certain level), or d
 This might involve setting up test data and simulated API responses, or using a staging environment to test the system
 in a production-like environment.
 
-	7. Deploy the system to a production environment, and monitor it to ensure that it is functioning correctly
+	7. Consider adding a user interface for your flight price monitor, either through a web app or a mobile app.
+This will make it easier for users to interact with your application and access flight information.
+
+	8. Deploy the system to a production environment, and monitor it to ensure that it is functioning correctly
 and meeting the needs of users. This might involve monitoring logs and metrics, and making updates or changes as needed
 to improve the system's performance and reliability.

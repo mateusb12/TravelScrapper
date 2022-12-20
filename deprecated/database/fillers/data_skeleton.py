@@ -1,4 +1,4 @@
-from database.fillers.time_manipulations import timedelta_format, get_today_date
+from deprecated.database.fillers.time_manipulations import timedelta_format, get_today_date
 from travel_analysis.flight import Flight
 
 

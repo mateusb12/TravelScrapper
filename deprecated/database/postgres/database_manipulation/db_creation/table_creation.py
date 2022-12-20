@@ -1,5 +1,5 @@
-from database.fillers.data_skeleton import get_flight_table_format, get_flight_query_format
-from database.postgres.runners.postgres_database_runner import PostgresRunner
+from deprecated.database.fillers.data_skeleton import get_flight_table_format, get_flight_query_format
+from deprecated.database.postgres.runners.postgres_database_runner import PostgresRunner
 
 
 class PostgresTableCreation:

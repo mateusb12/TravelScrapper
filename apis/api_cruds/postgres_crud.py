@@ -2,8 +2,8 @@ from typing import Union, Any
 
 import pandas as pd
 
-from database.fillers.data_skeleton import jsonify_flight_data
-from database.postgres.wrappers.postgres_wrapper import PostgresWrapper
+from deprecated.database.fillers.data_skeleton import jsonify_flight_data
+from deprecated.database import PostgresWrapper
 
 runner = PostgresWrapper()
 

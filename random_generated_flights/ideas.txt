@@ -1,0 +1,18 @@
+1.	Determine the format and structure of the flight data you will be using for your test. This may include information
+	such as the flight origin, destination, price, and departure and arrival dates.
+
+2.	Create a sample set of fake flight data that you will use for testing. This data should include a range of prices,
+	so that you can test how your system responds to both cheaper and more expensive flights.
+
+3.	Set up your test environment by creating a test database or file where you can store the fake flight data.
+
+4.	Write a script or function that reads the fake flight data and uses it to trigger your flight price monitor system.
+	This could involve making API calls to your system or interacting with it in some other way.
+
+5.	Test your system using the fake flight data to ensure that it is functioning as expected. You may want to try a
+	variety of different test cases, such as triggering the system with a flight that is significantly cheaper than the current lowest price, or with a flight that is only slightly cheaper.
+
+6.	Debug and refine your system as needed based on the results of your testing.
+
+7.	Once you are confident that your system is working correctly, you can begin using it with real flight
+	data to monitor for new cheap flights.

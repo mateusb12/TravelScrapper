@@ -2,7 +2,7 @@ import random
 
 import pandas as pd
 
-from database.fillers.filler_generator import FillerGenerator
+from deprecated.database.fillers.filler_generator import FillerGenerator
 
 
 def create_random_flight() -> pd.Series:
