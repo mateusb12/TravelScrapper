@@ -5,6 +5,7 @@ import webbrowser
 
 import pyrebase
 
+from references.paths import get_service_account_json_reference
 from tokens.token_loader import check_env_variable, load_all_tokens
 from firebase_admin import credentials, auth, initialize_app
 
@@ -12,7 +13,7 @@ from firebase_admin import credentials, auth, initialize_app
 class FirebaseApp:
     def __init__(self):
         aux = check_env_variable("FIREBASE_API_KEY")
-        with open("service_account_key.json", "r") as f:
+        with open(get_service_account_json_reference(), "r") as f:
             service_account_key = json.load(f)
         config = {
             "apiKey": os.environ["FIREBASE_API_KEY"],
