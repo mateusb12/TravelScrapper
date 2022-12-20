@@ -35,8 +35,8 @@ class FirebaseApp:
         self.all_entries = self.get_all_flights().val()
 
     def __authenticate_using_email_and_password(self) -> dict:
-        email = "user@example.com"
-        password = "123456789"
+        email = os.environ["FIREBASE_DUMMY_LOGIN"]
+        password = os.environ["FIREBASE_DUMMY_PASSWORD"]
         return self.auth.sign_in_with_email_and_password(email, password)
 
     def add_entry(self, input_dict: dict):

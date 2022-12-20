@@ -1,4 +1,5 @@
 from firebase_data.firebase_run import FirebaseApp
+from wrapper.flight_processor import get_flight_data_example
 
 
 class FirebaseCrud:
@@ -49,8 +50,10 @@ class FirebaseCrud:
 
 def __main():
     fbc = FirebaseCrud()
-    fbc.firebase_app.set_firebase_folder("tests")
-    fbc.delete_folder(folder_name="tests")
+    fbc.firebase_app.set_firebase_folder("flight_data")
+    flight_data = get_flight_data_example()
+    single_flight = flight_data[0]
+    fbc.create_flight(single_flight)
     # fbc.update_flight(flight_unique_id="-NJjiRqwX8-qlOPRy-Iv", new_flight_data={"arrivalAirport": "GIH"})
 
 
