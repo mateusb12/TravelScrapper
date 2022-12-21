@@ -68,8 +68,17 @@ class FlightDataGenerator:
             self.__generate_single_complete_flight()
         return self.flight_pot
 
+    @staticmethod
+    def __beautify_time_delta(input_time_delta: timedelta) -> str:
+        hours = input_time_delta.seconds // 3600
+        minutes = (input_time_delta.seconds // 60) % 60
+        return f"{hours}h{minutes}m"
+
     def __generate_simple_flight(self, departure_airport: str = "FOR", arrival_airport: str = "RIO") -> dict:
         dates = self.__generate_random_dates()
+        datetime_dates = {key: datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.000Z') for key, value in dates.items()}
+        delta_time_duration = datetime_dates["arrivalTime"] - datetime_dates["departureTime"]
+        delta_time_str = self.__beautify_time_delta(delta_time_duration)
         stop_flights = None
         if stop_flights := self.__add_stop_flight(dates):
             layover_durations = analyze_layover_durations(stop_flights)
@@ -80,7 +89,8 @@ class FlightDataGenerator:
                                "arrivalFormattedDateAndTime": beautify_dates[1]}
         price = self.__generate_random_prices()
         return {"departureAirport": departure_airport, "arrivalAirport": arrival_airport,
-                **dates, **beautify_dates_dict, "layoverDurations": layover_durations, "_route": stop_flights,
+                **dates, **beautify_dates_dict, "flightDuration": delta_time_str,
+                "layoverDurations": layover_durations, "_route": stop_flights,
                 "price": price}
 
     @staticmethod
