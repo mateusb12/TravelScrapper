@@ -88,9 +88,10 @@ class FlightDataGenerator:
         beautify_dates_dict = {"departureFormattedDateAndTime": beautify_dates[0],
                                "arrivalFormattedDateAndTime": beautify_dates[1]}
         price = self.__generate_random_prices()
+        query_date = self.__generate_query_date()
         return {"departureAirport": departure_airport, "arrivalAirport": arrival_airport,
                 **dates, **beautify_dates_dict, "flightDuration": delta_time_str,
-                "layoverDurations": layover_durations, "_route": stop_flights,
+                "layoverDurations": layover_durations, "queryDate": query_date, "_route": stop_flights,
                 "price": price}
 
     @staticmethod
