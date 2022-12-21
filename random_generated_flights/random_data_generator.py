@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from airports.airport_exporter import export_codes
 from references.paths import get_airports_reference
+from wrapper.flight_utils import beautify_date, analyze_layover_durations
 
 
 class FlightDataGenerator:
@@ -32,7 +33,7 @@ class FlightDataGenerator:
     @staticmethod
     def __generate_random_arrival_date(departure_time: str):
         date = datetime.strptime(departure_time, '%Y-%m-%dT%H:%M:%S.000Z')
-        duration = timedelta(minutes=random.randint(40, 1080))
+        duration = timedelta(minutes=random.randint(40, 1000))
         arrival_time = date + duration
         return arrival_time.strftime('%Y-%m-%dT%H:%M:%S.000Z')
 
@@ -53,19 +54,64 @@ class FlightDataGenerator:
         new_date = date + timedelta(days=1)
         return new_date.strftime('%d-%b-%Y')
 
-    def generate_single_flight(self):
+    def __generate_single_complete_flight(self):
         airport_codes = self.__generate_random_airport_codes()
         airline_codes = self.__generate_airline_codes()
         dates = self.__generate_random_dates()
         price = self.__generate_random_prices()
         query_date = self.__generate_query_date()
         flight_dict = {**airport_codes, **dates, "airlines": airline_codes, "price": price, "queryDate": query_date}
-        return 0
+        self.flight_pot.append(flight_dict)
+
+    def generate_multiple_complete_flights(self, flight_amount: int) -> list[dict]:
+        for _ in range(flight_amount):
+            self.__generate_single_complete_flight()
+        return self.flight_pot
+
+    def __generate_simple_flight(self, departure_airport: str = "FOR", arrival_airport: str = "RIO") -> dict:
+        dates = self.__generate_random_dates()
+        stop_flights = None
+        if stop_flights := self.__add_stop_flight(dates):
+            layover_durations = analyze_layover_durations(stop_flights)
+        else:
+            layover_durations = [None]
+        beautify_dates = [beautify_date(dates["departureTime"]), beautify_date(dates["arrivalTime"])]
+        beautify_dates_dict = {"departureFormattedDateAndTime": beautify_dates[0],
+                               "arrivalFormattedDateAndTime": beautify_dates[1]}
+        price = self.__generate_random_prices()
+        return {"departureAirport": departure_airport, "arrivalAirport": arrival_airport,
+                **dates, **beautify_dates_dict, "layoverDurations": layover_durations, "_route": stop_flights,
+                "price": price}
+
+    @staticmethod
+    def __add_stop_flight(dates: dict):
+        date_pattern = '%Y-%m-%dT%H:%M:%S.%fZ'
+        departure_time = datetime.strptime(dates['departureTime'], date_pattern)
+        arrival_time = datetime.strptime(dates['arrivalTime'], date_pattern)
+        flight_duration = arrival_time - departure_time
+        if flight_duration <= timedelta(hours=7):
+            return
+        layover_duration = timedelta(minutes=random.randint(40, 150))
+        first_arrival_placement = flight_duration * random.uniform(0.3, 0.7)
+        first_flight_arrival_timedelta = timedelta(seconds=round(first_arrival_placement.total_seconds()))
+        first_arrival_time = departure_time + first_flight_arrival_timedelta
+        second_departure_time = first_arrival_time + layover_duration
+        first_flight = ({"type": "departure", "time": departure_time.strftime(date_pattern)},
+                        {"type": "arrival", "time": first_arrival_time.strftime(date_pattern)})
+        second_flight = ({"type": "departure", "time": second_departure_time.strftime(date_pattern)},
+                         {"type": "arrival", "time": arrival_time.strftime(date_pattern)})
+        return [first_flight, second_flight]
+
+    def generate_multiple_simple_flights(self, flight_amount: int) -> list[dict]:
+        for _ in range(flight_amount):
+            flight = self.__generate_simple_flight()
+            self.flight_pot.append(flight)
+        return self.flight_pot
 
 
 def __main():
     fdg = FlightDataGenerator()
-    aux = fdg.generate_single_flight()
+    aux = fdg.generate_multiple_simple_flights(10)
     return
 
 
