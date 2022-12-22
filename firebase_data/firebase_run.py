@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import urllib
 import webbrowser
 
@@ -48,11 +49,10 @@ class FirebaseApp:
         # sourcery skip: use-any, use-named-expression, use-next
         if not self.all_entries:
             return False
-        today_date = get_formatted_today_date()
-        try:
-            all_flights = list(self.all_entries[today_date].values())
-        except KeyError:
-            all_flights = list(self.all_entries.values())
+        test_key = list(self.all_entries.keys())[0]
+        if bool(re.match(r'^\d{2} \w+ \d{4}$', test_key)):
+            self.refresh_all_entries()
+        all_flights = list(self.all_entries.values())
         for flight in all_flights:
             same_flights = self.are_two_flights_the_same(flight, input_dict)
             if same_flights:
