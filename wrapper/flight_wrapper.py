@@ -9,9 +9,10 @@ from wrapper.flight_utils import get_formatted_today_date
 class FlightWrapper:
     def __init__(self):
         self.crud = FirebaseCrud()
+        today_date = get_formatted_today_date()
+        self.crud.set_folder(f"flight_data/{today_date}")
         self.existing_flight_data = [{}]
         self.new_flight_data = [{}]
-        self.cached_prices = []
         self.__run()
 
     def __run(self):
@@ -37,12 +38,12 @@ class FlightWrapper:
         trimmed_data = self.__trim_kiwi_data(kiwi_api_call["data"])
         flight_processor_instance = FlightProcessor(trimmed_data)
         raw_flights = flight_processor_instance.flights
-        self.new_flight_data = sorted(raw_flights, key=lambda flight: flight["quality"], reverse=True)
+        self.new_flight_data = sorted(raw_flights, key=lambda x: x["duration"]["total"])
 
     @staticmethod
     def __trim_kiwi_data(kiwi_flights: list[dict]) -> list[dict]:
-        lowest_price = min(flight["price"] for flight in kiwi_flights)
-        return [flight for flight in kiwi_flights if flight["price"] == lowest_price]
+        lowest_price_value = min(flight["price"] for flight in kiwi_flights)
+        return [flight for flight in kiwi_flights if flight["price"] == lowest_price_value]
 
     def __get_current_lowest_price(self):
         all_flights_call = self.crud.read_all_flights()
@@ -68,6 +69,7 @@ class FlightWrapper:
         self.__insert_new_data(self.new_flight_data)
 
     def __insert_new_data(self, flight_pot: list[dict]):
+        # available_flights = self.crud.trim_non_existing_flights(flight_pot)
         for flight in flight_pot:
             self.crud.create_flight(flight)
 

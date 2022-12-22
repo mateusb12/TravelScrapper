@@ -9,6 +9,8 @@ from references.paths import get_service_account_json_reference
 from tokens.token_loader import check_env_variable, load_all_tokens
 from firebase_admin import credentials, auth, initialize_app
 
+from wrapper.flight_utils import get_formatted_today_date
+
 
 class FirebaseApp:
     def __init__(self):
@@ -43,13 +45,28 @@ class FirebaseApp:
         self.db.child(f'/{self.firebase_folder}').push(input_dict, token=self.token)
 
     def check_existing_flight(self, input_dict: dict) -> bool:
-        # sourcery skip: use-any, use-next
+        # sourcery skip: use-any, use-named-expression, use-next
         if not self.all_entries:
             return False
-        for unique_id, content in self.all_entries.items():
-            if content == input_dict:
+        today_date = get_formatted_today_date()
+        try:
+            all_flights = list(self.all_entries[today_date].values())
+        except KeyError:
+            all_flights = list(self.all_entries.values())
+        for flight in all_flights:
+            same_flights = self.are_two_flights_the_same(flight, input_dict)
+            if same_flights:
                 return True
         return False
+
+    @staticmethod
+    def are_two_flights_the_same(flight_a: dict, flight_b: dict) -> bool:
+        price_a = int(flight_a["price"])
+        price_b = int(flight_b["price"])
+        price_check = price_a == price_b
+        departure_check = flight_a["departureFormattedDateAndTime"] == flight_b["departureFormattedDateAndTime"]
+        arrival_check = flight_a["arrivalFormattedDateAndTime"] == flight_b["arrivalFormattedDateAndTime"]
+        return price_check and departure_check and arrival_check
 
     def check_existing_unique_id(self, unique_id: str) -> bool:
         # sourcery skip: assign-if-exp, reintroduce-else

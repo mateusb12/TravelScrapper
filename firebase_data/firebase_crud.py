@@ -14,6 +14,7 @@ class FirebaseCrud:
             return {"output": "error", "outputDetails": "Flight already exists"}
         query_date = get_formatted_today_date()
         flight_data["queryDate"] = query_date
+        del flight_data["duration"]
         self.firebase_app.add_entry(flight_data)
         self.refresh_entries()
         return {"output": "success", "outputDetails": "Flight created"}
@@ -55,6 +56,9 @@ class FirebaseCrud:
 
     def read_all_flights(self):
         return self.firebase_app.get_all_flights()
+
+    def trim_non_existing_flights(self, flight_pot: list[dict]):
+        return [item for item in flight_pot if not self.firebase_app.check_existing_flight(item)]
 
 
 def __main():
