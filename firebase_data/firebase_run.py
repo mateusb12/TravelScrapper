@@ -134,7 +134,7 @@ class FirebaseApp:
 
 def __main():
     fba = FirebaseApp()
-    fba.delete_all_entries()
+    # fba.delete_all_entries()
     # fba.get_entry("flight_data")
     return
 
