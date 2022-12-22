@@ -1,5 +1,6 @@
 from firebase_data.firebase_run import FirebaseApp
 from wrapper.flight_processor import get_flight_data_example
+from wrapper.flight_utils import get_formatted_today_date
 
 
 class FirebaseCrud:
@@ -11,6 +12,8 @@ class FirebaseCrud:
         existing_flight = self.firebase_app.check_existing_flight(flight_data)
         if existing_flight:
             return {"output": "error", "outputDetails": "Flight already exists"}
+        query_date = get_formatted_today_date()
+        flight_data["queryDate"] = query_date
         self.firebase_app.add_entry(flight_data)
         self.refresh_entries()
         return {"output": "success", "outputDetails": "Flight created"}
@@ -46,6 +49,12 @@ class FirebaseCrud:
 
     def refresh_entries(self):
         self.firebase_app.refresh_all_entries()
+
+    def set_folder(self, folder_name: str):
+        self.firebase_app.set_firebase_folder(folder_name)
+
+    def read_all_flights(self):
+        return self.firebase_app.get_all_flights()
 
 
 def __main():

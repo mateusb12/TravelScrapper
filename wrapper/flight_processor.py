@@ -3,17 +3,18 @@ from typing import List, Tuple, Dict
 from apis.api_consumer.kiwi_api_call import kiwi_call_example
 from datetime import datetime, timedelta
 
-from wrapper.flight_utils import analyze_layover_durations, beautify_date, convert_timedelta_list_to_beautiful_string
+from wrapper.flight_utils import analyze_layover_durations, beautify_date, convert_timedelta_list_to_beautiful_string, \
+    convert_seconds_to_beautiful_string
 
 
 class FlightProcessor:
     """This class is responsible for filtering and processing
     the most important pieces of data from a flight API call"""
 
-    def __init__(self, flight_api_call: dict):
+    def __init__(self, flight_api_call: dict or list[dict]):
         self.raw_data = flight_api_call
         self.flight_amount: int = 5
-        self.data = self.raw_data.get("data")
+        self.data = self.raw_data.get("data") if isinstance(self.raw_data, dict) else self.raw_data
         self.flights = []
         self.__flight_data_processing()
 
@@ -43,7 +44,11 @@ class FlightProcessor:
                 for key, value in flight_dict["luggagePrice"].items()
             ]
             flight_dict["luggagePrice"] = adjusted_luggage
+            duration_seconds = int(flight_dict["duration"]["total"])
+            formatted_duration_seconds = convert_seconds_to_beautiful_string(duration_seconds)
+            flight_dict["flightDuration"] = formatted_duration_seconds
             flight_dict = dict(sorted(flight_dict.items()))
+            del flight_dict["duration"]
             del flight_dict["_route"]
             self.flights.append(flight_dict)
 

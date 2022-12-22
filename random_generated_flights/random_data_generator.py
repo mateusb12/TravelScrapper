@@ -120,9 +120,13 @@ class FlightDataGenerator:
         return self.flight_pot
 
 
-def __main():
+def get_10_random_flights() -> list[dict]:
     fdg = FlightDataGenerator()
-    aux = fdg.generate_multiple_simple_flights(10)
+    return fdg.generate_multiple_simple_flights(10)
+
+
+def __main():
+    aux = get_10_random_flights()
     return
 
 

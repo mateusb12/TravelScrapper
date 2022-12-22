@@ -37,6 +37,18 @@ def convert_timedelta_list_to_beautiful_string(timedelta_list: list[timedelta]):
     return formatted_list
 
 
+def convert_seconds_to_beautiful_string(seconds: int) -> str:
+    # Convert amount of seconds to a format like "5h45min"
+    hours = seconds // 3600
+    minutes = (seconds % 3600) // 60
+    return f"{hours}h{minutes}min"
+
+
+def get_formatted_today_date():
+    today_date = datetime.now()
+    return today_date.strftime("%d %B %Y")
+
+
 def beautify_date(date_string: str):
     # Parse the date string and create a datetime object
     try:
@@ -68,8 +80,7 @@ def beautify_date(date_string: str):
 
 
 def __main():
-    date = "2023-02-12T02:40:00.000"
-    aux = beautify_date(date)
+    aux = get_formatted_today_date()
     return
 
 
