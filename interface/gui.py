@@ -33,7 +33,7 @@ class TravelGui:
 
     def __create_input_folder_name(self):
         self.folder_name_entry = tk.Entry(self.root)
-        self.folder_name_entry.pack()
+        self.folder_name_entry.pack(padx=100)
         self.folder_name_entry.insert(0, "flight_data")
         label = tk.Label(self.root, text="Folder Name")
         label.pack(side="top", fill="x", expand=False, before=self.folder_name_entry, pady=10)
@@ -64,12 +64,16 @@ class TravelGui:
         label.pack(side="top", after=self.arrival_airport_dropdown, pady=10)
         self.price_entry = tk.Entry(self.root)
         self.price_entry.insert(0, "300")
-        self.price_entry.pack(side="top", after=label, pady=5)
+        self.price_entry.pack(side="top", after=label, pady=5, padx=120)
 
     def __create_input_maximum_duration(self):
+        # Create a label above the dropwdowns
+        label = tk.Label(self.root, text="Maximum Duration")
+        label.pack(side="top", after=self.price_entry, pady=10)
+
         # Create a frame to hold the hours and minutes dropdown menus
         self.duration_frame = tk.Frame(self.root)
-        self.duration_frame.pack(side="top", after=self.price_entry, pady=15)
+        self.duration_frame.pack(side="top", after=label, pady=2)
 
         # Create hours dropdown
         hours_label = tk.Label(self.duration_frame, text="Hours")

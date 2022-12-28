@@ -1,19 +1,11 @@
 import json
 import os
 import re
-import urllib
-import webbrowser
-
 import pyrebase
 
 from references.paths import get_service_account_json_reference
-from tokens.token_loader import check_env_variable, load_all_tokens
-from firebase_admin import credentials, auth, initialize_app
-
-from firebase_admin import auth as sdk_auth
-
+from tokens.token_loader import check_env_variable
 from wrapper.flight_processor import get_flight_data_example
-from wrapper.flight_utils import get_formatted_today_date
 
 
 class FirebaseApp:
