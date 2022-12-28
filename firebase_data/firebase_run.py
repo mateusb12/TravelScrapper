@@ -10,6 +10,9 @@ from references.paths import get_service_account_json_reference
 from tokens.token_loader import check_env_variable, load_all_tokens
 from firebase_admin import credentials, auth, initialize_app
 
+from firebase_admin import auth as sdk_auth
+
+from wrapper.flight_processor import get_flight_data_example
 from wrapper.flight_utils import get_formatted_today_date
 
 
@@ -52,6 +55,8 @@ class FirebaseApp:
         test_key = list(self.all_entries.keys())[0]
         if bool(re.match(r'^\d{2} \w+ \d{4}$', test_key)):
             self.refresh_all_entries()
+        if self.all_entries is None:
+            return False
         all_flights = list(self.all_entries.values())
         for flight in all_flights:
             same_flights = self.are_two_flights_the_same(flight, input_dict)
@@ -129,11 +134,16 @@ class FirebaseApp:
         self.db.child(f'/{folder_name}').remove(token=self.token)
 
     def refresh_all_entries(self):
-        self.all_entries = self.get_all_flights().val()
+        all_entries_call = self.get_all_flights()
+        self.all_entries = all_entries_call.val()
+        return
 
 
 def __main():
     fba = FirebaseApp()
+    all_flights = fba.get_all_flights().val()
+    example = get_flight_data_example()[0]
+    existing = fba.check_existing_flight(example)
     # fba.delete_all_entries()
     # fba.get_entry("flight_data")
     return
