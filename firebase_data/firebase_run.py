@@ -34,7 +34,7 @@ class FirebaseApp:
         self.auth = auth
         self.token = "None"
         self.user = self.__authenticate_using_email_and_password()
-        self.all_entries = self.get_all_flights()
+        self.all_entries: dict = self.get_all_flights()
 
     def __authenticate_using_email_and_password(self) -> UserRecord:
         email = os.environ["FIREBASE_DUMMY_LOGIN"]
@@ -79,9 +79,7 @@ class FirebaseApp:
             return False
         return unique_id in self.all_entries
 
-    def get_all_flights(self):
-        # full_ref = self.db.reference()
-        # children = full_ref.get()
+    def get_all_flights(self) -> dict:
         ref = self.db.reference(self.firebase_folder)
         return ref.get()
 
@@ -142,11 +140,8 @@ class FirebaseApp:
             return
         ref = self.db.reference(folder_name)
         ref.delete()
-        # self.db.child(f'/{folder_name}').remove(token=self.token)
 
     def refresh_all_entries(self):
-        # all_entries_call = self.get_all_flights()
-        # self.all_entries = all_entries_call.val()
         self.all_entries = self.get_all_flights()
         return
 
