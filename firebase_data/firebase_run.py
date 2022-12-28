@@ -145,15 +145,26 @@ class FirebaseApp:
         self.all_entries = self.get_all_flights()
         return
 
+    def get_entries_by_user_email(self, user_email: str):
+        ref = self.db.reference(self.firebase_folder)
+        ref_get = ref.get()
+        ordered_ref = ref.order_by_child("userEmail")
+        ordered_get = ordered_ref.get()
+        check_ref = ordered_ref.equal_to(user_email)
+        check_get = check_ref.get()
+        return ordered_ref.get()
+
 
 def __main():
     fba = FirebaseApp()
-    all_folders = fba.get_all_firebase_folders()
-    example = get_flight_data_example()[0]
-    existing = fba.check_existing_flight(example)
-    # fba.delete_all_entries()
-    # fba.get_entry("flight_data")
+    aux = fba.get_entries_by_user_email("user@example.com")
     return
+    # all_folders = fba.get_all_firebase_folders()
+    # example = get_flight_data_example()[0]
+    # existing = fba.check_existing_flight(example)
+    # # fba.delete_all_entries()
+    # # fba.get_entry("flight_data")
+    # return
 
 
 if __name__ == "__main__":

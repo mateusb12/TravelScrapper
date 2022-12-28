@@ -25,11 +25,10 @@ class FlightWrapper:
 
     def __gather_current_data(self):
         raw_data = self.crud.firebase_app.get_all_flights()
-        if raw_data.pyres is None:
+        if raw_data is None:
             self.existing_flight_data = []
             return
-        raw_dict = raw_data.val()
-        self.existing_flight_data = list(raw_dict.values())
+        self.existing_flight_data = list(raw_data.values())
         return
 
     def __collect_new_data(self):
@@ -47,9 +46,9 @@ class FlightWrapper:
 
     def __get_current_lowest_price(self):
         all_flights_call = self.crud.read_all_flights()
-        if all_flights_call.pyres is None:
+        if all_flights_call is None:
             return float("inf")
-        all_flights_dict = all_flights_call.val()
+        all_flights_dict = all_flights_call
         all_flights_list = list(all_flights_dict.values())
         all_flights_ordered_list = sorted(all_flights_list, key=lambda flight: flight["price"])
         return all_flights_ordered_list[0]["price"]

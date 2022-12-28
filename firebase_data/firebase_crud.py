@@ -6,6 +6,7 @@ from wrapper.flight_utils import get_formatted_today_date
 class FirebaseCrud:
     def __init__(self):
         self.firebase_app = FirebaseApp()
+        self.firebase_app.query_date = get_formatted_today_date()
 
     def create_flight(self, flight_data: dict) -> dict:
         # sourcery skip: use-named-expression
@@ -14,6 +15,7 @@ class FirebaseCrud:
             return {"output": "error", "outputDetails": "Flight already exists"}
         query_date = get_formatted_today_date()
         flight_data["queryDate"] = query_date
+        flight_data["userEmail"] = self.firebase_app.user.email
         del flight_data["duration"]
         self.firebase_app.add_entry(flight_data)
         self.refresh_entries()
@@ -59,6 +61,9 @@ class FirebaseCrud:
 
     def trim_non_existing_flights(self, flight_pot: list[dict]):
         return [item for item in flight_pot if not self.firebase_app.check_existing_flight(item)]
+
+    def get_flights_by_user_email(self, user_email: str):
+        return self.firebase_app.get_entries_by_user_email(user_email)
 
 
 def __main():
