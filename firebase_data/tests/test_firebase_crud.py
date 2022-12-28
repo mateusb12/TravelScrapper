@@ -13,7 +13,7 @@ def get_flight_data():
 @pytest.fixture(scope="module")
 def get_firebase_crud_instance():
     instance = FirebaseCrud()
-    instance.firebase_app.set_firebase_folder("/tests")
+    instance.firebase_app.set_firebase_folder("tests")
     instance.delete_folder(folder_name="/tests")
     return instance
 
@@ -27,7 +27,7 @@ def test_firebase_create_flight(get_flight_data, get_firebase_crud_instance):
     firebase_crud = get_firebase_crud_instance
 
     creation_result = firebase_crud.create_flight(flight_data)
-    all_flights = firebase_crud.firebase_app.get_all_flights().val()
+    all_flights = firebase_crud.firebase_app.get_all_flights()
     created_flight = list(all_flights.values())[0]
     different_values = [item for item in created_flight.values() if item not in flight_data.values()]
     assert creation_result["output"] == "success"
@@ -41,7 +41,7 @@ def test_firebase_read_flight(get_flight_data, get_firebase_crud_instance):
     flight_data = get_flight_data
     firebase_crud = get_firebase_crud_instance
 
-    all_flights = firebase_crud.firebase_app.get_all_flights().val()
+    all_flights = firebase_crud.firebase_app.get_all_flights()
     flight_unique_id = list(all_flights.keys())[0]
     read_flight = firebase_crud.read_flight(flight_unique_id)
     assert read_flight == flight_data
@@ -56,7 +56,7 @@ def test_firebase_update_flight(get_flight_data, get_firebase_crud_instance):
     new_flight_data = {"arrivalAirport": "BER", "departureAirport": "LHR"}
     expected_flight_data = flight_data.copy()
     expected_flight_data.update(new_flight_data)
-    all_flights = firebase_crud.firebase_app.get_all_flights().val()
+    all_flights = firebase_crud.firebase_app.get_all_flights()
     flight_unique_id = list(all_flights.keys())[0]
     update_result = firebase_crud.update_flight(flight_unique_id, new_flight_data)
     assert update_result["output"] == "success"
@@ -71,13 +71,13 @@ def test_firebase_delete_flight(get_firebase_crud_instance):
     """This test uses the delete_flight method to delete the flight and verify that the flight was deleted."""
     firebase_crud = get_firebase_crud_instance
 
-    all_flights = firebase_crud.firebase_app.get_all_flights().val()
+    all_flights = firebase_crud.firebase_app.get_all_flights()
     flight_unique_id = list(all_flights.keys())[0]
 
     delete_result = firebase_crud.delete_flight(flight_unique_id)
     assert delete_result["output"] == "success"
 
-    all_flights = firebase_crud.firebase_app.get_all_flights().val()
+    all_flights = firebase_crud.firebase_app.get_all_flights()
     if all_flights is None:
         all_flights = {"key": "value"}
     assert flight_unique_id not in all_flights.keys()

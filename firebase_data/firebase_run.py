@@ -2,10 +2,13 @@ import json
 import os
 import re
 import pyrebase
+from firebase_admin.auth import UserRecord
 
 from references.paths import get_service_account_json_reference
 from tokens.token_loader import check_env_variable
 from wrapper.flight_processor import get_flight_data_example
+import firebase_admin
+from firebase_admin import firestore, credentials, auth, db
 
 
 class FirebaseApp:
@@ -13,6 +16,7 @@ class FirebaseApp:
         aux = check_env_variable("FIREBASE_API_KEY")
         with open(get_service_account_json_reference(), "r") as f:
             service_account_key = json.load(f)
+        credential = credentials.Certificate(service_account_key)
         config = {
             "apiKey": os.environ["FIREBASE_API_KEY"],
             "authDomain": os.environ["FIREBASE_AUTH_DOMAIN"],
@@ -22,23 +26,27 @@ class FirebaseApp:
             "appId": os.environ["FIREBASE_APP_ID"],
             "measurementId": os.environ["FIREBASE_MEASUREMENT_ID"],
             "databaseURL": os.environ["FIREBASE_DATABASE_URL"],
-            "credential": service_account_key
+            "credential": credential
         }
-        firebase = pyrebase.initialize_app(config)
+        self.app = firebase_admin.initialize_app(credential, config)
         self.firebase_folder = "flight_data"
-        self.db = firebase.database()
-        self.auth = firebase.auth()
+        self.db = db
+        self.auth = auth
+        self.token = "None"
         self.user = self.__authenticate_using_email_and_password()
-        self.token = self.user["idToken"]
-        self.all_entries = self.get_all_flights().val()
+        self.all_entries = self.get_all_flights()
 
-    def __authenticate_using_email_and_password(self) -> dict:
+    def __authenticate_using_email_and_password(self) -> UserRecord:
         email = os.environ["FIREBASE_DUMMY_LOGIN"]
         password = os.environ["FIREBASE_DUMMY_PASSWORD"]
-        return self.auth.sign_in_with_email_and_password(email, password)
+        custom_token = auth.create_custom_token(email, {"is_admin": True})
+        self.token = custom_token.decode('utf-8')
+        return self.auth.get_user_by_email(email, self.app)
+        # return self.auth.sign_in_with_email_and_password(custom_token)
 
     def add_entry(self, input_dict: dict):
-        self.db.child(f'/{self.firebase_folder}').push(input_dict, token=self.token)
+        ref = self.db.reference(self.firebase_folder)
+        return ref.push(input_dict)
 
     def check_existing_flight(self, input_dict: dict) -> bool:
         # sourcery skip: use-any, use-named-expression, use-next
@@ -72,7 +80,10 @@ class FirebaseApp:
         return unique_id in self.all_entries
 
     def get_all_flights(self):
-        return self.db.child(f'/{self.firebase_folder}').get(token=self.token)
+        # full_ref = self.db.reference()
+        # children = full_ref.get()
+        ref = self.db.reference(self.firebase_folder)
+        return ref.get()
 
     def get_entry_by_key(self, desired_key: str) -> dict:  # sourcery skip: use-next
         for unique_id, content in self.all_entries.items():
@@ -93,27 +104,33 @@ class FirebaseApp:
         return ""
 
     def delete_entry_by_unique_id(self, unique_id: str):
-        self.db.child(f'/{self.firebase_folder}').child(unique_id).remove(token=self.token)
+        ref = self.db.reference(f'{self.firebase_folder}/{unique_id}')
+        ref.delete()
+        # self.db.child(f'/{self.firebase_folder}').child(unique_id).remove(token=self.token)
 
     def update_entry_by_unique_id(self, unique_id: str, new_info: dict):
-        self.db.child(f'/{self.firebase_folder}').child(unique_id).update(new_info, token=self.token)
+        ref = self.db.reference(f'{self.firebase_folder}/{unique_id}')
+        ref.update(new_info)
+        # self.db.child(f'/{self.firebase_folder}').child(unique_id).update(new_info, token=self.token)
 
     def get_all_firebase_folders(self):
-        try:
-            return self.db.child("/").get(token=self.token).val().keys()
-        except AttributeError:
-            self.create_dummy_test_folder()
-            return self.db.child("/").get(token=self.token).val().keys()
+        ref = self.db.reference("/").get()
+        collections = dict(ref)
+        return list(collections.keys())
 
     def create_dummy_test_folder(self):
-        self.db.child('/tests').push("test", token=self.token)
+        ref = self.db.reference('tests')
+        ref.set({"test_field": "test"})
+        # self.db.child('/tests').push("test", token=self.token)
 
     def delete_all_entries(self):
         all_folders = self.get_all_firebase_folders()
         desired_folder = self.firebase_folder.replace("/", "")
         if desired_folder not in all_folders:
             return
-        self.db.child(f'/{self.firebase_folder}').remove(token=self.token)
+        ref = self.db.reference(self.firebase_folder)
+        ref.delete()
+        # self.db.child(f'/{self.firebase_folder}').remove(token=self.token)
 
     def set_firebase_folder(self, new_location: str):
         self.firebase_folder = new_location
@@ -123,17 +140,20 @@ class FirebaseApp:
         desired_folder = folder_name.replace("/", "")
         if desired_folder not in all_folders:
             return
-        self.db.child(f'/{folder_name}').remove(token=self.token)
+        ref = self.db.reference(folder_name)
+        ref.delete()
+        # self.db.child(f'/{folder_name}').remove(token=self.token)
 
     def refresh_all_entries(self):
-        all_entries_call = self.get_all_flights()
-        self.all_entries = all_entries_call.val()
+        # all_entries_call = self.get_all_flights()
+        # self.all_entries = all_entries_call.val()
+        self.all_entries = self.get_all_flights()
         return
 
 
 def __main():
     fba = FirebaseApp()
-    all_flights = fba.get_all_flights().val()
+    all_folders = fba.get_all_firebase_folders()
     example = get_flight_data_example()[0]
     existing = fba.check_existing_flight(example)
     # fba.delete_all_entries()
