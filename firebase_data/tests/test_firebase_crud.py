@@ -1,6 +1,6 @@
 import pytest
 
-from firebase_data.firebase_crud import FirebaseCrud
+from firebase_data.firebase_flight_crud import FirebaseFlightCrud
 from price_monitor.flight_processor import get_flight_data_example
 
 
@@ -12,7 +12,7 @@ def get_flight_data():
 
 @pytest.fixture(scope="module")
 def get_firebase_crud_instance():
-    instance = FirebaseCrud()
+    instance = FirebaseFlightCrud()
     instance.firebase_app.set_firebase_folder("tests")
     instance.delete_folder(folder_name="/tests")
     return instance

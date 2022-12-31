@@ -1,5 +1,5 @@
 from apis.api_consumer.kiwi_api_call import kiwi_call
-from firebase_data.firebase_crud import FirebaseCrud
+from firebase_data.firebase_flight_crud import FirebaseFlightCrud
 from notifications.telegram_bot.bot import telegram_bot_instance
 from random_generated_flights.random_data_generator import get_10_random_flights
 from price_monitor.flight_processor import FlightProcessor
@@ -8,7 +8,7 @@ from price_monitor.flight_utils import get_formatted_today_date
 
 class FlightMonitor:
     def __init__(self):
-        self.crud = FirebaseCrud()
+        self.crud = FirebaseFlightCrud()
         today_date = get_formatted_today_date()
         self.crud.set_folder(f"flight_data/{today_date}")
         self.existing_flight_data = [{}]

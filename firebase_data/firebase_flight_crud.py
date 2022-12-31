@@ -3,7 +3,7 @@ from price_monitor.flight_processor import get_flight_data_example
 from price_monitor.flight_utils import get_formatted_today_date
 
 
-class FirebaseCrud:
+class FirebaseFlightCrud:
     def __init__(self):
         self.firebase_app = FirebaseApp()
         self.firebase_app.query_date = get_formatted_today_date()
@@ -67,7 +67,7 @@ class FirebaseCrud:
 
 
 def __main():
-    fbc = FirebaseCrud()
+    fbc = FirebaseFlightCrud()
     fbc.firebase_app.set_firebase_folder("flight_data")
     flight_data = get_flight_data_example()
     single_flight = flight_data[0]

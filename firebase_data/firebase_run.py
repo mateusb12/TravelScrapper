@@ -35,13 +35,26 @@ class FirebaseApp:
         self.db = db
         self.auth = auth
         self.token = "None"
+        self.credential_email = ""
+        self.credential_password = ""
+        self.__set_env_credentials()
         self.user = self.__authenticate_using_email_and_password()
         self.all_entries: dict = self.get_all_flights()
         self.query_date = get_formatted_today_date()
 
+    def __set_env_credentials(self):
+        self.credential_email = os.environ["FIREBASE_DUMMY_LOGIN"]
+        self.credential_password = os.environ["FIREBASE_DUMMY_PASSWORD"]
+
+    def set_custom_credentials(self, email: str, password: str):
+        self.credential_email = email
+        self.credential_password = password
+        self.user = self.__authenticate_using_email_and_password()
+        self.all_entries = self.get_all_flights()
+
     def __authenticate_using_email_and_password(self) -> UserRecord:
-        email = os.environ["FIREBASE_DUMMY_LOGIN"]
-        password = os.environ["FIREBASE_DUMMY_PASSWORD"]
+        email = self.credential_email
+        password = self.credential_password
         custom_token = auth.create_custom_token(email, {"is_admin": True})
         self.token = custom_token.decode('utf-8')
         return self.auth.get_user_by_email(email, self.app)

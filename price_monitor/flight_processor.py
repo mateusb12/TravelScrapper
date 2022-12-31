@@ -48,7 +48,7 @@ class FlightProcessor:
             formatted_duration_seconds = convert_seconds_to_beautiful_string(duration_seconds)
             flight_dict["flightDuration"] = formatted_duration_seconds
             flight_dict = dict(sorted(flight_dict.items()))
-            # del flight_dict["duration"]
+            # p0
             del flight_dict["_route"]
             self.flights.append(flight_dict)
 
