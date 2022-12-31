@@ -3,7 +3,7 @@ from typing import List, Dict, Tuple
 
 import pytest
 
-from wrapper.flight_utils import analyze_layover_durations, beautify_date
+from price_monitor.flight_utils import analyze_layover_durations, beautify_date
 
 
 def get_flight_times_same_day_example() -> List[Tuple[Dict[str, str], Dict[str, str]]]:

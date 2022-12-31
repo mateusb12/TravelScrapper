@@ -1,7 +1,7 @@
 import pytest
 
 from firebase_data.firebase_crud import FirebaseCrud
-from wrapper.flight_processor import get_flight_data_example
+from price_monitor.flight_processor import get_flight_data_example
 
 
 @pytest.fixture(scope="module")

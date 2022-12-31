@@ -6,9 +6,11 @@ from firebase_admin.auth import UserRecord
 
 from references.paths import get_service_account_json_reference
 from tokens.token_loader import check_env_variable
-from wrapper.flight_processor import get_flight_data_example
+from price_monitor.flight_processor import get_flight_data_example
 import firebase_admin
 from firebase_admin import firestore, credentials, auth, db
+
+from price_monitor.flight_utils import get_formatted_today_date
 
 
 class FirebaseApp:
@@ -35,6 +37,7 @@ class FirebaseApp:
         self.token = "None"
         self.user = self.__authenticate_using_email_and_password()
         self.all_entries: dict = self.get_all_flights()
+        self.query_date = get_formatted_today_date()
 
     def __authenticate_using_email_and_password(self) -> UserRecord:
         email = os.environ["FIREBASE_DUMMY_LOGIN"]
@@ -145,14 +148,16 @@ class FirebaseApp:
         self.all_entries = self.get_all_flights()
         return
 
-    def get_entries_by_user_email(self, user_email: str):
-        ref = self.db.reference(self.firebase_folder)
-        ref_get = ref.get()
-        ordered_ref = ref.order_by_child("userEmail")
-        ordered_get = ordered_ref.get()
-        check_ref = ordered_ref.equal_to(user_email)
-        check_get = check_ref.get()
-        return ordered_ref.get()
+    def get_entries_by_user_email(self, user_email: str) -> list[dict]:
+        all_data = self.db.reference(self.firebase_folder).get()
+        user_pot = []
+        for date, flights in all_data.items():
+            user_pot.extend(
+                flight_content
+                for unique_id, flight_content in flights.items()
+                if flight_content["userEmail"] == user_email
+            )
+        return user_pot
 
 
 def __main():

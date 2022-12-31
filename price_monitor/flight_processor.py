@@ -3,7 +3,7 @@ from typing import List, Tuple, Dict
 from apis.api_consumer.kiwi_api_call import kiwi_call_example
 from datetime import datetime, timedelta
 
-from wrapper.flight_utils import analyze_layover_durations, beautify_date, convert_timedelta_list_to_beautiful_string, \
+from price_monitor.flight_utils import analyze_layover_durations, beautify_date, convert_timedelta_list_to_beautiful_string, \
     convert_seconds_to_beautiful_string
 
 

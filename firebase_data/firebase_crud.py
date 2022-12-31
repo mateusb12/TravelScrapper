@@ -1,6 +1,6 @@
 from firebase_data.firebase_run import FirebaseApp
-from wrapper.flight_processor import get_flight_data_example
-from wrapper.flight_utils import get_formatted_today_date
+from price_monitor.flight_processor import get_flight_data_example
+from price_monitor.flight_utils import get_formatted_today_date
 
 
 class FirebaseCrud:

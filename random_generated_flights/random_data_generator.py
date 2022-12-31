@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 from airports.airport_exporter import export_codes
 from references.paths import get_airports_reference
-from wrapper.flight_utils import beautify_date, analyze_layover_durations
+from price_monitor.flight_utils import beautify_date, analyze_layover_durations
 
 
 class FlightDataGenerator:
