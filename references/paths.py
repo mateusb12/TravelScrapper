@@ -62,6 +62,9 @@ def get_service_account_json_reference():
     return get_firebase_folder() / "service_account_key.json"
 
 
+def get_price_monitor_reference():
+    return get_main_folder_reference() / "price_monitor"
+
 
 if __name__ == "__main__":
     aux = get_travel_analysis_path()

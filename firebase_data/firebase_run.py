@@ -46,7 +46,7 @@ class FirebaseApp:
         self.credential_email = os.environ["FIREBASE_DUMMY_LOGIN"]
         self.credential_password = os.environ["FIREBASE_DUMMY_PASSWORD"]
 
-    def set_custom_credentials(self, email: str, password: str):
+    def login(self, email: str, password: str):
         self.credential_email = email
         self.credential_password = password
         self.user = self.__authenticate_using_email_and_password()
@@ -175,7 +175,7 @@ class FirebaseApp:
 
 def __main():
     fba = FirebaseApp()
-    aux = fba.get_entries_by_user_email("user@example.com")
+    # fba.login("test@example.com", "123456")
     return
     # all_folders = fba.get_all_firebase_folders()
     # example = get_flight_data_example()[0]
