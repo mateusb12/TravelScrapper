@@ -79,8 +79,23 @@ def beautify_date(date_string: str):
     return f"{day}{suffix} {month_names[month]} {year} at {hour:02d}:{minute:02d} {am_pm}"
 
 
+def get_date_tuple(date_string: str) -> Tuple[int, int, int]:
+    month_map = {"January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6, "July": 7, "August": 8,
+                 "September": 9, "October": 10, "November": 11, "December": 12}
+    date_parts = date_string.split()
+    year = int(date_parts[2])
+    month = month_map[date_parts[1]]
+    day = int(date_parts[0])
+    return year, month, day
+
+
+def reorder_flight_data_node_by_date(flight_data: dict) -> dict:
+    sorted_dates = sorted(flight_data.keys(), key=get_date_tuple, reverse=True)
+    return {date: flight_data[date] for date in sorted_dates}
+
+
 def __main():
-    aux = get_formatted_today_date()
+    aux = reorder_flight_data_node_by_date({'28 December 2022': 1, '31 December 2022': 2, '1 January 2023': 3})
     return
 
 

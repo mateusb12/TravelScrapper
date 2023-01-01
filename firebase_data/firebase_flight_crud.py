@@ -69,9 +69,11 @@ class FirebaseFlightCrud:
 def __main():
     fbc = FirebaseFlightCrud()
     fbc.firebase_app.set_firebase_folder("flight_data")
-    flight_data = get_flight_data_example()
-    single_flight = flight_data[0]
-    fbc.create_flight(single_flight)
+    aux = fbc.read_all_flights()
+    return
+    # flight_data = get_flight_data_example()
+    # single_flight = flight_data[0]
+    # fbc.create_flight(single_flight)
     # fbc.update_flight(flight_unique_id="-NJjiRqwX8-qlOPRy-Iv", new_flight_data={"arrivalAirport": "GIH"})
 
 

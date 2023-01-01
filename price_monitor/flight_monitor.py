@@ -66,6 +66,7 @@ class FlightMonitor:
             full_message = f"New flight found! {price_diff_tag} \n {flight_link}"
             telegram_bot_instance.send_message(chat_id=405202204, text=full_message)
         self.__insert_new_data(self.new_flight_data)
+        self.crud.firebase_app.reorder_flight_node_by_query_date_order()
 
     def __insert_new_data(self, flight_pot: list[dict]):
         # available_flights = self.crud.trim_non_existing_flights(flight_pot)

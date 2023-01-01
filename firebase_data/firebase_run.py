@@ -10,7 +10,7 @@ from price_monitor.flight_processor import get_flight_data_example
 import firebase_admin
 from firebase_admin import firestore, credentials, auth, db
 
-from price_monitor.flight_utils import get_formatted_today_date
+from price_monitor.flight_utils import get_formatted_today_date, reorder_flight_data_node_by_date
 
 
 class FirebaseApp:
@@ -172,9 +172,16 @@ class FirebaseApp:
             )
         return user_pot
 
+    def reorder_flight_node_by_query_date_order(self):
+        flight_node = self.db.reference("flight_data")
+        flight_node_dict = dict(flight_node.get())
+        reordered_dict = reorder_flight_data_node_by_date(flight_node_dict)
+        flight_node.update(reordered_dict)
+
 
 def __main():
     fba = FirebaseApp()
+    fba.reorder_flight_node_by_query_date_order()
     # fba.login("test@example.com", "123456")
     return
     # all_folders = fba.get_all_firebase_folders()
