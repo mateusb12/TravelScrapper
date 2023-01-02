@@ -59,6 +59,7 @@ def test_analyze_new_data_not_notify_when_no_cheaper_flight_found(get_flight_mon
     fm._collect_new_data()
     fm.new_flight_data[0]["price"] = 100000
     result = fm._analyze_new_data()
+    fm.crud.delete_folder("test")
     assert result["output"] == "failure"
 
 

@@ -1,36 +1,40 @@
 from firebase_admin.auth import EmailAlreadyExistsError, UserNotFoundError
 
-from firebase_data.firebase_run import FirebaseApp
+from firebase_data.firebase_connection import FirebaseCore
 
 
 class FirebaseUserCrud:
-    def __init__(self):  # sourcery skip: use-named-expression
-        self.app = FirebaseApp()
+    def __init__(self, input_firebase_app: FirebaseCore):  # sourcery skip: use-named-expression
+        self.app = input_firebase_app
         self.auth = self.app.auth
         no_existing_users = self.no_existing_users()
         if no_existing_users:
             self.create_dummy_user()
 
     def create_user(self, email: str = "test@example.com", password: str = "123456", name: str = "TestUser",
-                    phone_number: str = "+11234567890", admin: bool = False) -> dict:
+                    phone_number: str = "+11234567890", custom_claims=None) -> dict:
+        if custom_claims is None:
+            custom_claims = {"is_admin": False}
         if " " in name:
             return {"output": "error", "outputDetails": f"Name cannot contain spaces. Please adjust [{name}]"}
         try:
-            return self._create_new_firebase_user(email, password, name, phone_number, admin)
+            return self._create_new_firebase_user(email, password, name, phone_number, custom_claims)
         except EmailAlreadyExistsError:
             print("User already exists")
             return {"output": "error", "outputDetails": f"User {email} already exists"}
 
     def create_dummy_user(self) -> dict:
         return self.create_user(email="test@test.com", password="123456", name="TestUser", phone_number="+11234567890",
-                                admin=True)
+                                custom_claims=None)
 
-    def _create_new_firebase_user(self, email: str, password: str, name: str, phone_number: str, admin: bool) -> dict:
+    def _create_new_firebase_user(self, email: str, password: str, name: str, phone_number: str, custom_claims: dict)\
+            -> dict:
         self.app.auth.create_user(email=email, password=password, display_name=name, phone_number=phone_number)
         self.auth.generate_email_verification_link(email)
         user = self.get_single_user(email)["outputDetails"]
-        user_details = {"name": name, "phone_number": phone_number, "email": email, "unique_id": user.uid,
-                        "is_admin": admin}
+        user_details = {"name": name, "phone_number": phone_number, "email": email, "unique_id": user.uid}
+        for key, value in custom_claims.items():
+            self.auth.set_custom_user_claims(user.uid, {key: value})
         self.app.db.reference(f"user_data/{name}").set(user_details)
         return {"output": "success", "outputDetails": f"User {email} created successfully"}
 
@@ -85,10 +89,12 @@ class FirebaseUserCrud:
 
 
 def __main():
-    fba = FirebaseUserCrud()
-    all_users = fba.get_all_users()
+    fc = FirebaseCore()
+    fba = FirebaseUserCrud(fc)
+    # fba.delete_all_users()
+    # all_users = fba.get_all_users()
     # fba.delete_user("test@example.com")
-    aux = fba.create_dummy_user()
+    # aux = fba.create_dummy_user()
     return
 
 

@@ -1,46 +1,28 @@
-import json
 import os
 import re
-import pyrebase
 from firebase_admin.auth import UserRecord
 
-from references.paths import get_service_account_json_reference
-from tokens.token_loader import check_env_variable
-from price_monitor.flight_processor import get_flight_data_example
-import firebase_admin
-from firebase_admin import firestore, credentials, auth, db
+from firebase_data.firebase_connection import create_firebase_connection, FirebaseCore
+from firebase_admin import auth, db
 
+from firebase_data.firebase_user_crud import FirebaseUserCrud
 from price_monitor.flight_utils import get_formatted_today_date, reorder_flight_data_node_by_date
 
 
 class FirebaseApp:
     def __init__(self):
-        aux = check_env_variable("FIREBASE_API_KEY")
-        with open(get_service_account_json_reference(), "r") as f:
-            service_account_key = json.load(f)
-        credential = credentials.Certificate(service_account_key)
-        config = {
-            "apiKey": os.environ["FIREBASE_API_KEY"],
-            "authDomain": os.environ["FIREBASE_AUTH_DOMAIN"],
-            "projectId": os.environ["FIREBASE_PROJECT_ID"],
-            "storageBucket": os.environ["FIREBASE_STORAGE_BUCKET"],
-            "messagingSenderId": os.environ["FIREBASE_MESSAGING_SENDER_ID"],
-            "appId": os.environ["FIREBASE_APP_ID"],
-            "measurementId": os.environ["FIREBASE_MEASUREMENT_ID"],
-            "databaseURL": os.environ["FIREBASE_DATABASE_URL"],
-            "credential": credential
-        }
-        self.app = firebase_admin.initialize_app(credential, config)
+        connection_class = FirebaseCore()
+        self.app = connection_class.app
         self.firebase_folder = "flight_data"
-        self.db = db
-        self.auth = auth
+        self.db = connection_class.db
+        self.auth = connection_class.auth
         self.token = "None"
         self.credential_email = ""
         self.credential_password = ""
         self.__set_env_credentials()
-        self.user = self.__authenticate_using_email_and_password()
-        self.all_entries: dict = self.get_all_flights()
-        self.query_date = get_formatted_today_date()
+        # self.user = self.__authenticate_using_email_and_password()
+        # self.all_entries: dict = self.get_all_flights()
+        # self.query_date = get_formatted_today_date()
 
     def __set_env_credentials(self):
         self.credential_email = os.environ["FIREBASE_DUMMY_LOGIN"]
@@ -55,9 +37,11 @@ class FirebaseApp:
     def __authenticate_using_email_and_password(self) -> UserRecord:
         email = self.credential_email
         password = self.credential_password
+        user = self.auth.get_user_by_email(email)
+        user_data = self.db.reference(f'user_data/{user.display_name}').get()
         custom_token = auth.create_custom_token(email, {"is_admin": True})
         self.token = custom_token.decode('utf-8')
-        return self.auth.get_user_by_email(email, self.app)
+        return user
         # return self.auth.sign_in_with_email_and_password(custom_token)
 
     def add_entry(self, input_dict: dict):
