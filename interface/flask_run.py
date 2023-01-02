@@ -20,7 +20,7 @@ def forms():
 
 @app.route("/flight_results", methods=['GET', 'POST'])
 def results():
-    return render_template('flight_results.html')
+    return render_template('../templates/flight_results.html')
 
 
 if __name__ == '__main__':

@@ -1,0 +1,29 @@
+body {
+    font-family: Arial, sans-serif;
+}
+h2 {
+    font-size: 18px;
+    font-weight: bold;
+}
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+.folder-name {
+    color: blue;
+}
+.departure-airport {
+    color: green;
+}
+.arrival-airport {
+    color: red;
+}
+.price {
+    font-size: 20px;
+    font-weight: bold;
+    color: orange;
+}
+.duration {
+    font-style: italic;
+}

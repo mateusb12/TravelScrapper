@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Flight Results</title>
+    <link rel="stylesheet" type="text/css" href="../static/flight_results_style.css">
 </head>
 <body>
-<body>
-<h2>Folder Name: {{ results.folder_name }}</h2>
-<h2>Departure Airport: {{ results.departure_airport }}</h2>
-<h2>Arrival Airport: {{ results.arrival_airport }}</h2>
-<h2>Price: {{ results.price }}</h2>
-<h2>Duration: {{ results.duration }}</h2>
-</body>
+<div class="container">
+    <h2 class="folder-name">Folder Name: {{ results.folder_name }}</h2>
+    <h2 class="departure-airport">Departure Airport: {{ results.departure_airport }}</h2>
+    <h2 class="arrival-airport">Arrival Airport: {{ results.arrival_airport }}</h2>
+    <h2 class="price">Price: {{ results.price }}</h2>
+    <h2 class="duration">Duration: {{ results.duration }}</h2>
+</div>
 </body>
 </html>
