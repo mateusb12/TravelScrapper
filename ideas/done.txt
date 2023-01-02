@@ -1,0 +1,18 @@
+	1. Identify the flight data that you want to track. This might include the origin and destination airports,
+the dates of travel, and any other relevant details such as the number of passengers or the desired class of service.
+
+    	2. Set up an API endpoint that provides access to the flight price data that you want to track.
+This might involve signing up for an API key with a flight data provider, or using a pre-existing API endpoint that
+is available for free or for a fee.
+
+    	3. Store the flight price data in a database or other persistent storage system. This will allow you totrack
+changes in flight prices over time, and to generate alerts when prices reach a certain threshold.
+
+
+	4. Implement the alerting system itself. This could involve sending email or SMS notifications to users when
+flight prices meet certain criteria (e.g. when prices drop below a certain level), or displaying alerts on a web page
+or mobile app.
+
+	5. Test and debug the system to ensure that it is functioning correctly and that alerts are being generated as
+expected. This might involve setting up test data and simulated API responses, or using a staging environment to test
+the system in a production-like environment.

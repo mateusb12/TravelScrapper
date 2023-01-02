@@ -16,33 +16,14 @@ class FirebaseApp:
         self.firebase_folder = "flight_data"
         self.db = connection_class.db
         self.auth = connection_class.auth
-        self.token = "None"
-        self.credential_email = ""
-        self.credential_password = ""
-        self.__set_env_credentials()
-        # self.user = self.__authenticate_using_email_and_password()
-        # self.all_entries: dict = self.get_all_flights()
-        # self.query_date = get_formatted_today_date()
+        user_crud = FirebaseUserCrud(connection_class)
+        self.user = user_crud.user
+        self.all_entries: dict = self.get_all_flights()
+        self.query_date = get_formatted_today_date()
 
     def __set_env_credentials(self):
         self.credential_email = os.environ["FIREBASE_DUMMY_LOGIN"]
         self.credential_password = os.environ["FIREBASE_DUMMY_PASSWORD"]
-
-    def login(self, email: str, password: str):
-        self.credential_email = email
-        self.credential_password = password
-        self.user = self.__authenticate_using_email_and_password()
-        self.all_entries = self.get_all_flights()
-
-    def __authenticate_using_email_and_password(self) -> UserRecord:
-        email = self.credential_email
-        password = self.credential_password
-        user = self.auth.get_user_by_email(email)
-        user_data = self.db.reference(f'user_data/{user.display_name}').get()
-        custom_token = auth.create_custom_token(email, {"is_admin": True})
-        self.token = custom_token.decode('utf-8')
-        return user
-        # return self.auth.sign_in_with_email_and_password(custom_token)
 
     def add_entry(self, input_dict: dict):
         ref = self.db.reference(self.firebase_folder)
@@ -166,7 +147,6 @@ class FirebaseApp:
 def __main():
     fba = FirebaseApp()
     fba.reorder_flight_node_by_query_date_order()
-    # fba.login("test@example.com", "123456")
     return
     # all_folders = fba.get_all_firebase_folders()
     # example = get_flight_data_example()[0]

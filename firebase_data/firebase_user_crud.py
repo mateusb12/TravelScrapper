@@ -1,4 +1,6 @@
-from firebase_admin.auth import EmailAlreadyExistsError, UserNotFoundError
+import os
+
+from firebase_admin.auth import EmailAlreadyExistsError, UserNotFoundError, UserRecord
 
 from firebase_data.firebase_connection import FirebaseCore
 
@@ -7,9 +9,12 @@ class FirebaseUserCrud:
     def __init__(self, input_firebase_app: FirebaseCore):  # sourcery skip: use-named-expression
         self.app = input_firebase_app
         self.auth = self.app.auth
+        self.db = self.app.db
         no_existing_users = self.no_existing_users()
         if no_existing_users:
-            self.create_dummy_user()
+            self._create_dummy_user()
+        self.__set_env_credentials()
+        self.user = self._authenticate_using_email_and_password()
 
     def create_user(self, email: str = "test@example.com", password: str = "123456", name: str = "TestUser",
                     phone_number: str = "+11234567890", custom_claims=None) -> dict:
@@ -23,7 +28,7 @@ class FirebaseUserCrud:
             print("User already exists")
             return {"output": "error", "outputDetails": f"User {email} already exists"}
 
-    def create_dummy_user(self) -> dict:
+    def _create_dummy_user(self) -> dict:
         return self.create_user(email="test@test.com", password="123456", name="TestUser", phone_number="+11234567890",
                                 custom_claims=None)
 
@@ -35,8 +40,21 @@ class FirebaseUserCrud:
         user_details = {"name": name, "phone_number": phone_number, "email": email, "unique_id": user.uid}
         for key, value in custom_claims.items():
             self.auth.set_custom_user_claims(user.uid, {key: value})
+        user_details["custom_claims"] = custom_claims
         self.app.db.reference(f"user_data/{name}").set(user_details)
         return {"output": "success", "outputDetails": f"User {email} created successfully"}
+
+    def __set_env_credentials(self):
+        self.credential_email = os.environ["FIREBASE_DUMMY_LOGIN"]
+        self.credential_password = os.environ["FIREBASE_DUMMY_PASSWORD"]
+
+    def _authenticate_using_email_and_password(self) -> UserRecord:
+        email = self.credential_email
+        password = self.credential_password
+        return self.auth.get_user_by_email(email)
+
+    def _get_user_data_by_display_name(self, display_name: str):
+        return self.db.reference(f"user_data/{display_name}").get()
 
     def get_single_user(self, email: str) -> dict:
         try:

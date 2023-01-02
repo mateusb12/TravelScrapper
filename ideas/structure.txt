@@ -1,28 +1,21 @@
-	1. Identify the flight data that you want to track. This might include the origin and destination airports,
-the dates of travel, and any other relevant details such as the number of passengers or the desired class of service.
+	1. The system should allow users to sign up and log in to their account in order to create new queries
 
-	2. Set up an API endpoint that provides access to the flight price data that you want to track.
-This might involve signing up for an API key with a flight data provider, or using a pre-existing API endpoint that
-is available for free or for a fee.
+	2. The system should store historical data for each query, including the daily average prices for each
+day the query was active
 
-	3. Write code to periodically query the API endpoint for flight price data.
+	3. The system should allow users to view the current status of their queries and access the historical
+data for each query
+
+	4. The system should allow users to modify or delete existing queries as needed
+
+	5. Write code to periodically query the API endpoint for flight price data.
 This could be done on a regular schedule (e.g. every hour) using a task scheduler or cron job.
 Alternatively, you could use a webhook or other real-time notification system to receive updates as soon as
 new flight price data becomes available.
 
-	4. Store the flight price data in a database or other persistent storage system. This will allow you to track changes
-in flight prices over time, and to generate alerts when prices reach a certain threshold.
-
-	5. Implement the alerting system itself. This could involve sending email or SMS notifications to users when flight
-prices meet certain criteria (e.g. when prices drop below a certain level), or displaying alerts on a web page or mobile app.
-
-	6. Test and debug the system to ensure that it is functioning correctly and that alerts are being generated as expected.
-This might involve setting up test data and simulated API responses, or using a staging environment to test the system
-in a production-like environment.
-
-	7. Consider adding a user interface for your flight price monitor, either through a web app or a mobile app.
+	6. Consider adding a user interface for your flight price monitor, either through a web app or a mobile app.
 This will make it easier for users to interact with your application and access flight information.
 
-	8. Deploy the system to a production environment, and monitor it to ensure that it is functioning correctly
+	7. Deploy the system to a production environment, and monitor it to ensure that it is functioning correctly
 and meeting the needs of users. This might involve monitoring logs and metrics, and making updates or changes as needed
 to improve the system's performance and reliability.

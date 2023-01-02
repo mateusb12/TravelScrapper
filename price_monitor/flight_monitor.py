@@ -13,7 +13,6 @@ class FlightMonitor:
         self.crud.set_folder(f"flight_data/{self.today_date}")
         self.existing_flight_data = [{}]
         self.new_flight_data = [{}]
-        # self.__run()
 
     def run(self):
         self._gather_current_data()
@@ -80,6 +79,7 @@ class FlightMonitor:
 
 def __main():
     fw = FlightMonitor()
+    fw.run()
     return
 
 
