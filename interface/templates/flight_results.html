@@ -7,11 +7,28 @@
 </head>
 <body>
 <div class="container">
-    <h2 class="folder-name">Folder Name: {{ results.folder_name }}</h2>
-    <h2 class="departure-airport">Departure Airport: {{ results.departure_airport }}</h2>
-    <h2 class="arrival-airport">Arrival Airport: {{ results.arrival_airport }}</h2>
-    <h2 class="price">Price: {{ results.price }}</h2>
-    <h2 class="duration">Duration: {{ results.duration }}</h2>
+    <table>
+        <tr>
+            <td><label class="folder-name-label">Folder Name:</label></td>
+            <td class="folder-name">{{ results.folder_name }}</td>
+        </tr>
+        <tr>
+            <td><label class="departure-airport-label">Departure Airport:</label></td>
+            <td class="departure-airport">{{ results.departure_airport }}</td>
+        </tr>
+        <tr>
+            <td><label class="arrival-airport-label">Arrival Airport:</label></td>
+            <td class="arrival-airport">{{ results.arrival_airport }}</td>
+        </tr>
+        <tr>
+            <td><label class="price-label">Price:</label></td>
+            <td class="price">{{ results.price }}</td>
+        </tr>
+        <tr>
+            <td><label class="duration-label">Duration:</label></td>
+            <td class="duration">{{ results.duration }}</td>
+        </tr>
+    </table>
 </div>
 </body>
 </html>
