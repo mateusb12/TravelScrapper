@@ -1,4 +1,6 @@
-from flask import Flask, request, render_template
+import ast
+
+from flask import Flask, request, render_template, redirect, url_for
 
 app = Flask(__name__)
 
@@ -15,12 +17,15 @@ def forms():
         'price': request.form['price'],
         'duration': request.form['duration']
     }
-    return render_template('flight_results.html', results=flight_results)
+    # return render_template('flight_results.html', results=flight_results)
+    return redirect(url_for('results', results=flight_results))
 
 
 @app.route("/flight_results", methods=['GET', 'POST'])
 def results():
-    return render_template('../templates/flight_results.html')
+    results_string = request.args.get('results')
+    flight_results = ast.literal_eval(results_string)
+    return render_template('flight_results.html', results=flight_results)
 
 
 if __name__ == '__main__':
