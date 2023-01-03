@@ -2,6 +2,7 @@ import os
 import re
 
 from firebase_data.firebase_connection import FirebaseCore
+from firebase_data.firebase_login import FirebaseLogin
 
 from firebase_data.firebase_user_crud import FirebaseUserCrud
 from price_monitor.flight_utils import get_formatted_today_date, reorder_flight_data_node_by_date
@@ -15,7 +16,8 @@ class FirebaseApp:
         self.db = connection_class.db
         self.auth = connection_class.auth
         user_crud = FirebaseUserCrud(connection_class)
-        self.user = user_crud.user
+        user_login = FirebaseLogin(user_crud)
+        self.user = user_login.user
         self.all_entries: dict = self.get_all_flights()
         self.query_date = get_formatted_today_date()
 
@@ -144,7 +146,6 @@ class FirebaseApp:
 
 def __main():
     fba = FirebaseApp()
-    fba.reorder_flight_node_by_query_date_order()
     return
     # all_folders = fba.get_all_firebase_folders()
     # example = get_flight_data_example()[0]

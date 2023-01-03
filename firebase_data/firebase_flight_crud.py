@@ -4,8 +4,8 @@ from price_monitor.flight_utils import get_formatted_today_date
 
 
 class FirebaseFlightCrud:
-    def __init__(self):
-        self.firebase_app = FirebaseApp()
+    def __init__(self, input_app: FirebaseApp):
+        self.firebase_app = input_app
         self.firebase_app.query_date = get_formatted_today_date()
 
     def create_flight(self, flight_data: dict) -> dict:
@@ -67,7 +67,8 @@ class FirebaseFlightCrud:
 
 
 def __main():
-    fbc = FirebaseFlightCrud()
+    firebase_app = FirebaseApp()
+    fbc = FirebaseFlightCrud(firebase_app)
     fbc.firebase_app.set_firebase_folder("flight_data")
     aux = fbc.read_all_flights()
     return

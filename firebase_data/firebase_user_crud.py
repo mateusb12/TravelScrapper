@@ -10,11 +10,6 @@ class FirebaseUserCrud:
         self.app = input_firebase_app
         self.auth = self.app.auth
         self.db = self.app.db
-        no_existing_users = self.no_existing_users()
-        if no_existing_users:
-            self._create_dummy_user()
-        self.__set_env_credentials()
-        self.user = self._authenticate_using_email_and_password()
 
     def create_user(self, email: str = "test@example.com", password: str = "123456", name: str = "TestUser",
                     phone_number: str = "+11234567890", custom_claims=None) -> dict:
@@ -51,9 +46,7 @@ class FirebaseUserCrud:
         self.credential_email = os.environ["FIREBASE_DUMMY_LOGIN"]
         self.credential_password = os.environ["FIREBASE_DUMMY_PASSWORD"]
 
-    def _authenticate_using_email_and_password(self) -> UserRecord:
-        email = self.credential_email
-        password = self.credential_password
+    def authenticate_using_email_and_password(self, email: str, password: str) -> UserRecord:
         return self.auth.get_user_by_email(email)
 
     def _get_user_data_by_display_name(self, display_name: str):
