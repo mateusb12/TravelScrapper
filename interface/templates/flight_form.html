@@ -2,40 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Flight query</title>
+    <link rel="stylesheet" type="text/css" href="../static/flight_form_style.css">
 </head>
+
 <body>
 
 <form id="form" method="post">
-  <label for="folder-name">Folder Name:</label><br>
-  <input type="text" id="folder-name" name="folder-name"><br>
-  <label for="departure-airport">Departure Airport:</label><br>
-  <select id="departure-airport" name="departure-airport">
-    <option value="JFK">JFK</option>
-    <option value="ORD">ORD</option>
-    <option value="ATL">ATL</option>
-    <option value="LAX">LAX</option>
-    <option value="DFW">DFW</option>
-  </select><br>
-  <label for="arrival-airport">Arrival Airport:</label><br>
-  <select id="arrival-airport" name="arrival-airport">
-    <option value="JFK">JFK</option>
-    <option value="ORD">ORD</option>
-    <option value="ATL">ATL</option>
-    <option value="LAX">LAX</option>
-    <option value="DFW">DFW</option>
-  </select><br>
-  <label for="price">Maximum Price:</label><br>
-  <input type="text" id="price" name="price"><br>
-  <label for="duration">Maximum Duration:</label><br>
-  <select id="duration" name="duration">
-    <option value="2">2 hours</option>
-    <option value="4">4 hours</option>
-    <option value="6">6 hours</option>
-    <option value="8">8 hours</option>
-    <option value="10">10 hours</option>
-  </select><br><br>
-  <input type="submit" value="Submit">
+    <label for="folder-name">Folder Name:</label><br>
+      <input type="text" id="folder-name" name="folder-name" value="Flights"><br>
+    <label for="departure-airport">Departure Airport:</label><br>
+      <select id="departure-airport" name="departure-airport">
+        <option value="JFK">JFK</option>
+        <option value="ORD">ORD</option>
+        <option value="ATL">ATL</option>
+        <option value="LAX">LAX</option>
+        <option value="DFW">DFW</option>
+      </select><br>
+    <label for="arrival-airport">Arrival Airport:</label><br>
+      <select id="arrival-airport" name="arrival-airport">
+        <option value="JFK">JFK</option>
+        <option value="ORD">ORD</option>
+        <option value="ATL">ATL</option>
+        <option value="LAX">LAX</option>
+        <option value="DFW">DFW</option>
+      </select><br>
+    <label for="price">Maximum Price:</label><br>
+      <input type="text" id="price" name="price" value="1000"><br>
+    <label for="duration">Maximum Duration:</label><br>
+      <select id="duration" name="duration">
+        <option value="2">2 hours</option>
+        <option value="4">4 hours</option>
+        <option value="6">6 hours</option>
+        <option value="8">8 hours</option>
+        <option value="10">10 hours</option>
+      </select><br><br>
+    <input type="submit" value="Submit">
 </form>
 
 </body>
