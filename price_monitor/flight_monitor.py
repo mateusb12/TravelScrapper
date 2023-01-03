@@ -1,7 +1,6 @@
 from apis.api_consumer.kiwi_api_call import kiwi_call
 from firebase_data.firebase_flight_crud import FirebaseFlightCrud
 from notifications.telegram_bot.bot import telegram_bot_instance
-from random_generated_flights.random_data_generator import get_10_random_flights
 from price_monitor.flight_processor import FlightProcessor
 from price_monitor.flight_utils import get_formatted_today_date
 

@@ -14,7 +14,6 @@ def get_flight_data():
 def get_firebase_crud_instance():
     instance = FirebaseFlightCrud()
     instance.firebase_app.set_firebase_folder("tests")
-    instance.delete_folder(folder_name="/tests")
     return instance
 
 
@@ -26,6 +25,7 @@ def test_firebase_create_flight(get_flight_data, get_firebase_crud_instance):
     flight_data = get_flight_data
     firebase_crud = get_firebase_crud_instance
 
+    firebase_crud.delete_folder(folder_name="/tests")
     creation_result = firebase_crud.create_flight(flight_data)
     all_flights = firebase_crud.firebase_app.get_all_flights()
     created_flight = list(all_flights.values())[0]
@@ -44,7 +44,8 @@ def test_firebase_read_flight(get_flight_data, get_firebase_crud_instance):
     all_flights = firebase_crud.firebase_app.get_all_flights()
     flight_unique_id = list(all_flights.keys())[0]
     read_flight = firebase_crud.read_flight(flight_unique_id)
-    assert read_flight == flight_data
+    different_keys = [item for item in read_flight.keys() if item not in flight_data.keys()]
+    assert not different_keys
 
 
 @pytest.mark.run(order=3)

@@ -1,6 +1,6 @@
 import os
 
-from firebase_admin.auth import EmailAlreadyExistsError, UserNotFoundError, UserRecord
+from firebase_admin.auth import EmailAlreadyExistsError, UserNotFoundError, UserRecord, PhoneNumberAlreadyExistsError
 
 from firebase_data.firebase_connection import FirebaseCore
 
@@ -25,14 +25,17 @@ class FirebaseUserCrud:
         try:
             return self._create_new_firebase_user(email, password, name, phone_number, custom_claims)
         except EmailAlreadyExistsError:
-            print("User already exists")
             return {"output": "error", "outputDetails": f"User {email} already exists"}
+        except PhoneNumberAlreadyExistsError:
+            return {"output": "error", "outputDetails": f"Phone number {phone_number} already exists"}
+        except ValueError as ve:
+            return {"output": "error", "outputDetails": f"ValueError: {ve}"}
 
     def _create_dummy_user(self) -> dict:
         return self.create_user(email="test@test.com", password="123456", name="TestUser", phone_number="+11234567890",
                                 custom_claims=None)
 
-    def _create_new_firebase_user(self, email: str, password: str, name: str, phone_number: str, custom_claims: dict)\
+    def _create_new_firebase_user(self, email: str, password: str, name: str, phone_number: str, custom_claims: dict) \
             -> dict:
         self.app.auth.create_user(email=email, password=password, display_name=name, phone_number=phone_number)
         self.auth.generate_email_verification_link(email)
@@ -105,10 +108,17 @@ class FirebaseUserCrud:
         users = self.get_all_users()["outputDetails"]
         return not users
 
+    def update_user(self, user_email: str, new_info: dict):
+        user = self.get_single_user(user_email)["outputDetails"]
+        user_unique_id = user.uid
+        self.auth.update_user(user_unique_id, **new_info)
+        return {"output": "success", "outputDetails": f"User {user_email} updated successfully"}
+
 
 def __main():
     fc = FirebaseCore()
     fba = FirebaseUserCrud(fc)
+    fba.update_user("testing@purpose.com", {"display_name": "TestingPurpose23"})
     # fba.delete_all_users()
     # all_users = fba.get_all_users()
     # fba.delete_user("test@example.com")

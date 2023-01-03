@@ -1,9 +1,7 @@
 import os
 import re
-from firebase_admin.auth import UserRecord
 
-from firebase_data.firebase_connection import create_firebase_connection, FirebaseCore
-from firebase_admin import auth, db
+from firebase_data.firebase_connection import FirebaseCore
 
 from firebase_data.firebase_user_crud import FirebaseUserCrud
 from price_monitor.flight_utils import get_formatted_today_date, reorder_flight_data_node_by_date
