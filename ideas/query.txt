@@ -1,0 +1,12 @@
+A Query entity could be useful to store information about a user's search for flights.
+Here are some parameters that it could include:
+
+Create a layoverDuration category for flights (none, low, medium, high)
+
+    userEmail: the email address of the user who made the query
+    departure: the departure location
+    arrival: the arrival location
+    departureDate: the date of departure
+    returnDate: the date of return (if applicable)
+    maxLayoverDuration: the maximum layover duration (if applicable)
+    queryDate: the date and time the query was made
