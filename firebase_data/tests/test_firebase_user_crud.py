@@ -93,6 +93,8 @@ def test_update_user(get_user_crud_instance):
     true_data = true_data_result["outputDetails"]
     assert result["output"] == "success"
     assert true_data.display_name == "NewBeautifulName"
+    new_data["display_name"] = "TestingPurpose"
+    firebase_crud.update_user(email, new_data)
 
 
 @pytest.mark.run(order=8)

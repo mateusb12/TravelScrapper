@@ -89,6 +89,8 @@ class FirebaseUserCrud:
         user = self.get_single_user(input_email)["outputDetails"]
         user_unique_id = user.uid
         self.auth.delete_user(user_unique_id)
+        real_time_database_location = self.db.reference(f"user_data/{user.display_name}")
+        real_time_database_location.delete()
         return {"output": "success", "outputDetails": f"User {input_email} deleted successfully"}
 
     def delete_all_users(self) -> dict:
@@ -111,7 +113,8 @@ class FirebaseUserCrud:
 def __main():
     fc = FirebaseCore()
     fba = FirebaseUserCrud(fc)
-    fba.update_user("testing@purpose.com", {"display_name": "TestingPurpose23"})
+    # fba.update_user("testing@purpose.com", {"display_name": "TestingPurpose23"})
+    fba.delete_user("testing@purpose.com")
     # fba.delete_all_users()
     # all_users = fba.get_all_users()
     # fba.delete_user("test@example.com")
