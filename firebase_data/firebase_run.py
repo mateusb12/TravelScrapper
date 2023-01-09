@@ -18,7 +18,7 @@ class FirebaseApp:
         user_crud = FirebaseUserCrud(connection_class)
         user_login = FirebaseLogin(user_crud)
         self.user = user_login.user
-        self.all_entries: dict = self.get_all_flights()
+        self.all_entries: dict = self.get_all_entries()
         self.query_date = get_formatted_today_date()
 
     def __set_env_credentials(self):
@@ -60,7 +60,7 @@ class FirebaseApp:
             return False
         return unique_id in self.all_entries
 
-    def get_all_flights(self) -> dict:
+    def get_all_entries(self) -> dict:
         ref = self.db.reference(self.firebase_folder)
         return ref.get()
 
@@ -123,7 +123,7 @@ class FirebaseApp:
         ref.delete()
 
     def refresh_all_entries(self):
-        self.all_entries = self.get_all_flights()
+        self.all_entries = self.get_all_entries()
         return
 
     def get_entries_by_user_email(self, user_email: str) -> list[dict]:

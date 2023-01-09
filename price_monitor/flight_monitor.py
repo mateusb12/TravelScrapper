@@ -22,7 +22,7 @@ class FlightMonitor:
         self.crud.delete_folder("flight_data")
 
     def _gather_current_data(self):
-        raw_data = self.crud.firebase_app.get_all_flights()
+        raw_data = self.crud.firebase_app.get_all_entries()
         if raw_data is None:
             self.existing_flight_data = []
             return
