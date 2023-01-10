@@ -5,6 +5,11 @@ from flask import Flask, request, render_template, redirect, url_for
 app = Flask(__name__)
 
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    return render_template("login_page.html")
+
+
 @app.route('/query_creator', methods=['GET', 'POST'])
 def forms():
     if request.method == 'GET':
