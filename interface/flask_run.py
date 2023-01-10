@@ -5,10 +5,10 @@ from flask import Flask, request, render_template, redirect, url_for
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/query_creator', methods=['GET', 'POST'])
 def forms():
     if request.method == 'GET':
-        return render_template('flight_form.html')
+        return render_template('query_form.html')
     print("You have clicked on the submit button!")
     flight_results = {
         'folder_name': request.form['folder-name'],

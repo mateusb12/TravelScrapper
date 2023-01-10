@@ -84,7 +84,7 @@ def __main():
     firebase_app = FirebaseApp()
     fqc = FirebaseQueryCrud(firebase_app)
     query = __get_query_example()
-    aux = fqc.delete_query(query)
+    aux = fqc.create_query(query)
     return
 
 

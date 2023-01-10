@@ -10,8 +10,8 @@
 <body>
 
 <form id="form" method="post">
-    <label for="folder-name">Folder Name:</label>
-      <input type="text" id="folder-name" name="folder-name" value="Flights">
+    <label for="query-name">Query name:</label>
+      <input type="text" id="query-name" name="folder-name" value="Flights">
     <label for="departure-airport">Departure Airport:</label>
       <select id="departure-airport" name="departure-airport">
         <option value="JFK">JFK</option>
@@ -19,6 +19,7 @@
         <option value="ATL">ATL</option>
         <option value="LAX">LAX</option>
         <option value="DFW">DFW</option>
+          <option value="other">Other</option>
       </select><br>
     <label for="arrival-airport">Arrival Airport:</label>
       <select id="arrival-airport" name="arrival-airport">
@@ -27,8 +28,9 @@
         <option value="ATL">ATL</option>
         <option value="LAX">LAX</option>
         <option value="DFW">DFW</option>
+          <option value="other">Other</option>
       </select><br>
-    <label for="price">Maximum Price:</label>
+    <label for="price">Price Alert:</label>
       <input type="text" id="price" name="price" value="1000"><br>
     <label for="duration">Maximum Duration:</label>
       <select id="duration" name="duration">
@@ -37,9 +39,14 @@
         <option value="6">6 hours</option>
         <option value="8">8 hours</option>
         <option value="10">10 hours</option>
-      </select><br><br>
+      </select><br>
+    <label for="departure-date">Departure Date:</label>
+    <input type="date" id="departure-date" name="departure-date">
     <input type="submit" value="Submit">
 </form>
 
+<script src="../static/flight_query_logic.js"></script>
+
 </body>
+
 </html>
