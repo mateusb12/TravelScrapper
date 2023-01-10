@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flight Queries</title>
+    <style>
+      /* Style for the list elements */
+      .list-item {
+        border: 1px solid black;
+        padding: 8px;
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      /* Style for the rounded border */
+      .list-item:hover {
+        border-radius: 25px;
+      }
+
+      /* Style for the sub-list items */
+      .sub-list {
+        display: none;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+
+    <script>
+    function expandCollapse(element) {
+        // Get all the sub-list items
+        let subLists = document.getElementsByClassName("sub-list");
+
+        // Iterate over all sub-lists and hide them
+        for(let i=0; i < subLists.length; i++) {
+            subLists[i].style.display = "none";
+        }
+
+        // Get the sub-list element based on unique class
+        let subList = element.closest('.list-item').querySelector('.query01-sub-list');
+        // Show the sub-list
+        subList.style.display = "block";
+    }
+    </script>
+</head>
+
+<body>
+
+<ul>
+  <li class="list-item">
+    <span>Query01</span>
+    <ul class="sub-list query01-sub-list">
+        <li>A</li>
+        <li>B</li>
+        <li>C</li>
+        <li>D</li>
+    </ul>
+  </li>
+  <li class="list-item">
+    <span>Query02</span>
+    <ul class="sub-list query02-sub-list">
+        <li>A</li>
+        <li>B</li>
+        <li>C</li>
+        <li>D</li>
+    </ul>
+  </li>
+  <li class="list-item">
+    <span>Query03</span>
+    <ul class="sub-list query03-sub-list">
+        <li>A</li>
+        <li>B</li>
+        <li>C</li>
+        <li>D</li>
+    </ul>
+  </li>
+</ul>
+
+
+
+</body>
+</html>

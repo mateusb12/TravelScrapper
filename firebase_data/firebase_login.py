@@ -12,7 +12,7 @@ class FirebaseLogin:
         if no_existing_users:
             self._create_dummy_user()
         self.user = None
-        self.__login_using_env_credentials()
+        # self.__login_using_env_credentials()
 
     def _create_dummy_user(self) -> dict:
         return self.__crud_user.create_user(email="test@test.com", password="123456", name="TestUser",
@@ -31,6 +31,7 @@ def __main():
     fc = FirebaseCore()
     fbc = FirebaseUserCrud(fc)
     fbl = FirebaseLogin(fbc)
+    user = fbl.user
     return
 
 

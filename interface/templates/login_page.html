@@ -15,12 +15,12 @@
   <body>
     <div class="login-form">
         <h2>Login</h2>
-        <form>
+        <form action='/login' method="POST">
           <label for="username">Username:</label>
-          <input type="text" id="username" name="username" autocomplete="off">
+          <input type="text" id="username" name="username" autocomplete="off" value="test@test.com">
           <br>
           <label for="password">Password:</label>
-          <input type="password" id="password" name="password">
+          <input type="password" id="password" name="password" value="123456">
           <br>
           <input type="submit" value="Login">
         </form>
