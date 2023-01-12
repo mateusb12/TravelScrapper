@@ -1,30 +1,35 @@
 import ast
+from typing import Optional
 
 from flask import Flask, request, render_template, redirect, url_for, session
 
 from firebase_data.firebase_factory import FirebaseFactory
 
+factory: FirebaseFactory = FirebaseFactory()
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    global factory
     if request.method == 'GET':
         return render_template("login_page.html")
     username = request.form['username']
     password = request.form['password']
     print(f"Username: {username}, Password: {password}")
-    factory = FirebaseFactory(email=username, password=password)
-    all_queries = factory.firebase_query.all_queries
-    session['all_queries'] = all_queries
+    factory.run(username, password)
+    # all_queries = factory.firebase_query.all_queries
+    # session['all_queries'] = all_queries
     return redirect('/flight_query_viewer')
     # return render_template("flight_query_viewer.html", query_dict=all_queries)
 
 
 @app.route('/flight_query_viewer')
 def flight_query_viewer():
-    all_queries = session.get('all_queries')
+    global factory
+    # all_queries = session.get('all_queries')
+    all_queries = factory.firebase_query.all_queries
     return render_template("flight_query_viewer.html", query_dict=all_queries)
 
 

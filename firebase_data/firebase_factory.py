@@ -8,7 +8,15 @@ from firebase_data.firebase_user_crud import FirebaseUserCrud
 
 
 class FirebaseFactory:
-    def __init__(self, email: str, password: str):
+    def __init__(self):
+        self.core = None
+        self.user_crud = None
+        self.firebase_login = None
+        self.user = None
+        self.app = None
+        self.firebase_query = None
+
+    def run(self, email: str, password: str):
         self.core = FirebaseCore()
         self.user_crud = FirebaseUserCrud(self.core)
         self.firebase_login = FirebaseLogin(self.user_crud)
@@ -16,10 +24,12 @@ class FirebaseFactory:
         self.user = self.firebase_login.user
         self.app = FirebaseApp(input_user=self.user, input_core=self.core)
         self.firebase_query = FirebaseQueryCrud(self.app)
+        print("Factory successfully finished!")
 
 
 def __main():
-    factory = FirebaseFactory(email="test@test.com", password="123456")
+    factory = FirebaseFactory()
+    factory.run("email", "password")
     queries = factory.firebase_query.all_queries
     return
 
