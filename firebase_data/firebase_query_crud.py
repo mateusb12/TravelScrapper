@@ -8,7 +8,8 @@ from price_monitor.flight_utils import get_formatted_today_date
 class FirebaseQueryCrud:
     def __init__(self, input_app: FirebaseApp):
         self.app = input_app
-        self.app.firebase_folder = "query_data"
+        self.folder = "query_data"
+        self.app.firebase_folder = self.folder
         self.user = input_app.user
         self.query_date = get_formatted_today_date()
         self.all_queries = self._get_all_queries()
@@ -74,6 +75,10 @@ class FirebaseQueryCrud:
             return {"output": "error", "outputDetails": "Query does not exist"}
         self.app.delete_entry_by_unique_id(unique_id)
         return {"output": "success", "outputDetails": "Query deleted"}
+
+    def read_all_queries(self):
+        self.app.firebase_folder = self.folder
+        return self.app.get_all_entries()
 
 
 def __get_query_example():

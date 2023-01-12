@@ -5,6 +5,7 @@ from price_monitor.flight_utils import get_formatted_today_date
 
 class FirebaseFlightCrud:
     def __init__(self, input_app: FirebaseApp):
+        self.folder = "flight_data"
         self.firebase_app = input_app
         self.firebase_app.query_date = get_formatted_today_date()
 
@@ -57,6 +58,7 @@ class FirebaseFlightCrud:
         self.firebase_app.set_firebase_folder(folder_name)
 
     def read_all_flights(self):
+        self.firebase_app.firebase_folder = self.folder
         return self.firebase_app.get_all_entries()
 
     def trim_non_existing_flights(self, flight_pot: list[dict]):

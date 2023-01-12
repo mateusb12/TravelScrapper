@@ -66,7 +66,8 @@ class FirebaseApp:
         return unique_id in self.all_entries
 
     def get_all_entries(self) -> dict:
-        ref = self.db.reference(self.firebase_folder)
+        entry_location = self.firebase_folder
+        ref = self.db.reference(entry_location)
         return ref.get()
 
     def get_entry_by_key(self, desired_key: str) -> dict:  # sourcery skip: use-next
