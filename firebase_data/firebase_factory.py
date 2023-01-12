@@ -7,23 +7,20 @@ from firebase_data.firebase_run import FirebaseApp
 from firebase_data.firebase_user_crud import FirebaseUserCrud
 
 
-def login_pipeline(email: str, password: str) -> FirebaseApp:
-    fc = FirebaseCore()
-    fbc = FirebaseUserCrud(fc)
-    fbl = FirebaseLogin(fbc)
-    fbl.login(email, password)
-    user = fbl.user
-    return FirebaseApp(input_user=user, input_core=fc)
-
-
-def get_all_queries(app: FirebaseApp):
-    fqc = FirebaseQueryCrud(app)
-    return fqc.all_queries
+class FirebaseFactory:
+    def __init__(self, email: str, password: str):
+        self.core = FirebaseCore()
+        self.user_crud = FirebaseUserCrud(self.core)
+        self.firebase_login = FirebaseLogin(self.user_crud)
+        self.firebase_login.login(email, password)
+        self.user = self.firebase_login.user
+        self.app = FirebaseApp(input_user=self.user, input_core=self.core)
+        self.firebase_query = FirebaseQueryCrud(self.app)
 
 
 def __main():
-    app = login_pipeline(email="test@test.com", password="123456")
-    queries = get_all_queries(app)
+    factory = FirebaseFactory(email="test@test.com", password="123456")
+    queries = factory.firebase_query.all_queries
     return
 
 
