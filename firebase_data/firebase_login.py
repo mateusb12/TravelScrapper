@@ -31,6 +31,7 @@ def __main():
     fc = FirebaseCore()
     fbc = FirebaseUserCrud(fc)
     fbl = FirebaseLogin(fbc)
+    fbl.login(email="test@test.com", password="123456")
     user = fbl.user
     return
 

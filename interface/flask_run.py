@@ -2,10 +2,6 @@ import ast
 
 from flask import Flask, request, render_template, redirect, url_for
 
-from firebase_data.firebase_connection import FirebaseCore
-from firebase_data.firebase_login import FirebaseLogin
-from firebase_data.firebase_user_crud import FirebaseUserCrud
-
 app = Flask(__name__)
 
 
@@ -16,10 +12,6 @@ def login():
     username = request.form['username']
     password = request.form['password']
     print(f"Username: {username}, Password: {password}")
-    # fc = FirebaseCore()
-    # fbc = FirebaseUserCrud(fc)
-    # fbl = FirebaseLogin(fbc)
-    # fbl.login(username, password)
     return render_template("flight_query_viewer.html")
 
 

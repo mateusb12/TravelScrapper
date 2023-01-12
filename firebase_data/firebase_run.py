@@ -1,6 +1,8 @@
 import os
 import re
 
+from firebase_admin.auth import UserRecord
+
 from firebase_data.firebase_connection import FirebaseCore
 from firebase_data.firebase_login import FirebaseLogin
 
@@ -9,15 +11,18 @@ from price_monitor.flight_utils import get_formatted_today_date, reorder_flight_
 
 
 class FirebaseApp:
-    def __init__(self):
-        connection_class = FirebaseCore()
+    def __init__(self, input_user: UserRecord = None, input_core: FirebaseCore = None):
+        connection_class = FirebaseCore() if input_core is None else input_core
         self.app = connection_class.app
         self.firebase_folder = "flight_data"
         self.db = connection_class.db
         self.auth = connection_class.auth
-        user_crud = FirebaseUserCrud(connection_class)
-        user_login = FirebaseLogin(user_crud)
-        self.user = user_login.user
+        if input_user is None:
+            user_crud = FirebaseUserCrud(connection_class)
+            user_login = FirebaseLogin(user_crud)
+            self.user = user_login.user
+        else:
+            self.user = input_user
         self.all_entries: dict = self.get_all_entries()
         self.query_date = get_formatted_today_date()
 
