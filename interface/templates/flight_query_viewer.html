@@ -59,57 +59,33 @@
 
 <body>
 
-<div class="query">
-    <div class="query-summary" onclick="this.parentElement.classList.toggle('active')">
-        <span class="query-unique-id">-NLOKa_j8bJkNA427x4F</span>
-    </div>
-    <div class="query-details">
-        <div class="query-sublist">
-            <div class="query-sublist-item">
-                <span class="query-departure-airport-tag">Departure Airport →</span>
-                <span class="query-departure-airport">FOR</span>
-            </div>
-            <div class="query-sublist-item">
-                <span class="query-arrival-airport-tag">Arrival Airport →</span>
-                <span class="query-arrival-airport">SAO</span>
-            </div>
-            <div class="query-sublist-item">
-                <span class="query-departure-date-tag">Departure Date →</span>
-                <span class="query-departure-date">02 March 2022</span>
-            </div>
-            <div class="query-date">
-                <span class="query-user-email-tag">User email →</span>
-                <span class="query-user-email">test@test.com</span>
+{% for key, query in query_dict.items() %}
+    <div class="query">
+        <div class="query-summary" onclick="this.parentElement.classList.toggle('active')">
+            <span class="query-unique-id">{{ key }}</span>
+        </div>
+        <div class="query-details">
+            <div class="query-sublist">
+                <div class="query-sublist-item">
+                    <span class="query-departure-airport-tag">Departure Airport →</span>
+                    <span class="query-departure-airport">{{ query.departureAirport }}</span>
+                </div>
+                <div class="query-sublist-item">
+                    <span class="query-arrival-airport-tag">Arrival Airport →</span>
+                    <span class="query-arrival-airport">{{ query.arrivalAirport }}</span>
+                </div>
+                <div class="query-sublist-item">
+                    <span class="query-departure-date-tag">Departure Date →</span>
+                    <span class="query-departure-date">{{ query.departureDate }}</span>
+                </div>
+                <div class="query-date">
+                    <span class="query-user-email-tag">User email →</span>
+                    <span class="query-user-email">{{ query.userEmail }}</span>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="query">
-    <div class="query-summary" onclick="this.parentElement.classList.toggle('active')">
-        <span class="query-unique-id">-NKQ6fKuCcPZPyy0uaHB</span>
-    </div>
-    <div class="query-details">
-        <div class="query-sublist">
-            <div class="query-sublist-item">
-                <span class="query-departure-airport-tag">Departure Airport →</span>
-                <span class="query-departure-airport">SAO</span>
-            </div>
-            <div class="query-sublist-item">
-                <span class="query-arrival-airport-tag">Arrival Airport →</span>
-                <span class="query-arrival-airport">RIO</span>
-            </div>
-            <div class="query-sublist-item">
-                <span class="query-departure-date-tag">Departure Date →</span>
-                <span class="query-departure-date">04 March 2022</span>
-            </div>
-            <div class="query-date">
-                <span class="query-user-email-tag">User email →</span>
-                <span class="query-user-email">test@test.com</span>
-            </div>
-        </div>
-    </div>
-</div>
+{% endfor %}
 
 
 </body>

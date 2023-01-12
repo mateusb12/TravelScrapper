@@ -2,6 +2,8 @@ import ast
 
 from flask import Flask, request, render_template, redirect, url_for
 
+from firebase_data.firebase_factory import login_pipeline, get_all_queries
+
 app = Flask(__name__)
 
 
@@ -12,7 +14,9 @@ def login():
     username = request.form['username']
     password = request.form['password']
     print(f"Username: {username}, Password: {password}")
-    return render_template("flight_query_viewer.html")
+    firebase_app = login_pipeline(email=username, password=password)
+    all_queries = get_all_queries(firebase_app)
+    return render_template("flight_query_viewer.html", query_dict=all_queries)
 
 
 @app.route('/query_creator', methods=['GET', 'POST'])
