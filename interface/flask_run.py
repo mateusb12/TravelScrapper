@@ -1,10 +1,11 @@
 import ast
 
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, session
 
 from firebase_data.firebase_factory import FirebaseFactory
 
 app = Flask(__name__)
+app.secret_key = 'your_secret_key'
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -16,6 +17,14 @@ def login():
     print(f"Username: {username}, Password: {password}")
     factory = FirebaseFactory(email=username, password=password)
     all_queries = factory.firebase_query.all_queries
+    session['all_queries'] = all_queries
+    return redirect('/flight_query_viewer')
+    # return render_template("flight_query_viewer.html", query_dict=all_queries)
+
+
+@app.route('/flight_query_viewer')
+def flight_query_viewer():
+    all_queries = session.get('all_queries')
     return render_template("flight_query_viewer.html", query_dict=all_queries)
 
 
