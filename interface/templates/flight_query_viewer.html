@@ -4,78 +4,118 @@
     <meta charset="UTF-8">
     <title>Flight Queries</title>
     <style>
-      /* Style for the list elements */
-      .list-item {
-        border: 1px solid black;
-        padding: 8px;
-        font-size: 18px;
-        cursor: pointer;
-      }
+        /* Rounded borders for the queries */
+        .query {
+            border-radius: 10px;
+            overflow: hidden;
+        }
 
-      /* Style for the rounded border */
-      .list-item:hover {
-        border-radius: 25px;
-      }
+        /* Style for the summary section of each query */
+        .query-summary {
+            background-color: rgba(250, 246, 7, 0.47);
+            padding: 10px;
+            cursor: pointer;
+        }
 
-      /* Style for the sub-list items */
-      .sub-list {
-        display: none;
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-      }
+        /* Style for the details section of each query */
+        .query-details {
+            background-color: rgba(2, 246, 13, 0.48);
+            padding: 10px;
+            margin-left: 20px;
+            display: none;
+        }
+
+        /* Style to show the details section when the query is active */
+        .query.active .query-details {
+            display: block;
+        }
+
+        /*
+      Use flex layout to display sub-list items vertically
+      and with different heights
+    */
+        .query-sublist {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .query-sublist-item {
+            height: 30px;
+        }
+
+        /* Example of how you can change the height of each item */
+        .query-sublist-item:nth-of-type(1) {
+            height: 30px;
+        }
+
+        .query-sublist-item:nth-of-type(2) {
+            height: 30px;
+        }
     </style>
 
     <script>
-    function expandCollapse(element) {
-        // Get all the sub-list items
-        let subLists = document.getElementsByClassName("sub-list");
-
-        // Iterate over all sub-lists and hide them
-        for(let i=0; i < subLists.length; i++) {
-            subLists[i].style.display = "none";
-        }
-
-        // Get the sub-list element based on unique class
-        let subList = element.closest('.list-item').querySelector('.query01-sub-list');
-        // Show the sub-list
-        subList.style.display = "block";
-    }
+        const container = document.querySelector('.container');
+        container.addEventListener('click', function (event) {
+            if (event.target.classList.contains('query-summary')) {
+                event.target.parentElement.classList.toggle('active');
+            }
+        });
     </script>
 </head>
 
 <body>
 
-<ul>
-  <li class="list-item">
-    <span>Query01</span>
-    <ul class="sub-list query01-sub-list">
-        <li>A</li>
-        <li>B</li>
-        <li>C</li>
-        <li>D</li>
-    </ul>
-  </li>
-  <li class="list-item">
-    <span>Query02</span>
-    <ul class="sub-list query02-sub-list">
-        <li>A</li>
-        <li>B</li>
-        <li>C</li>
-        <li>D</li>
-    </ul>
-  </li>
-  <li class="list-item">
-    <span>Query03</span>
-    <ul class="sub-list query03-sub-list">
-        <li>A</li>
-        <li>B</li>
-        <li>C</li>
-        <li>D</li>
-    </ul>
-  </li>
-</ul>
+<div class="query">
+    <div class="query-summary" onclick="this.parentElement.classList.toggle('active')">
+        <span class="query-unique-id">-NLOKa_j8bJkNA427x4F</span>
+    </div>
+    <div class="query-details">
+        <div class="query-sublist">
+            <div class="query-sublist-item">
+                <span class="query-departure-airport-tag">Departure Airport →</span>
+                <span class="query-departure-airport">FOR</span>
+            </div>
+            <div class="query-sublist-item">
+                <span class="query-arrival-airport-tag">Arrival Airport →</span>
+                <span class="query-arrival-airport">SAO</span>
+            </div>
+            <div class="query-sublist-item">
+                <span class="query-departure-date-tag">Departure Date →</span>
+                <span class="query-departure-date">02 March 2022</span>
+            </div>
+            <div class="query-date">
+                <span class="query-user-email-tag">User email →</span>
+                <span class="query-user-email">test@test.com</span>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="query">
+    <div class="query-summary" onclick="this.parentElement.classList.toggle('active')">
+        <span class="query-unique-id">-NKQ6fKuCcPZPyy0uaHB</span>
+    </div>
+    <div class="query-details">
+        <div class="query-sublist">
+            <div class="query-sublist-item">
+                <span class="query-departure-airport-tag">Departure Airport →</span>
+                <span class="query-departure-airport">SAO</span>
+            </div>
+            <div class="query-sublist-item">
+                <span class="query-arrival-airport-tag">Arrival Airport →</span>
+                <span class="query-arrival-airport">RIO</span>
+            </div>
+            <div class="query-sublist-item">
+                <span class="query-departure-date-tag">Departure Date →</span>
+                <span class="query-departure-date">04 March 2022</span>
+            </div>
+            <div class="query-date">
+                <span class="query-user-email-tag">User email →</span>
+                <span class="query-user-email">test@test.com</span>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 </body>
