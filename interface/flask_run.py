@@ -33,6 +33,11 @@ def flight_query_viewer():
     return render_template("flight_query_viewer.html", query_dict=all_queries)
 
 
+@app.route('/flight_data_viewer')
+def flight_data_viewer():
+    return render_template("flight_data_viewer.html")
+
+
 @app.route('/query_creator', methods=['GET', 'POST'])
 def forms():
     if request.method == 'GET':
