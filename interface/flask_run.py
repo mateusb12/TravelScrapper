@@ -19,16 +19,19 @@ def login():
     password = request.form['password']
     print(f"Username: {username}, Password: {password}")
     factory.run(username, password)
-    # all_queries = factory.firebase_query.all_queries
-    # session['all_queries'] = all_queries
-    return redirect('/flight_query_viewer')
-    # return render_template("flight_query_viewer.html", query_dict=all_queries)
+    session['username'] = username
+    return redirect('/user_details')
+
+
+@app.route('/user_details', methods=['GET', 'POST'])
+def user_details():
+    user_name = session.get('username', "email not found")
+    return render_template("flight_user_details.html", username=user_name)
 
 
 @app.route('/flight_query_viewer')
 def flight_query_viewer():
     global factory
-    # all_queries = session.get('all_queries')
     all_queries = factory.firebase_query.read_all_queries()
     return render_template("flight_query_viewer.html", query_dict=all_queries)
 

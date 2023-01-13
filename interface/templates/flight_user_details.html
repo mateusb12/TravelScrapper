@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../static/icons/flight_icon.png">
+    <style>
+        body {
+            display: flex; /* Make the body a flex container */
+            justify-content: center; /* Center elements horizontally */
+        }
+
+        .background {
+            background-color: #b7ff00;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .rounded {
+            border-radius: 10px;
+        }
+
+        .btn {
+            display: block;
+            width: 50%;
+            margin: 0 auto 10px;
+
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .saved {
+            background-color: blue;
+            color: white;
+        }
+
+        .create {
+            background-color: #bd04ee;
+            color: white;
+        }
+    </style>
+    <title>User details</title>
+</head>
+<body>
+<div class="background rounded">
+    <div class="rounded">
+        <h2>User Email: {{ username }}</h2>
+        <a href="#" class="btn saved">Saved Flights</a>
+        <a href="#" class="btn saved">Saved Queries</a>
+        <a href="#" class="btn create">Create Queries</a>
+    </div>
+</div>
+</body>
+</html>
