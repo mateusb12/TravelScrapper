@@ -5,108 +5,128 @@
     <link rel="icon" type="image/png" href="../static/icons/flight_icon.png">
     <title>Flight Data</title>
     <style>
-        /* Rounded borders for the queries */
-        .date {
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        /* Style for the summary section of each query */
-        .date-header {
-            background-color: rgba(250, 246, 7, 0.47);
-            padding: 10px;
+        .clickable {
             cursor: pointer;
+            border-radius: 10px;
+            padding: 10px;
         }
 
-        .date-details {
+        .data-sub-item {
+            border-radius: 10px;
+            padding: 10px;
+            background-color: rgba(29, 161, 242, 0.47);
+        }
+
+        .hidden {
             display: none;
         }
 
-        .active .date-details {
-            display: block;
+        .date-header {
+            background-color: rgba(250, 246, 7, 0.47);
         }
 
         .unique-id-header {
             background-color: rgba(2, 246, 13, 0.48);
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        .unique-id-details {
-            display: none;
-        }
-
-        .active .unique-id-details {
-            display: block;
         }
     </style>
+    <script>
+        function expandSibling(element) {
+            element.nextElementSibling.style.display = element.nextElementSibling.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
 </head>
 <body>
 
-<div class="data-container">
-    <div class="date-header" onclick="this.parentElement.classList.toggle('active')">
+<div class="data-container active">
+    <div class="date-header clickable" onclick="expandSibling(this)">
         <span class="date">01 January 2023</span>
     </div>
-    <div class="date-details">
-        <div class="data-item" onclick="this.parentElement.classList.toggle('active')">
-            <div class="unique-id-header">
+    <div class="date-details hidden">
+        <div class="data-item">
+            <div class="unique-id-header clickable" onclick="expandSibling(this)">
                 <span class="unique-id">-NKihnIPT9ZNKSCpSZKn</span>
             </div>
-            <div class="unique-id-details">
-                <div class="data-subitem">
-                    <span class="data-label">Airlines:</span>
-                    <ul class="data-list" onclick="this.parentElement.classList.toggle('active')">
-                        <li>AD</li>
-                        <li>CD</li>
-                    </ul>
+            <div class="unique-id-details hidden">
+                <div class="data-sub-item">
+                    <span class="data-label">Departure Airport:</span>
+                    <span class="data-value">FOR</span>
                 </div>
-                <div class="data-subitem">
-                    <span class="data-label">Arrival Formatted Date and Time:</span>
+                <div class="data-sub-item">
+                    <span class="data-label">Arrival Airport:</span>
+                    <span class="data-value">SAO</span>
+                </div>
+                <div class="data-sub-item">
+                    <span class="data-label">Departure Date:</span>
+                    <span class="data-value">7th February 2023 at 01:05 PM</span>
+                </div>
+                <div class="data-sub-item">
+                    <span class="data-label">Arrival Date:</span>
                     <span class="data-value">7th February 2023 at 06:45 PM</span>
                 </div>
-                <div class="data-subitem">
-                    <span class="data-label">Layover Durations:</span>
-                    <ul class="data-list" onclick="this.parentElement.classList.toggle('active')">
-                        <li>0 hours 55 min</li>
-                        <li>1 hour 30 min</li>
-                    </ul>
-                </div>
-                <div class="data-subitem">
+                <div class="data-sub-item">
                     <span class="data-label">User Email:</span>
                     <span class="data-value">test@test.com</span>
                 </div>
-            </div>
-        </div>
-        <div class="data-item" onclick="this.parentElement.classList.toggle('active')">
-            <div class="unique-id-header">
-                <span class="unique-id">-NKikQDzK0RQktfSzL7M</span>
-            </div>
-            <div class="unique-id-details">
-                <div class="data-subitem">
-                    <span class="data-label">Airlines:</span>
-                    <ul class="data-list" onclick="this.parentElement.classList.toggle('active')">
-                        <li>CD</li>
-                        <li>EF</li>
+                <div class="data-sub-item">
+                    <span class="data-label">Flight Duration:</span>
+                    <span class="data-value">5h40min</span>
+                </div>
+                <div class="data-sub-item">
+                    <span class="data-label">Layover Durations:</span>
+                    <ul class="data-list">
+                        <li>0 hours 35 min</li>
+                        <li>1 hour 55 min</li>
                     </ul>
                 </div>
-                <div class="data-subitem">
-                    <span class="data-label">Arrival Formatted Date and Time:</span>
-                    <span class="data-value">8th February 2023 at 02:32 PM</span>
+                <div class="data-sub-item">
+                    <span class="data-label">Price:</span>
+                    <span class="data-value">114</span>
                 </div>
-                <div class="data-subitem">
-                <span class="data-label">Layover Durations:</span>
-                <ul class="data-list" onclick="this.parentElement.classList.toggle('active')">
-                    <li>0 hours 35 min</li>
-                    <li>1 hour 55 min</li>
-                </ul>
             </div>
-            <div class="data-subitem">
-                <span class="data-label">User Email:</span>
-                <span class="data-value">test@test.com</span>
+        </div>
+        <div class="data-item">
+            <div class="unique-id-header clickable" onclick="expandSibling(this)">
+                <span class="unique-id">-NKikQDzK0RQktfSzL7M</span>
+            </div>
+            <div class="unique-id-details hidden">
+                <div class="data-sub-item">
+                    <span class="data-label">Departure Airport:</span>
+                    <span class="data-value">FOR</span>
+                </div>
+                <div class="data-sub-item">
+                    <span class="data-label">Arrival Airport:</span>
+                    <span class="data-value">SAO</span>
+                </div>
+                <div class="data-sub-item">
+                    <span class="data-label">Departure Date:</span>
+                    <span class="data-value">7th February 2023 at 01:05 PM</span>
+                </div>
+                <div class="data-sub-item">
+                    <span class="data-label">Arrival Date:</span>
+                    <span class="data-value">7th February 2023 at 06:45 PM</span>
+                </div>
+                <div class="data-sub-item">
+                    <span class="data-label">User Email:</span>
+                    <span class="data-value">test@test.com</span>
+                </div>
+                <div class="data-sub-item">
+                    <span class="data-label">Flight Duration:</span>
+                    <span class="data-value">5h40min</span>
+                </div>
+                <div class="data-sub-item">
+                    <span class="data-label">Layover Durations:</span>
+                    <ul class="data-list">
+                        <li>0 hours 35 min</li>
+                        <li>1 hour 55 min</li>
+                    </ul>
+                </div>
+                <div class="data-sub-item">
+                    <span class="data-label">Price:</span>
+                    <span class="data-value">114</span>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 </body>
 </html>
