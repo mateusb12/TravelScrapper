@@ -49,6 +49,7 @@ def __main():
     factory.run("test@test.com", "123456")
     queries = factory.firebase_query.read_all_queries()
     flights = factory.firebase_flights.read_all_flights()
+    dummy_flights = get_dummy_flights()
     return
 
 

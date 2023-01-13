@@ -29,13 +29,14 @@ def login():
 def flight_query_viewer():
     global factory
     # all_queries = session.get('all_queries')
-    all_queries = factory.firebase_query.all_queries
+    all_queries = factory.firebase_query.read_all_queries()
     return render_template("flight_query_viewer.html", query_dict=all_queries)
 
 
 @app.route('/flight_data_viewer')
 def flight_data_viewer():
-    all_flights = get_dummy_flights()
+    global factory
+    all_flights = factory.firebase_flights.read_all_flights()
     return render_template("flight_data_viewer.html", flight_data=all_flights)
 
 
