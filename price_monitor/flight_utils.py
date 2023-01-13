@@ -94,8 +94,16 @@ def reorder_flight_data_node_by_date(flight_data: dict) -> dict:
     return {date: flight_data[date] for date in sorted_dates}
 
 
+def convert_html_date(input_html_date: str):
+    """This function converts a date like '2023-01-01' to '01 'January 2023' format"""
+    year, month, day = input_html_date.split('-')
+    month_names = {1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 7: 'July', 8: 'August',
+                   9: 'September', 10: 'October', 11: 'November', 12: 'December'}
+    return f"{day} {month_names[int(month)]} {year}"
+
+
 def __main():
-    aux = reorder_flight_data_node_by_date({'28 December 2022': 1, '31 December 2022': 2, '1 January 2023': 3})
+    aux = beautify_date("2022-01-01")
     return
 
 

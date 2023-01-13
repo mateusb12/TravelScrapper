@@ -56,6 +56,11 @@
                                 <span class="data-label">{{ key }}:</span>
                                 <span class="data-value">{{ value }}</span>
                             </div>
+                            {% if loop.last %}
+                                <div class="data-sub-item">
+                                    <button class="delete-button" style="color: red;">Delete</button>
+                                </div>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 </div>

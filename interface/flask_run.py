@@ -4,6 +4,7 @@ from typing import Optional
 from flask import Flask, request, render_template, redirect, url_for, session
 
 from firebase_data.firebase_factory import FirebaseFactory, get_dummy_flights
+from price_monitor.flight_utils import convert_html_date
 
 factory: FirebaseFactory = FirebaseFactory()
 app = Flask(__name__)
@@ -48,15 +49,16 @@ def forms():
     if request.method == 'GET':
         return render_template('query_form.html')
     print("You have clicked on the submit button!")
-    flight_results = {
-        'folder_name': request.form['folder-name'],
-        'departure_airport': request.form['departure-airport'],
-        'arrival_airport': request.form['arrival-airport'],
-        'price': request.form['price'],
-        'duration': request.form['duration']
+    res = dict(request.form)
+    desired_query = {
+        "departureAirport": request.form['departure-airport'],
+        "arrivalAirport": request.form['arrival-airport'],
+        "departureDate": convert_html_date(request.form['departure-date'])
     }
+    result = factory.firebase_query.create_query(desired_query)
+    print(result)
     # return render_template('flight_results.html', results=flight_results)
-    return redirect(url_for('results', results=flight_results))
+    # return redirect(url_for('results', results=flight_results))
 
 
 @app.route("/flight_results", methods=['GET', 'POST'])
