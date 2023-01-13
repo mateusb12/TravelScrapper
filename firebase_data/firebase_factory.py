@@ -25,6 +25,25 @@ class FirebaseFactory:
         print("Factory successfully finished!")
 
 
+def get_dummy_flights():
+    return {"01 January 2023": {
+        "-NKihnIPT9ZNKSCpSZKn": {"Departure Airport": "FOR", "Arrival Airport": "GRU",
+                                 "Departure Date": " 7th February 2023 at 01:05 PM",
+                                 "Arrival Date": " 7th February 2023 at 05:05 PM",
+                                 "User Email": "test@test.com",
+                                 "Flight Duration": "5h40min",
+                                 "Layover Durations": ["0 hours 35 min", "1 hour 55 min"],
+                                 "Price": "114"},
+        "-NKikQDzK0RQktfSzL7M": {"Departure Airport": "FOR", "Arrival Airport": "GRU",
+                                 "Departure Date": " 7th February 2023 at 01:05 PM",
+                                 "Arrival Date": " 7th February 2023 at 05:05 PM",
+                                 "User Email": "test@test.com",
+                                 "Flight Duration": "5h40min",
+                                 "Layover Durations": ["0 hours 35 min", "1 hour 55 min"],
+                                 "Price": "114"},
+    }}
+
+
 def __main():
     factory = FirebaseFactory()
     factory.run("test@test.com", "123456")

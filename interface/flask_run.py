@@ -3,7 +3,7 @@ from typing import Optional
 
 from flask import Flask, request, render_template, redirect, url_for, session
 
-from firebase_data.firebase_factory import FirebaseFactory
+from firebase_data.firebase_factory import FirebaseFactory, get_dummy_flights
 
 factory: FirebaseFactory = FirebaseFactory()
 app = Flask(__name__)
@@ -35,7 +35,8 @@ def flight_query_viewer():
 
 @app.route('/flight_data_viewer')
 def flight_data_viewer():
-    return render_template("flight_data_viewer.html")
+    all_flights = get_dummy_flights()
+    return render_template("flight_data_viewer.html", flight_data=all_flights)
 
 
 @app.route('/query_creator', methods=['GET', 'POST'])

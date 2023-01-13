@@ -11,12 +11,6 @@
             padding: 10px;
         }
 
-        .data-sub-item {
-            border-radius: 10px;
-            padding: 10px;
-            background-color: rgba(29, 161, 242, 0.47);
-        }
-
         .hidden {
             display: none;
         }
@@ -27,6 +21,14 @@
 
         .unique-id-header {
             background-color: rgba(2, 246, 13, 0.48);
+            margin-left: 20px;
+        }
+
+        .data-sub-item {
+            border-radius: 10px;
+            padding: 10px;
+            background-color: rgba(29, 161, 242, 0.47);
+            margin-left: 40px;
         }
     </style>
     <script>
@@ -37,96 +39,29 @@
 </head>
 <body>
 
-<div class="data-container active">
-    <div class="date-header clickable" onclick="expandSibling(this)">
-        <span class="date">01 January 2023</span>
-    </div>
-    <div class="date-details hidden">
-        <div class="data-item">
-            <div class="unique-id-header clickable" onclick="expandSibling(this)">
-                <span class="unique-id">-NKihnIPT9ZNKSCpSZKn</span>
-            </div>
-            <div class="unique-id-details hidden">
-                <div class="data-sub-item">
-                    <span class="data-label">Departure Airport:</span>
-                    <span class="data-value">FOR</span>
-                </div>
-                <div class="data-sub-item">
-                    <span class="data-label">Arrival Airport:</span>
-                    <span class="data-value">SAO</span>
-                </div>
-                <div class="data-sub-item">
-                    <span class="data-label">Departure Date:</span>
-                    <span class="data-value">7th February 2023 at 01:05 PM</span>
-                </div>
-                <div class="data-sub-item">
-                    <span class="data-label">Arrival Date:</span>
-                    <span class="data-value">7th February 2023 at 06:45 PM</span>
-                </div>
-                <div class="data-sub-item">
-                    <span class="data-label">User Email:</span>
-                    <span class="data-value">test@test.com</span>
-                </div>
-                <div class="data-sub-item">
-                    <span class="data-label">Flight Duration:</span>
-                    <span class="data-value">5h40min</span>
-                </div>
-                <div class="data-sub-item">
-                    <span class="data-label">Layover Durations:</span>
-                    <ul class="data-list">
-                        <li>0 hours 35 min</li>
-                        <li>1 hour 55 min</li>
-                    </ul>
-                </div>
-                <div class="data-sub-item">
-                    <span class="data-label">Price:</span>
-                    <span class="data-value">114</span>
-                </div>
-            </div>
+{% for date, date_content in flight_data.items() %}
+    <div class="data-container">
+        <div class="date-header clickable" onclick="expandSibling(this)">
+            <span class="date">{{ date }}</span>
         </div>
-        <div class="data-item">
-            <div class="unique-id-header clickable" onclick="expandSibling(this)">
-                <span class="unique-id">-NKikQDzK0RQktfSzL7M</span>
-            </div>
-            <div class="unique-id-details hidden">
-                <div class="data-sub-item">
-                    <span class="data-label">Departure Airport:</span>
-                    <span class="data-value">FOR</span>
+        <div class="date-details hidden">
+            {% for unique_id, flight_content in date_content.items() %}
+                <div class="data-item">
+                    <div class="unique-id-header clickable" onclick="expandSibling(this)">
+                        <span class="unique-id">{{ unique_id }}</span>
+                    </div>
+                    <div class="unique-id-details hidden">
+                        {% for key, value in flight_content.items() %}
+                            <div class="data-sub-item">
+                                <span class="data-label">{{ key }}:</span>
+                                <span class="data-value">{{ value }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="data-sub-item">
-                    <span class="data-label">Arrival Airport:</span>
-                    <span class="data-value">SAO</span>
-                </div>
-                <div class="data-sub-item">
-                    <span class="data-label">Departure Date:</span>
-                    <span class="data-value">7th February 2023 at 01:05 PM</span>
-                </div>
-                <div class="data-sub-item">
-                    <span class="data-label">Arrival Date:</span>
-                    <span class="data-value">7th February 2023 at 06:45 PM</span>
-                </div>
-                <div class="data-sub-item">
-                    <span class="data-label">User Email:</span>
-                    <span class="data-value">test@test.com</span>
-                </div>
-                <div class="data-sub-item">
-                    <span class="data-label">Flight Duration:</span>
-                    <span class="data-value">5h40min</span>
-                </div>
-                <div class="data-sub-item">
-                    <span class="data-label">Layover Durations:</span>
-                    <ul class="data-list">
-                        <li>0 hours 35 min</li>
-                        <li>1 hour 55 min</li>
-                    </ul>
-                </div>
-                <div class="data-sub-item">
-                    <span class="data-label">Price:</span>
-                    <span class="data-value">114</span>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
-</div>
+{% endfor %}
 </body>
 </html>
