@@ -4,12 +4,15 @@
     <link rel="icon" type="image/png" href="../static/icons/flight_icon.png">
     <style>
         body {
-            display: flex; /* Make the body a flex container */
-            justify-content: center; /* Center elements horizontally */
+            display: flex;
+            background-image: url('../static/wallpapers/background.jpg');
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
 
-        .background {
-            background-color: #b7ff00;
+        .background-window {
+            background-color: #f4f4f4;
             display: flex;
             justify-content: center;
             flex-direction: column;
@@ -39,14 +42,14 @@
         }
 
         .create {
-            background-color: #bd04ee;
+            background-color: #4CAF50;
             color: white;
         }
     </style>
     <title>User details</title>
 </head>
 <body>
-<div class="background rounded">
+<div class="background-window rounded">
     <div class="rounded">
         <h2>User Email: {{ username }}</h2>
         <a href="#" class="btn saved">Saved Flights</a>
