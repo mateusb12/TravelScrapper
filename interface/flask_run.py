@@ -37,6 +37,14 @@ def flight_query_viewer():
     return render_template("flight_query_viewer.html", query_dict=all_queries)
 
 
+@app.route('/delete_query/<query_id>', methods=['DELETE'])
+def delete_query(query_id):
+    global factory
+    a = 5
+    factory.firebase_query.delete_query(query_id)
+    return 'Query successfully deleted', 204
+
+
 @app.route('/flight_data_viewer')
 def flight_data_viewer():
     global factory
@@ -57,8 +65,6 @@ def forms():
     }
     result = factory.firebase_query.create_query(desired_query)
     print(result)
-    # return render_template('flight_results.html', results=flight_results)
-    # return redirect(url_for('results', results=flight_results))
 
 
 @app.route("/flight_results", methods=['GET', 'POST'])

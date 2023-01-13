@@ -76,6 +76,11 @@ class FirebaseQueryCrud:
         self.app.delete_entry_by_unique_id(unique_id)
         return {"output": "success", "outputDetails": "Query deleted"}
 
+    def delete_query_by_unique_id(self, unique_id: str):
+        self.app.firebase_folder = self.folder
+        self.app.delete_entry_by_unique_id(unique_id)
+        return {"output": "success", "outputDetails": "Query deleted"}
+
     def read_all_queries(self):
         self.app.firebase_folder = self.folder
         return self.app.get_all_entries()
