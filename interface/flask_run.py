@@ -37,11 +37,16 @@ def flight_query_viewer():
     return render_template("flight_query_viewer.html", query_dict=all_queries)
 
 
+@app.route('/dummy')
+def dummy():
+    return render_template("dummy.html")
+
+
 @app.route('/delete_query/<query_id>', methods=['DELETE'])
 def delete_query(query_id):
     global factory
-    a = 5
-    factory.firebase_query.delete_query(query_id)
+    print("Delete query")
+    factory.firebase_query.delete_query_by_unique_id(query_id)
     return 'Query successfully deleted', 204
 
 

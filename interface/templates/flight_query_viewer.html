@@ -91,8 +91,12 @@
                     <span class="query-user-email-tag">User email →</span>
                     <span class="query-user-email">{{ query.userEmail }}</span>
                 </div>
-                <div class="query-sublist-item" onclick="deleteQuery(event)">
-                    <button class="button delete">Delete</button>
+                <div class="query-sublist-item">
+                    <form>
+                        <a href=# id=test>
+                            <button class="button delete">Delete</button>
+                        </a>
+                    </form>
                 </div>
             </div>
         </div>
@@ -102,16 +106,20 @@
 
 </body>
 
-<script>
-    function deleteQuery(event) {
-        let queryId;
-        if (event.target.classList.contains("delete")) {
-            queryId = event.target.parentElement.parentElement.querySelector('.query-unique-id').getAttribute("key");
-            console.log(queryId);
-        }
-    }
-    document.querySelectorAll(".query-sublist-item").forEach(element => {
-        element.addEventListener("click", deleteQuery);
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script type=text/javascript>
+    $('a#test').on('click', function (e) {
+        e.preventDefault()
+        let key = $('.query-unique-id').attr('key');
+        $.ajax({
+            type: 'DELETE',
+            url: '/delete_query/' + key,
+            success: function (data) {
+                console.log("success");
+            }
+        });
+        return false;
     });
 </script>
 </html>
