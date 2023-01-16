@@ -12,6 +12,7 @@ class FlightMonitor:
         self.crud.set_folder(f"flight_data/{self.today_date}")
         self.existing_flight_data = [{}]
         self.new_flight_data = [{}]
+        self.output = {"cheapest_firebase_flight": 0, "cheapest_kiwi_flight": 0}
 
     def run(self):
         self._gather_current_data()
@@ -54,6 +55,8 @@ class FlightMonitor:
     def _analyze_new_data(self) -> dict:
         lowest_firebase_price = self._get_current_lowest_price()
         lowest_kiwi_price = self.new_flight_data[0]["price"]
+        self.output["cheapest_firebase_flight"] = lowest_firebase_price
+        self.output["cheapest_kiwi_flight"] = lowest_kiwi_price
         if lowest_firebase_price == float("inf"):
             self.crud.create_flight(self.new_flight_data[0])
             return {"output": "failure", "outputDetails": "There was no data in the database."
@@ -74,6 +77,9 @@ class FlightMonitor:
         # available_flights = self.crud.trim_non_existing_flights(flight_pot)
         for flight in flight_pot:
             self.crud.create_flight(flight)
+
+    def export_query_output(self):
+        return self.output
 
 
 def __main():
