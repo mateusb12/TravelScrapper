@@ -6,12 +6,13 @@ from firebase_data.firebase_login import FirebaseLogin
 from firebase_data.firebase_query_crud import FirebaseQueryCrud
 from firebase_data.firebase_run import FirebaseApp
 from firebase_data.firebase_user_crud import FirebaseUserCrud
+from price_monitor.flight_monitor import FlightMonitor
 
 
 class FirebaseFactory:
     def __init__(self):
         self.core, self.user_crud, self.firebase_login, self.user, self.app = None, None, None, None, None
-        self.firebase_query, self.firebase_flights = None, None
+        self.firebase_query, self.firebase_flights, self.firebase_monitor = None, None, None
 
     def run(self, email: str, password: str):
         self.core = FirebaseCore()
@@ -22,6 +23,7 @@ class FirebaseFactory:
         self.app = FirebaseApp(input_user=self.user, input_core=self.core)
         self.firebase_query = FirebaseQueryCrud(self.app)
         self.firebase_flights = FirebaseFlightCrud(self.app)
+        self.firebase_monitor = FlightMonitor(self.app)
         print("Factory successfully finished!")
 
 

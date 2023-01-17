@@ -102,8 +102,19 @@ def convert_html_date(input_html_date: str):
     return f"{day} {month_names[int(month)]} {year}"
 
 
+def get_earliest_date(list_of_dates: list[str]):
+    """This function gets a list like ['01 January 2023', '02 January 2023', '28 December 2022', '31 December 2022']
+    and returns the most recent date"""
+    dates = [get_date_tuple(item) for item in list_of_dates]
+    most_recent_date = max(dates, key=lambda date: datetime(*date))
+    month_names = {1: 'January', 2: 'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 7: 'July', 8: 'August',
+                   9: 'September', 10: 'October', 11: 'November', 12: 'December'}
+    day = str(most_recent_date[2]).zfill(2)
+    return f"{day} {month_names[most_recent_date[1]]} {most_recent_date[0]}"
+
+
 def __main():
-    aux = beautify_date("2022-01-01")
+    aux = get_earliest_date(['01 January 2023', '02 January 2023', '28 December 2022', '31 December 2022'])
     return
 
 

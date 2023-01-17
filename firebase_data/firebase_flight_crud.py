@@ -1,4 +1,4 @@
-from firebase_data.firebase_run import FirebaseApp
+from firebase_data.firebase_run import FirebaseApp, are_two_flights_the_same
 from price_monitor.flight_processor import get_flight_data_example
 from price_monitor.flight_utils import get_formatted_today_date
 
@@ -8,17 +8,22 @@ class FirebaseFlightCrud:
         self.folder = "flight_data"
         self.firebase_app = input_app
         self.firebase_app.query_date = get_formatted_today_date()
+        self.existing_flights = self.__get_existing_flights()
 
     def create_flight(self, flight_data: dict) -> dict:
         # sourcery skip: use-named-expression
-        existing_flight = self.firebase_app.check_existing_flight(flight_data)
+        existing_flight = self.__check_existing_flight(flight_data)
         if existing_flight:
             return {"output": "error", "outputDetails": "Flight already exists"}
         query_date = get_formatted_today_date()
         flight_data["queryDate"] = query_date
         flight_data["userEmail"] = self.firebase_app.user.email
         del flight_data["duration"]
+        base_folder = self.firebase_app.main_firebase_folder
+        new_firebase_folder = f"{self.firebase_app.firebase_folder}/{self.firebase_app.query_date}"
+        self.firebase_app.set_firebase_folder(new_firebase_folder)
         self.firebase_app.add_entry(flight_data)
+        self.firebase_app.set_firebase_folder(base_folder)
         self.refresh_entries()
         return {"output": "success", "outputDetails": "Flight created"}
 
@@ -66,6 +71,17 @@ class FirebaseFlightCrud:
 
     def get_flights_by_user_email(self, user_email: str):
         return self.firebase_app.get_entries_by_user_email(user_email)
+
+    def __get_existing_flights(self):
+        nested_flights = list(self.firebase_app.all_entries.values())
+        return [x for sublist in nested_flights for x in sublist.values()]
+
+    def __check_existing_flight(self, new_flight: dict):
+        # sourcery skip: use-any, use-next
+        for flight in self.existing_flights:
+            if are_two_flights_the_same(flight, new_flight):
+                return True
+        return False
 
 
 def __main():

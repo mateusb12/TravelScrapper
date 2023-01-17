@@ -79,5 +79,13 @@ def results():
     return render_template('flight_results.html', results=flight_results)
 
 
+@app.route("/run_query", methods=['GET', 'POST'])
+def run_query():
+    global factory
+    factory.firebase_monitor.run()
+    query_results = factory.firebase_monitor.output
+    return render_template('flight_monitor_results.html', output=query_results)
+
+
 if __name__ == '__main__':
     app.run()
