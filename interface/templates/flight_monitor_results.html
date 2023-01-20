@@ -2,10 +2,11 @@
 <html lang="EN">
 <head>
     <title>Price Comparison</title>
+    <link rel="icon" type="image/png" href="../static/icons/flight_icon.png">
     <style>
         /* Center the window */
         .center-window {
-            display: flex;
+            display: block;
             justify-content: center;
             align-items: center;
             height: auto;
@@ -20,6 +21,7 @@
             display: flex;
             flex-wrap: wrap;
             flex-direction: column;
+            margin-bottom: 40px;
         }
 
         /* Labels */
@@ -44,6 +46,11 @@
             justify-content: center;
             height: 100vh;
         }
+
+        #price_diff {
+            margin-left: 35%;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -51,14 +58,59 @@
     <div class="rounded-window">
         <div>
             <label>Smallest Firebase Price:</label>
-            <span class="value">{{ output.cheapest_firebase_flight }}</span>
+            <span class="value" id="firebase_price">4</span>
         </div>
         <br>
         <div style="display: grid">
             <label>Smallest Kiwi Price:</label>
-            <span class="value">{{ output.cheapest_kiwi_flight }}</span>
+            <span class="value" id="kiwi_price">7</span>
         </div>
+    </div>
+
+    <div class="rounded-window">
+        <label>New price found is</label>
+        <span class="value" id="price_diff">0</span>
     </div>
 </div>
 </body>
+
+<script>
+    function getPriceDifference() {
+        let firebasePriceElement = document.getElementById('firebase_price');
+        let kiwiPriceElement = document.getElementById('kiwi_price');
+        const firebasePrice = firebasePriceElement.innerText;
+        const kiwiPrice = kiwiPriceElement.innerText;
+
+        const difference = kiwiPrice - firebasePrice;
+        return Math.round((difference / firebasePrice) * 100).toString();
+    }
+
+    function adjustPriceTag(value) {
+        if (value > 0) {
+            return "+" + value + "%";
+        } else {
+            return "-" + Math.abs(value) + "%";
+        }
+    }
+
+    function setPriceColor(value) {
+        let priceDiffElement = document.getElementById('price_diff');
+        if (value > 0) {
+            priceDiffElement.style.color = "rgba(255,0,0,0.67)";
+        } else {
+            priceDiffElement.style.color = "rgba(0,255,0,0.7)";
+        }
+    }
+
+    function setPriceDifference() {
+        let priceDiffElement = document.getElementById('price_diff');
+        let priceDiff = getPriceDifference();
+        setPriceColor(priceDiff);
+        priceDiffElement.innerText = adjustPriceTag(priceDiff);
+    }
+
+    window.onload = function () {
+        setPriceDifference();
+    };
+</script>
 </html>
