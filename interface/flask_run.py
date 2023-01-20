@@ -82,9 +82,8 @@ def results():
 @app.route("/run_query", methods=['GET', 'POST'])
 def run_query():
     global factory
-    # factory.firebase_monitor.run()
-    # query_results = factory.firebase_monitor.output
-    query_results = {}
+    factory.firebase_monitor.search_prices()
+    query_results = factory.firebase_monitor.output
     return render_template('flight_monitor_results.html', output=query_results)
 
 

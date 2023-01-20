@@ -10,7 +10,7 @@ def get_user_crud_instance():
     return FirebaseUserCrud(fc)
 
 
-@pytest.mark.run(order=1)
+@pytest.mark.search_prices(order=1)
 def test_create_user(get_user_crud_instance):
     """Test that the create_user method creates a new user in Firebase with the specified email, password,
      name, phone number, and custom claims"""
@@ -23,7 +23,7 @@ def test_create_user(get_user_crud_instance):
     assert result["output"] == "success"
 
 
-@pytest.mark.run(order=2)
+@pytest.mark.search_prices(order=2)
 def test_create_user_already_exists(get_user_crud_instance):
     """Test that the create_user method returns an error if a user with the specified email already exists
     in Firebase"""
@@ -35,7 +35,7 @@ def test_create_user_already_exists(get_user_crud_instance):
     assert result["output"] == "error"
 
 
-@pytest.mark.run(order=3)
+@pytest.mark.search_prices(order=3)
 def test_create_user_name_with_spaces(get_user_crud_instance):
     """Test that the create_user method returns an error if the name parameter contains spaces"""
     firebase_crud = get_user_crud_instance
@@ -46,7 +46,7 @@ def test_create_user_name_with_spaces(get_user_crud_instance):
     assert result["output"] == "error"
 
 
-@pytest.mark.run(order=4)
+@pytest.mark.search_prices(order=4)
 def test_create_user_phone_already_exists(get_user_crud_instance):
     """Test that the create_user method returns an error if a user with the specified phone number already
     exists in Firebase"""
@@ -58,7 +58,7 @@ def test_create_user_phone_already_exists(get_user_crud_instance):
     assert result["output"] == "error"
 
 
-@pytest.mark.run(order=5)
+@pytest.mark.search_prices(order=5)
 def test_create_user_invalid_phone(get_user_crud_instance):
     """Test that the create_user method returns an error if the phone number parameter is not a valid"""
     firebase_crud = get_user_crud_instance
@@ -69,7 +69,7 @@ def test_create_user_invalid_phone(get_user_crud_instance):
     assert result["output"] == "error"
 
 
-@pytest.mark.run(order=6)
+@pytest.mark.search_prices(order=6)
 def test_get_user(get_user_crud_instance):
     """Test that the get_user method returns the correct user data for the specified user"""
     firebase_crud = get_user_crud_instance
@@ -82,7 +82,7 @@ def test_get_user(get_user_crud_instance):
     assert user_dict == comparison_dict
 
 
-@pytest.mark.run(order=7)
+@pytest.mark.search_prices(order=7)
 def test_update_user(get_user_crud_instance):
     """Test that the update_user method updates the specified user's data in Firebase"""
     firebase_crud = get_user_crud_instance
@@ -97,7 +97,7 @@ def test_update_user(get_user_crud_instance):
     firebase_crud.update_user(email, new_data)
 
 
-@pytest.mark.run(order=8)
+@pytest.mark.search_prices(order=8)
 def test_delete_user(get_user_crud_instance):
     """Test that the delete_user method deletes the specified user from Firebase"""
     firebase_crud = get_user_crud_instance

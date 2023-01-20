@@ -2,31 +2,48 @@ from apis.api_consumer.kiwi_api_call import kiwi_call
 from firebase_data.firebase_connection import FirebaseCore
 from firebase_data.firebase_flight_crud import FirebaseFlightCrud
 from firebase_data.firebase_login import FirebaseLogin
+from firebase_data.firebase_query_crud import FirebaseQueryCrud
 from firebase_data.firebase_run import FirebaseApp
 from firebase_data.firebase_user_crud import FirebaseUserCrud
 from notifications.telegram_bot.bot import telegram_bot_instance
 from price_monitor.flight_processor import FlightProcessor
-from price_monitor.flight_utils import get_formatted_today_date, get_earliest_date
+from price_monitor.flight_utils import get_formatted_today_date, get_earliest_date, revert_date
 
 
 class FlightMonitor:
     def __init__(self, app: FirebaseApp):
         self.crud = FirebaseFlightCrud(input_app=app)
+        self.query_crud = FirebaseQueryCrud(input_app=app)
         self.today_date = get_formatted_today_date()
         self.crud.set_folder(f"flight_data/{self.today_date}")
         self.existing_flight_data = [{}]
         self.new_flight_data = [{}]
         self.output = {"cheapest_firebase_flight": 0, "cheapest_kiwi_flight": 0}
+        self.query_data = []
 
-    def run(self):
-        self._gather_current_data()
-        self._collect_new_data()
+    def search_prices(self):
+        self._gather_current_firebase_flight_data()
+        self._read_all_queries()
+        self._process_all_queries()
+
+    def _read_all_queries(self):
+        all_queries = self.query_crud.read_all_queries()
+        for key, value in all_queries.items():
+            value["uniqueId"] = key
+            self.query_data.append(value)
+
+    def _process_all_queries(self):
+        for query in self.query_data:
+            self._process_single_query(query)
+
+    def _process_single_query(self, query_dict: dict):
+        self._collect_new_kiwi_data(query_dict)
         self._analyze_new_data()
 
     def _clean_folder(self):
         self.crud.delete_folder("flight_data")
 
-    def _gather_current_data(self):
+    def _gather_current_firebase_flight_data(self):
         raw_data = self.crud.firebase_app.get_all_entries()
         if raw_data is None:
             self.existing_flight_data = []
@@ -34,9 +51,15 @@ class FlightMonitor:
         self.existing_flight_data = list(raw_data.values())
         return
 
-    def _collect_new_data(self):
-        kiwi_api_call = kiwi_call(fly_from="FOR", fly_to="RIO", date_from="01/01/2023",
-                                  date_to="01/03/2023", limit=500)
+    def _collect_new_kiwi_data(self, kiwi_info: dict):
+        departure_airport = kiwi_info["departureAirport"]
+        arrival_airport = kiwi_info["arrivalAirport"]
+        raw_departure_date = kiwi_info["departureDate"]
+        raw_arrival_date = kiwi_info.get("arrivalDate")
+        raw_arrival_date = kiwi_info["departureDate"] if raw_arrival_date is None else raw_arrival_date
+        raw_departure_date, raw_arrival_date = revert_date(raw_departure_date), revert_date(raw_arrival_date)
+        kiwi_api_call = kiwi_call(fly_from=departure_airport, fly_to=arrival_airport, date_from=raw_departure_date,
+                                  date_to=raw_arrival_date, limit=100)
         trimmed_data = self._trim_kiwi_data(kiwi_api_call["data"])
         flight_processor_instance = FlightProcessor(trimmed_data)
         raw_flights = flight_processor_instance.flights
@@ -77,6 +100,7 @@ class FlightMonitor:
         flight_link = self.new_flight_data[0]["link"]
         price_diff_tag = f"{price_diff}% cheaper"
         full_message = f"New flight found! {price_diff_tag} \n {flight_link}"
+        print(full_message)
         telegram_bot_instance.send_message(chat_id=405202204, text=full_message)
         self._insert_new_data(self.new_flight_data)
         return {"output": "success", "outputDetails": f"New cheapest flight found for ${lowest_kiwi_price} "
@@ -100,7 +124,7 @@ def __main():
     user = firebase_login.user
     app = FirebaseApp(input_user=user, input_core=core)
     fw = FlightMonitor(app)
-    fw.run()
+    fw.search_prices()
     output = fw.output
     return
 

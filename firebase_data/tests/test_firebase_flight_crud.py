@@ -17,7 +17,7 @@ def get_firebase_crud_instance():
     return instance
 
 
-@pytest.mark.run(order=1)
+@pytest.mark.search_prices(order=1)
 def test_firebase_create_flight(get_flight_data, get_firebase_crud_instance):
     # sourcery skip: use-next
     """This test creates a flight using the create_flight method, and then uses the read_flight method to retrieve
@@ -34,7 +34,7 @@ def test_firebase_create_flight(get_flight_data, get_firebase_crud_instance):
     assert not different_values
 
 
-@pytest.mark.run(order=2)
+@pytest.mark.search_prices(order=2)
 def test_firebase_read_flight(get_flight_data, get_firebase_crud_instance):
     """This test uses the read_flight method to retrieve the flight and verify that the returned data
      matches the data that was originally used to create the flight."""
@@ -48,7 +48,7 @@ def test_firebase_read_flight(get_flight_data, get_firebase_crud_instance):
     assert not different_keys
 
 
-@pytest.mark.run(order=3)
+@pytest.mark.search_prices(order=3)
 def test_firebase_update_flight(get_flight_data, get_firebase_crud_instance):
     """This test uses the update_flight method to update the flight and verify that the update was successful."""
     flight_data = get_flight_data
@@ -67,7 +67,7 @@ def test_firebase_update_flight(get_flight_data, get_firebase_crud_instance):
     assert not different_values
 
 
-@pytest.mark.run(order=4)
+@pytest.mark.search_prices(order=4)
 def test_firebase_delete_flight(get_firebase_crud_instance):
     """This test uses the delete_flight method to delete the flight and verify that the flight was deleted."""
     firebase_crud = get_firebase_crud_instance

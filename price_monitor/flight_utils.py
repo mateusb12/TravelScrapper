@@ -102,6 +102,15 @@ def convert_html_date(input_html_date: str):
     return f"{day} {month_names[int(month)]} {year}"
 
 
+def revert_date(input_date: str):
+    """This function converts a date like '26 March 2023' to '03/26/2023' format"""
+    day, month, year = input_date.split()
+    month_map = {"January": "01", "February": "02", "March": "03", "April": "04", "May": "05", "June": "06",
+                 "July": "07", "August": "08", "September": "09", "October": "10", "November": "11", "December": "12"}
+    adjusted_month = month_map[month]
+    return f"{day}/{adjusted_month}/{year}"
+
+
 def get_earliest_date(list_of_dates: list[str]):
     """This function gets a list like ['01 January 2023', '02 January 2023', '28 December 2022', '31 December 2022']
     and returns the most recent date"""
