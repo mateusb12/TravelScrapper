@@ -69,7 +69,7 @@ def forms():
         "departureDate": convert_html_date(request.form['departure-date'])
     }
     result = factory.firebase_query.create_query(desired_query)
-    print(result)
+    return redirect('/user_details')
 
 
 @app.route("/flight_results", methods=['GET', 'POST'])

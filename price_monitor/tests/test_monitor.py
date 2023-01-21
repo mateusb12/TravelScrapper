@@ -8,16 +8,16 @@ from price_monitor.flight_monitor import FlightMonitor
 def get_flight_monitor_instance():
     fm = FlightMonitor()
     today = fm.today_date
-    fm.crud.set_folder(f"test/{today}")
+    fm.flight_crud.set_folder(f"test/{today}")
     return fm
 
 
 @pytest.mark.search_prices(order=1)
 def test_gather_current_data_handles_empty_firebase_response(get_flight_monitor_instance):
     fm = get_flight_monitor_instance
-    fm.crud.delete_folder("test")
+    fm.flight_crud.delete_folder("test")
     fm.search_prices()
-    current_firebase_structure = fm.crud.firebase_app.db.reference("/").get()
+    current_firebase_structure = fm.flight_crud.firebase_app.db.reference("/").get()
     today_flights = current_firebase_structure["test"][fm.today_date]
     assert fm.existing_flight_data == []
     assert len(today_flights) == 1
@@ -27,7 +27,7 @@ def test_gather_current_data_handles_empty_firebase_response(get_flight_monitor_
 def test_run_creates_new_node_when_no_stored_flights(get_flight_monitor_instance):
     fm = get_flight_monitor_instance
     fm.search_prices()
-    current_firebase_structure = fm.crud.firebase_app.db.reference("/").get()
+    current_firebase_structure = fm.flight_crud.firebase_app.db.reference("/").get()
     assert len(current_firebase_structure["test"].keys()) == 1
     assert len(fm.existing_flight_data) == 1
     assert len(fm.new_flight_data) >= 1
@@ -59,7 +59,7 @@ def test_analyze_new_data_not_notify_when_no_cheaper_flight_found(get_flight_mon
     fm._collect_new_kiwi_data()
     fm.new_flight_data[0]["price"] = 100000
     result = fm._analyze_new_data()
-    fm.crud.delete_folder("test")
+    fm.flight_crud.delete_folder("test")
     assert result["output"] == "failure"
 
 

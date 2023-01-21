@@ -64,7 +64,11 @@ class FirebaseFlightCrud:
 
     def read_all_flights(self):
         self.firebase_app.firebase_folder = self.folder
-        return self.firebase_app.get_all_entries()
+        raw_flights = self.firebase_app.get_all_entries()
+        for key, value in raw_flights.items():
+            for key2, value2 in value.items():
+                value2["uniqueId"] = key2
+        return raw_flights
 
     def trim_non_existing_flights(self, flight_pot: list[dict]):
         return [item for item in flight_pot if not self.firebase_app.check_existing_flight(item)]

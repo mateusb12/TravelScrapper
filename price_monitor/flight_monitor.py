@@ -12,10 +12,10 @@ from price_monitor.flight_utils import get_formatted_today_date, get_earliest_da
 
 class FlightMonitor:
     def __init__(self, app: FirebaseApp):
-        self.crud = FirebaseFlightCrud(input_app=app)
+        self.flight_crud = FirebaseFlightCrud(input_app=app)
         self.query_crud = FirebaseQueryCrud(input_app=app)
         self.today_date = get_formatted_today_date()
-        self.crud.set_folder(f"flight_data/{self.today_date}")
+        self.flight_crud.set_folder(f"flight_data/{self.today_date}")
         self.existing_flight_data = [{}]
         self.new_flight_data = [{}]
         self.output = {"cheapest_firebase_flight": 0, "cheapest_kiwi_flight": 0}
@@ -41,10 +41,10 @@ class FlightMonitor:
         self._analyze_new_data()
 
     def _clean_folder(self):
-        self.crud.delete_folder("flight_data")
+        self.flight_crud.delete_folder("flight_data")
 
     def _gather_current_firebase_flight_data(self):
-        raw_data = self.crud.firebase_app.get_all_entries()
+        raw_data = self.flight_crud.read_all_flights()
         if raw_data is None:
             self.existing_flight_data = []
             return
@@ -56,10 +56,12 @@ class FlightMonitor:
         arrival_airport = kiwi_info["arrivalAirport"]
         raw_departure_date = kiwi_info["departureDate"]
         raw_arrival_date = kiwi_info.get("arrivalDate")
-        raw_arrival_date = kiwi_info["departureDate"] if raw_arrival_date is None else raw_arrival_date
+        raw_arrival_date = raw_departure_date if raw_arrival_date is None else raw_arrival_date
         raw_departure_date, raw_arrival_date = revert_date(raw_departure_date), revert_date(raw_arrival_date)
         kiwi_api_call = kiwi_call(fly_from=departure_airport, fly_to=arrival_airport, date_from=raw_departure_date,
                                   date_to=raw_arrival_date, limit=100)
+        if 'status' in kiwi_api_call and kiwi_api_call["status"] == "Bad Request":
+            raise ValueError("Kiwi API call failed")
         trimmed_data = self._trim_kiwi_data(kiwi_api_call["data"])
         flight_processor_instance = FlightProcessor(trimmed_data)
         raw_flights = flight_processor_instance.flights
@@ -71,7 +73,7 @@ class FlightMonitor:
         return [flight for flight in kiwi_flights if flight["price"] == lowest_price_value]
 
     def _get_current_lowest_price(self):
-        all_flights_call = self.crud.read_all_flights()
+        all_flights_call = self.flight_crud.read_all_flights()
         if all_flights_call is None:
             return float("inf")
         all_flights_dict = all_flights_call
@@ -87,7 +89,7 @@ class FlightMonitor:
         self.output["cheapest_firebase_flight"] = lowest_firebase_price
         self.output["cheapest_kiwi_flight"] = lowest_kiwi_price
         if lowest_firebase_price == float("inf"):
-            self.crud.create_flight(self.new_flight_data[0])
+            self.flight_crud.create_flight(self.new_flight_data[0])
             return {"output": "failure", "outputDetails": "There was no data in the database."
                                                           " Could not find a cheaper flight"}
         price_diff = round(100 * (lowest_kiwi_price - lowest_firebase_price) / lowest_firebase_price, 2)
@@ -108,7 +110,7 @@ class FlightMonitor:
 
     def _insert_new_data(self, flight_pot: list[dict]):
         for flight in flight_pot:
-            self.crud.create_flight(flight)
+            self.flight_crud.create_flight(flight)
 
     def export_query_output(self):
         return self.output
