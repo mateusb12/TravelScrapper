@@ -1,5 +1,3 @@
-from firebase_admin.auth import UserRecord
-
 from firebase_data.firebase_connection import FirebaseCore
 from firebase_data.firebase_flight_crud import FirebaseFlightCrud
 from firebase_data.firebase_login import FirebaseLogin
