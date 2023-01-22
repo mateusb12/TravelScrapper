@@ -83,6 +83,7 @@ def results():
 def run_query():
     global factory
     factory.firebase_monitor.search_prices()
+    print("Finished searching prices!")
     query_results = factory.firebase_monitor.output
     return render_template('flight_monitor_results.html', output=query_results)
 

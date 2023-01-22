@@ -16,6 +16,7 @@ class FlightMonitor:
         self.query_crud = FirebaseQueryCrud(input_app=app)
         self.today_date = get_formatted_today_date()
         self.flight_crud.set_folder(f"flight_data/{self.today_date}")
+        self.current_query = {}
         self.existing_flight_data = [{}]
         self.new_flight_data = [{}]
         self.output = {"cheapest_firebase_flight": 0, "cheapest_kiwi_flight": 0}
@@ -37,6 +38,7 @@ class FlightMonitor:
             self._process_single_query(query)
 
     def _process_single_query(self, query_dict: dict):
+        self.current_query = query_dict
         self._collect_new_kiwi_data(query_dict)
         self._analyze_new_data()
 
@@ -73,17 +75,24 @@ class FlightMonitor:
         return [flight for flight in kiwi_flights if flight["price"] == lowest_price_value]
 
     def _get_current_lowest_price(self):
-        all_flights_call = self.flight_crud.read_all_flights()
-        if all_flights_call is None:
-            return float("inf")
-        all_flights_dict = all_flights_call
+        """This function retrieves the lowest price for the flights that matches the current selected query"""
+        all_flights_dict = self.flight_crud.read_all_flights()
+        flights = [sub_val for key, val in all_flights_dict.items() for sub_key, sub_val in val.items()]
+        flights_with_query_id = [flight for flight in flights if "queryId" in flight]
+        current_query_flights = [flight for flight in flights_with_query_id if flight["queryId"] ==
+                                 self.current_query["uniqueId"]]
         all_flights_dates = list(all_flights_dict.keys())
         earliest_date = get_earliest_date(all_flights_dates)
         all_flights_list = all_flights_dict[earliest_date]
-        cheapest_flight = min(all_flights_list.values(), key=lambda x: x['price'])
+        unique_id_flight_pot = [flight["uniqueId"] for flight in current_query_flights]
+        all_relevant_flights = [flight for flight in all_flights_list.values() if flight["uniqueId"] in
+                                unique_id_flight_pot]
+        cheapest_flight = min(all_relevant_flights, key=lambda x: x['price'])
         return cheapest_flight["price"]
 
     def _analyze_new_data(self) -> dict:
+        """This function compares the new retrieved data to the existing data, updating the firebase accordingly.
+        If it ends up finding a new cheapest flight, it will call the handle_new_cheapest_flight function"""
         lowest_firebase_price = self._get_current_lowest_price()
         lowest_kiwi_price = self.new_flight_data[0]["price"]
         self.output["cheapest_firebase_flight"] = lowest_firebase_price
@@ -99,6 +108,7 @@ class FlightMonitor:
         return {"output": "failure", "outputDetails": f"Could not find a cheaper flight than {lowest_firebase_price}"}
 
     def handle_new_cheapest_flight(self, price_diff, lowest_kiwi_price):
+        """This function sends a telegram message to the user"""
         flight_link = self.new_flight_data[0]["link"]
         price_diff_tag = f"{price_diff}% cheaper"
         full_message = f"New flight found! {price_diff_tag} \n {flight_link}"
@@ -109,7 +119,10 @@ class FlightMonitor:
                                                       f"({price_diff_tag} cheaper)"}
 
     def _insert_new_data(self, flight_pot: list[dict]):
+        """This function inserts the new data into the firebase database"""
         for flight in flight_pot:
+            flight["queryDetails"] = self.current_query
+            flight["queryId"] = self.current_query["uniqueId"]
             self.flight_crud.create_flight(flight)
 
     def export_query_output(self):
