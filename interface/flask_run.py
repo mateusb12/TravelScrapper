@@ -1,7 +1,5 @@
-import sys
-print(sys.path)
-
-import fix_flask_imports
+from fix_flask_imports import fix_path
+fix_path()
 import ast
 from typing import Optional
 
