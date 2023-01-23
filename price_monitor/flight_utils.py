@@ -26,7 +26,7 @@ def analyze_layover_durations(flights: List[Tuple[Dict[str, str], Dict[str, str]
     return convert_timedelta_list_to_beautiful_string(waiting_times)
 
 
-def convert_timedelta_list_to_beautiful_string(timedelta_list: list[timedelta]):
+def convert_timedelta_list_to_beautiful_string(timedelta_list: List[timedelta]):
     formatted_list = []
 
     for td in timedelta_list:
