@@ -53,7 +53,7 @@ class FlightProcessor:
             self.flights.append(flight_dict)
 
 
-def get_flight_data_example() -> list[dict]:
+def get_flight_data_example() -> List[dict]:
     api_data = kiwi_call_example()
     fp = FlightProcessor(api_data)
     return fp.flights
