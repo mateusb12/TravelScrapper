@@ -1,5 +1,6 @@
 import os
 import re
+from typing import List
 
 from firebase_admin.auth import UserRecord
 
@@ -136,7 +137,7 @@ class FirebaseApp:
         self.all_entries = self.get_all_entries()
         return
 
-    def get_entries_by_user_email(self, user_email: str) -> list[dict]:
+    def get_entries_by_user_email(self, user_email: str) -> List[dict]:
         all_data = self.db.reference(self.firebase_folder).get()
         user_pot = []
         for date, flights in all_data.items():
