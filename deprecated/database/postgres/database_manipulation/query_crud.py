@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, List
 
 from deprecated.database.fillers.data_skeleton import get_rio_example
 from deprecated.database.postgres.database_manipulation.db_creation.sql_lines_generator import get_sql_line_create
@@ -13,7 +13,7 @@ class PostgresQueryCrud:
     def __post_init__(self):
         self.query_amount = len(self.list_all_queries())
 
-    def list_all_queries(self) -> list[dict[Any, Any]]:
+    def list_all_queries(self) -> List[dict[Any, Any]]:
         sql = f"select * from {self.table_name}"
         self.db.run_sql_query(sql)
         raw_results = self.db.show_query_results()

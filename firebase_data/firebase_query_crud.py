@@ -1,4 +1,5 @@
 import copy
+from typing import List
 
 from firebase_data.firebase_connection import FirebaseCore
 from firebase_data.firebase_run import FirebaseApp
@@ -40,7 +41,7 @@ class FirebaseQueryCrud:
         return unique_id is not None
 
     @staticmethod
-    def fix_dict(main_dict: dict, keys_to_remove: list[str]):
+    def fix_dict(main_dict: dict, keys_to_remove: List[str]):
         copy_dict = copy.deepcopy(main_dict)
         for key in keys_to_remove:
             copy_dict.pop(key, None)

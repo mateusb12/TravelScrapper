@@ -1,3 +1,5 @@
+from typing import List
+
 from deprecated.database.fillers.data_skeleton import get_flight_dict_example
 from deprecated.database.postgres.database_manipulation.db_creation.sql_lines_generator import generate_sql_update_line, \
     get_sql_line_create
@@ -12,7 +14,7 @@ class PostgresFlightCrud:
     def __post_init__(self):
         self.query_amount = len(self.list_all_flights())
 
-    def list_all_flights(self) -> list[tuple]:
+    def list_all_flights(self) -> List[tuple]:
         sql = f"select * from {self.table_name}"
         self.db.run_sql_query(sql)
         return self.db.show_query_results()
