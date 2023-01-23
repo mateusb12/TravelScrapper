@@ -1,5 +1,3 @@
-from fix_flask_imports import fix_path
-fix_path()
 import ast
 from typing import Optional
 
