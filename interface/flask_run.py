@@ -4,6 +4,7 @@ from typing import Optional
 from flask import Flask, request, render_template, redirect, url_for, session
 
 from firebase_data.firebase_factory import FirebaseFactory, get_dummy_flights
+from global_monitor import GlobalFlightMonitor
 from price_monitor.flight_utils import convert_html_date
 
 factory: FirebaseFactory = FirebaseFactory()
@@ -86,6 +87,14 @@ def run_query():
     print("Finished searching prices!")
     query_results = factory.firebase_monitor.output
     return render_template('flight_monitor_results.html', output=query_results)
+
+
+@app.route("/start_pipeline", methods=['GET', 'POST'])
+def start_pipeline():
+    gfm = GlobalFlightMonitor()
+    monitor = gfm.factory.firebase_monitor
+    monitor.search_prices()
+    return 'OK', 200
 
 
 if __name__ == '__main__':
