@@ -13,7 +13,7 @@ class TokenLoadErrorException(Exception):
     pass
 
 
-def load_env_file() -> dict[str, Optional[str]]:
+def load_env_file():
     file = Path(get_tokens_reference(), ".env")
     file_content = dotenv_values(file)
     if len(file_content) != 0:
