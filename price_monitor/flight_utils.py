@@ -111,7 +111,7 @@ def revert_date(input_date: str):
     return f"{day}/{adjusted_month}/{year}"
 
 
-def get_earliest_date(list_of_dates: list[str]):
+def get_earliest_date(list_of_dates: List[str]):
     """This function gets a list like ['01 January 2023', '02 January 2023', '28 December 2022', '31 December 2022']
     and returns the most recent date"""
     dates = [get_date_tuple(item) for item in list_of_dates]
