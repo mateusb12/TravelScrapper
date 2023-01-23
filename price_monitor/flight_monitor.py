@@ -1,3 +1,5 @@
+from typing import List
+
 from apis.api_consumer.kiwi_api_call import kiwi_call
 from firebase_data.firebase_connection import FirebaseCore
 from firebase_data.firebase_flight_crud import FirebaseFlightCrud
@@ -70,7 +72,7 @@ class FlightMonitor:
         self.new_flight_data = sorted(raw_flights, key=lambda x: x["duration"]["total"])
 
     @staticmethod
-    def _trim_kiwi_data(kiwi_flights: list[dict]) -> list[dict]:
+    def _trim_kiwi_data(kiwi_flights: List[dict]) -> List[dict]:
         lowest_price_value = min(flight["price"] for flight in kiwi_flights)
         return [flight for flight in kiwi_flights if flight["price"] == lowest_price_value]
 
@@ -118,7 +120,7 @@ class FlightMonitor:
         return {"output": "success", "outputDetails": f"New cheapest flight found for ${lowest_kiwi_price} "
                                                       f"({price_diff_tag} cheaper)"}
 
-    def _insert_new_data(self, flight_pot: list[dict]):
+    def _insert_new_data(self, flight_pot: List[dict]):
         """This function inserts the new data into the firebase database"""
         for flight in flight_pot:
             flight["queryDetails"] = self.current_query
