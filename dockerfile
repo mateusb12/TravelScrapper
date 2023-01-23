@@ -8,4 +8,4 @@ WORKDIR /app
 
 RUN pip install -r requirements.txt
 
-CMD ["python", "price_monitor/monitor_all_users.py"]
+CMD ["python", "global_monitor.py"]
