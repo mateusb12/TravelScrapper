@@ -1,3 +1,5 @@
+from typing import List
+
 from firebase_data.firebase_run import FirebaseApp, are_two_flights_the_same
 from price_monitor.flight_processor import get_flight_data_example
 from price_monitor.flight_utils import get_formatted_today_date
@@ -70,7 +72,7 @@ class FirebaseFlightCrud:
                 value2["uniqueId"] = key2
         return raw_flights
 
-    def trim_non_existing_flights(self, flight_pot: list[dict]):
+    def trim_non_existing_flights(self, flight_pot: List[dict]):
         return [item for item in flight_pot if not self.firebase_app.check_existing_flight(item)]
 
     def get_flights_by_user_email(self, user_email: str):
