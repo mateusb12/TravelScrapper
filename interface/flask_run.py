@@ -1,3 +1,6 @@
+import sys
+print(sys.path)
+
 import fix_flask_imports
 import ast
 from typing import Optional
