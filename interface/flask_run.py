@@ -12,6 +12,11 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
 
+@app.route("/", methods=['GET', 'POST'])
+def landing_page():
+    return render_template("landing_page.html")
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     global factory
@@ -98,4 +103,4 @@ def start_pipeline():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=8080)
