@@ -24,6 +24,11 @@ class FirebaseFactory:
         self.firebase_monitor = FlightMonitor(self.app)
         print("Factory successfully finished!")
 
+    def clean(self):
+        self.core, self.user_crud, self.firebase_login, self.user, self.app = None, None, None, None, None
+        self.firebase_query, self.firebase_flights, self.firebase_monitor = None, None, None
+        print("Factory cleaned!")
+
 
 def get_dummy_flights():
     return {"01 January 2023": {

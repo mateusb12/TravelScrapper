@@ -24,6 +24,8 @@ def login():
         return render_template("login_page.html")
     username = request.form['username']
     password = request.form['password']
+    if hasattr(factory, 'flag'):
+        aux = factory
     print(f"Username: {username}, Password: {password}")
     factory.run(username, password)
     session['username'] = username
@@ -100,6 +102,15 @@ def start_pipeline():
     monitor = gfm.factory.firebase_monitor
     monitor.search_prices()
     return 'OK', 200
+
+
+@app.route("/logout", methods=['GET', 'POST'])
+def logout():
+    global factory
+    aux = factory
+    factory.clean()
+    factory.flag = "true"
+    return redirect('/login')
 
 
 if __name__ == '__main__':

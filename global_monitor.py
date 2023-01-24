@@ -1,16 +1,6 @@
 import fix_imports_sys
 from firebase_data.firebase_factory import FirebaseFactory
-
-
-def singleton(cls):
-    _instances = {}
-
-    def getinstance(*args, **kwargs):
-        if cls not in _instances:
-            _instances[cls] = cls(*args, **kwargs)
-        return _instances[cls]
-
-    return getinstance
+from singleton_pattern import singleton
 
 
 @singleton

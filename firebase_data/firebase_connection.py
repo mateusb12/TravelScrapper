@@ -5,6 +5,7 @@ import firebase_admin
 from firebase_admin import credentials
 
 from references.paths import get_service_account_json_reference
+from singleton_pattern import singleton
 from tokens.token_loader import check_env_variable
 from firebase_admin import auth, db
 
@@ -28,6 +29,7 @@ def create_firebase_connection() -> firebase_admin.App:
     return firebase_admin.initialize_app(credential, config)
 
 
+@singleton
 class FirebaseCore:
     def __init__(self):
         self.app: firebase_admin.App = create_firebase_connection()
