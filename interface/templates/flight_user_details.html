@@ -20,6 +20,7 @@
             border-radius: 20px;
             margin: 20px auto;
             text-align: center;
+            position: relative;
         }
 
         .rounded {
@@ -47,8 +48,20 @@
         }
 
         .run {
-            background-color: red;
+            background-color: #ff9b00;
             color: white;
+        }
+
+        .logout {
+            background-color: #ff0000;
+            color: white;
+            position: absolute;
+            bottom: 5px;
+            right: 8px;
+            padding: 2px;
+            width: 12%;
+            font-size: 0.8em;
+            margin-bottom: 1px;
         }
     </style>
     <title>User details</title>
@@ -61,6 +74,7 @@
         <a href="/flight_query_viewer" class="btn saved">Saved Queries</a>
         <a href="/query_creator" class="btn create">Create Queries</a>
         <a href="/run_query" class="btn run">Run Queries</a>
+        <a href="/logout" class="btn logout">Logout</a>
     </div>
 </div>
 </body>
