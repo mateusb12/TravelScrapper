@@ -2,21 +2,25 @@
 Travel scrapper is an algorithm made for automatically checking for new flight prices. 
 
 **Main pipeline**
-- HTTP request for the Tequilla API is sent (kiwi.com)
-- New flights are added to a PostgresSQL database
+- HTTP request for the Tequila API is sent (kiwi.com)
+- Flights are stored to a firebase database
+- The algorithm then compares stored flights with the new API ones
 - Whenever a new cheaper flight appears on the radar, it sends a telegram message to the user
 
 ## Setup guide
 Look at .env_example for the default pattern. Create a .env file on the tokens folder with the following:
-- KIWI_TOKEN → your tequilla API token
+- KIWI_TOKEN → your tequila API token
 - TELEGRAM_TOKEN →  token of the BOT that will send you telegram messages
 - TELEGRAM_USER_ID → your telegram user number. Send a message to @get_my_telegram_chat_id_bot to check it by yourself
-- POSTGRES_HOST, POSTGRES_DATABASE, POSTGRES_USER, POSTGRES_PASSWORD → self explanatory, these are your postgresSQL database credentials
+- FIREBASE_TOKENS → self-explanatory, these are mostly database credentials related
+- PORT → port that the flask API will run on. Useful for deploying
 
 After configuring everything on the .env file, you should run
 ```
 apis/travel_api/travel_api_launcher.py
 ```
+
+![Flight artwork](https://i.imgur.com/DynIlEb.png)
 
 ## Main endpoints
 
