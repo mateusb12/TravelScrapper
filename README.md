@@ -20,7 +20,7 @@ After configuring everything on the .env file, you should run
 apis/travel_api/travel_api_launcher.py
 ```
 
-![Flight artwork](https://i.imgur.com/DynIlEb.png)
+![Flight artwork](https://i.imgur.com/pS65UlG.png)
 
 ## Main endpoints
 
