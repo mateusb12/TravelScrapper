@@ -1,6 +1,7 @@
-import requests as requests
+import os
+from datetime import datetime, timedelta
 
-from tokens.token_loader import load_kiwi_token
+import requests as requests
 
 
 def kiwi_call(**kwargs) -> dict:
@@ -11,7 +12,7 @@ def kiwi_call(**kwargs) -> dict:
     limit = kwargs.get('limit')
     param_tag = f"fly_from={fly_from}&fly_to={fly_to}&dateFrom={date_from}&dateTo={date_to}&limit={limit}"
     url = f"https://tequila-api.kiwi.com/v2/search?{param_tag}"
-    api_key = load_kiwi_token()
+    api_key = os.environ["KIWI_TOKEN"]
     header_dict = {
         "apikey": api_key,
         "max_fly_duration": "20",
@@ -21,7 +22,14 @@ def kiwi_call(**kwargs) -> dict:
 
 
 def kiwi_call_example() -> dict:
-    return kiwi_call(fly_from="FOR", fly_to="RIO", date_from="01/01/2023", date_to="01/03/2023", limit=500)
+    current_date = datetime.now()
+    one_month_ago = current_date - timedelta(days=30)
+    one_month_later = current_date + timedelta(days=30)
+
+    date_from = one_month_ago.strftime("%d/%m/%Y")
+    date_to = one_month_later.strftime("%d/%m/%Y")
+
+    return kiwi_call(fly_from="FOR", fly_to="RIO", date_from=date_from, date_to=date_to, limit=500)
 
 
 def kiwi_call_sp_example() -> dict:

@@ -1,9 +1,9 @@
+import os
+
 from telegram import Bot
 
-from tokens.token_loader import load_all_tokens, load_telegram_token
-
 # load_all_tokens()
-TOKEN = load_telegram_token()
+TOKEN = os.environ["TELEGRAM_TOKEN"]
 telegram_bot_instance = Bot(token=TOKEN)
 
 

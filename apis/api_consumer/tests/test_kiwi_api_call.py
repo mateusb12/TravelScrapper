@@ -3,7 +3,6 @@ import requests as requests
 import unittest.mock
 
 from apis.api_consumer.kiwi_api_call import kiwi_call, kiwi_call_example, kiwi_call_sp_example
-from tokens.token_loader import load_kiwi_token
 
 
 def test_kiwi_call_returns_valid_json():
