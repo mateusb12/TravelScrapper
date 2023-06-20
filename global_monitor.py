@@ -1,6 +1,5 @@
-import fix_imports_sys
 from firebase_data.firebase_factory import FirebaseFactory
-from singleton_pattern import singleton
+from utils.singleton_pattern import singleton
 
 
 @singleton
