@@ -1,11 +1,12 @@
 .login-form {
 	background-color: #f4f4f4;
-	padding: 5px;
 	border-radius: 10px;
 	max-width: 350px;
 	margin: auto;
     min-height: 150px;
     min-width: 250px;
+    border: 2px solid black;
+    padding: 20px;
 }
 
 form {

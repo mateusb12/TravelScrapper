@@ -4,7 +4,6 @@ from flask import Flask, jsonify, request
 from apis.api_cruds.postgres_crud import postgres_create_query, postgres_read_query, postgres_update_query, \
     postgres_delete_query, postgres_list_all_queries, postgres_create_flight, postgres_list_all_flights, \
     postgres_read_flight, postgres_refresh_db
-from deprecated.database.query_execution.postgres_query_runner import run_all_postgres_queries
 
 application = Flask(__name__)
 application.config['JSON_SORT_KEYS'] = False
@@ -74,11 +73,6 @@ def read_flight(tag: str):
 @application.route("/read_all_flights", methods=["GET"])
 def read_all_flights():
     return postgres_list_all_flights()
-
-
-@application.route("/run_all_queries", methods=["POST"])
-def run_all():
-    return run_all_postgres_queries()
 
 
 @application.route("/refresh_db", methods=["DELETE"])

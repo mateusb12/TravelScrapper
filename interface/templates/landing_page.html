@@ -27,13 +27,19 @@
 
         .rounded-window {
             background-color: #f4f4f4;
-            padding: 5px;
             border-radius: 10px;
             max-width: 350px;
             margin: auto;
             min-height: 150px;
             min-width: 250px;
             text-align: center;
+            border: 2px solid black;
+            padding: 20px;
+        }
+
+        .welcome-text{
+            margin-left: 10px;
+            margin-right: 10px;
         }
     </style>
     <link rel="stylesheet" type="text/css" href="../static/css/login_style.css">
@@ -41,7 +47,7 @@
 
 <body>
 <div class="rounded-window">
-    <h1>Welcome to our website!</h1>
+    <h1 class="welcome-text">Welcome to our website!</h1>
     <p>Please login to access all of our features.</p>
     <button onclick="location.href='/login'">Go to login page</button>
 </div>
