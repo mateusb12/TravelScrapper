@@ -1,12 +1,17 @@
 import os
 from flask import Flask, jsonify
+from graphene import Schema
 
+from apis.travel_api.graphQLSchemas import Query
 from firebase_data.firebase_factory import FirebaseFactory
+from flask_graphql import GraphQLView
 
 factory: FirebaseFactory = FirebaseFactory()
 factory.run("test@test.com", "123456")
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
+schema = Schema(query=Query)
+app.add_url_rule('/graphql', view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True))
 
 
 @app.route("/")
