@@ -12,3 +12,35 @@
 **Description:** 
 
 This endpoint returns all queries from Firebase when accessed with a GET request.
+
+```json
+"Date": Date {
+    "Unique Query Identifier": {
+        "arrivalAirport": String,
+        "departureAirport": String,
+        "departureDate": String,
+        "queryDate": String,
+        "userEmail": String
+    }
+}
+```
+
+## Example
+
+### Request
+```http
+GET /get_all_queries
+```
+
+### Response
+```json
+{
+    "-NMK3JNMYjRC9hEbc3Yd": {
+        "arrivalAirport": "SAO",
+        "departureAirport": "FOR",
+        "departureDate": "18 February 2023",
+        "queryDate": "21 January 2023",
+        "userEmail": "test@test.com"
+    }
+}
+```
