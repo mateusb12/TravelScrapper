@@ -1,6 +1,8 @@
 # Travel Scrapper
 Travel scrapper is an algorithm made for automatically checking for new flight prices. 
 
+### [Api Overview](docs/api_overview.md)
+
 **Main pipeline**
 - HTTP request for the Tequila API is sent (kiwi.com)
 - Flights are stored to a firebase database
@@ -23,13 +25,14 @@ apis/travel_api/travel_api_launcher.py
 
 ## Main endpoints
 
-| Prefix | Endpoint | Tag | Type |
-| ------ | ------ |  ------ |  ------ |
-| http://localhost:8080/ | create_query | <query_tag> | POST
-| http://localhost:8080/ | list_all_queries | _ | GET
-| http://localhost:8080/| list_all_flights | _ | GET
-| http://localhost:8080/ | refresh_db | _ | DELETE
-| http://localhost:8080/ | run_all_queries | _ | POST
+| Prefix                 | Endpoint         | Tag         | Type   |
+|------------------------|------------------|-------------|--------|
+| http://localhost:8080/ | create_query     | <query_tag> | POST   |
+| http://localhost:8080/ | list_all_queries | _           | GET    |
+| http://localhost:8080/ | list_all_flights | _           | GET    |
+| http://localhost:8080/ | refresh_db       | _           | DELETE |
+| http://localhost:8080/ | run_all_queries  | _           | POST   |
+
 
 #### Create query
 Creates a query that will be run by the run_all_queries function. Example below
