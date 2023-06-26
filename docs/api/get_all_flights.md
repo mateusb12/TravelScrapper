@@ -1,29 +1,60 @@
-# Get All Flights Query with Pagination
-
-**Endpoint:** `/graphql`
-
-**Method:** `POST`
-
-**Request:**
-
-- A GraphQL query in the request body
-
-**Response:** 
-
-- A JSON object containing the requested fields
-- HTTP status code 200
-
-**Description:** 
-
-This query returns a list of all flights. A successful response returns a `200 OK` HTTP status code along with a JSON object. The structure of the JSON object depends on the requested fields in the GraphQL query. The query supports pagination by accepting optional `page` and `size` parameters, defaulting to page `1` and size `10` if not provided.
-
-In GraphQL, the client specifies the needed fields in the request. The structure of the response will mirror the structure of the request. This differs from REST where the structure of the response is determined by the server.
-
-## Example
+## Contract
 
 ### Request
 
-To get all flights with their arrival airport, departure airport, price, number of stops and query date, you'd send this request:
+- **Endpoint:** `POST /graphql`
+- **Headers:**
+    - `Content-Type: application/json`
+- **Body:** A JSON object with a `query` key. The `query` key's value should be a string containing a GraphQL query.
+
+The GraphQL query should have the following format:
+
+```graphql
+query {
+  allFlights(page: <page_number>, size: <page_size>) {
+    flights {
+      <field_name_1>
+      <field_name_2>
+    ...
+    <field_name_n> {
+    }
+    total {
+    }
+  }
+```
+Replace `<page_number>`, `<page_size>`, and `<field_name_n>` with appropriate values.
+
+### Response
+
+- A JSON object with a `data` key. The `data` key's value is another JSON object with an `allFlights` key. The `allFlights` key's value is an object with the following keys:
+    - `flights`: An array of objects. Each object has the fields specified in the GraphQL query.
+    - `total`: An integer representing the total number of flights.
+
+The status code for a successful request is `200`. 
+
+### Errors
+
+Errors are returned as a JSON object with an `errors` key. The `errors` key's value is an array of error objects.
+Each error object has a `message` key.
+
+```json
+{
+  "errors": [
+    {
+      "message": "<error_message>"
+    }
+  ]
+}
+```
+
+The status code for an unsuccessful request is usually `400`, but may vary depending on the error.
+
+## Request Example
+
+### Request
+
+In order to get all flights with their arrival airport, departure airport, price, number of stops and query date,
+you would need send the following request:
 
 ```http
 POST /graphql
@@ -48,7 +79,8 @@ Content-Type: application/json
 ```
 
 ### Response
-The response will be a JSON object with the same structure as the request:
+
+The response would be a JSON object with the same structure as the request:
 
 ```json
 {
@@ -61,7 +93,7 @@ The response will be a JSON object with the same structure as the request:
           "price": 114.0,
           "numberOfStops": 2,
           "queryDate": "01 January 2023"
-        },
+        }
         // more flights...
       ],
       "total": 100
@@ -72,7 +104,7 @@ The response will be a JSON object with the same structure as the request:
 
 ```
 
-To get all fields, simply include all fields in your query. Note that in GraphQL, you don't need to send separate requests to different endpoints to get different types of data. You can get all the data you need in a single request by including all the fields you need in your query. For example:
+To get all fields, simply include all fields in your query. For example:
 
 ```http
 POST /graphql
@@ -126,3 +158,5 @@ Content-Type: application/json
 }
 
 ```
+
+
