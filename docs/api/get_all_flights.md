@@ -1,60 +1,12 @@
-## Contract
+## Flight Price Monitor API
 
-### Request
+This API provides a GraphQL endpoint at `POST /graphql` that lets you query flight information. The API can provide details about flights, including their airlines, arrival and departure times, and prices.
 
-- **Endpoint:** `POST /graphql`
-- **Headers:**
-    - `Content-Type: application/json`
-- **Body:** A JSON object with a `query` key. The `query` key's value should be a string containing a GraphQL query.
+### GraphQL Endpoint
 
-The GraphQL query should have the following format:
+Send a `POST` request to the `/graphql` endpoint with a JSON object in the body. The JSON object should have a `query` key. The `query` key's value should be a string containing a GraphQL query.
 
-```graphql
-query {
-  allFlights(page: <page_number>, size: <page_size>) {
-    flights {
-      <field_name_1>
-      <field_name_2>
-    ...
-    <field_name_n> {
-    }
-    total {
-    }
-  }
-```
-Replace `<page_number>`, `<page_size>`, and `<field_name_n>` with appropriate values.
-
-### Response
-
-- A JSON object with a `data` key. The `data` key's value is another JSON object with an `allFlights` key. The `allFlights` key's value is an object with the following keys:
-    - `flights`: An array of objects. Each object has the fields specified in the GraphQL query.
-    - `total`: An integer representing the total number of flights.
-
-The status code for a successful request is `200`. 
-
-### Errors
-
-Errors are returned as a JSON object with an `errors` key. The `errors` key's value is an array of error objects.
-Each error object has a `message` key.
-
-```json
-{
-  "errors": [
-    {
-      "message": "<error_message>"
-    }
-  ]
-}
-```
-
-The status code for an unsuccessful request is usually `400`, but may vary depending on the error.
-
-## Request Example
-
-### Request
-
-In order to get all flights with their arrival airport, departure airport, price, number of stops and query date,
-you would need send the following request:
+#### Example Request:
 
 ```http
 POST /graphql
@@ -78,9 +30,7 @@ Content-Type: application/json
 }
 ```
 
-### Response
-
-The response would be a JSON object with the same structure as the request:
+#### Example Response:
 
 ```json
 {
@@ -100,11 +50,13 @@ The response would be a JSON object with the same structure as the request:
     }
   }
 }
-
-
 ```
 
-To get all fields, simply include all fields in your query. For example:
+### Querying All Fields
+
+To query all fields for flights, include all field names in your query.
+
+#### Example Request Querying All Fields:
 
 ```http
 POST /graphql
@@ -156,7 +108,22 @@ Content-Type: application/json
     }
   "
 }
-
 ```
 
+### Error Responses
 
+If there is an error with your request, the server will respond with a JSON object containing an `errors` array. Each error object in the array has a `message` key.
+
+#### Example Error Response:
+
+```json
+{
+  "errors": [
+    {
+      "message": "<error_message>"
+    }
+  ]
+}
+```
+
+The status code for an unsuccessful request is usually `400`, but may vary depending on the error.
