@@ -21,14 +21,19 @@ query = ObjectType("Query")
 
 
 @query.field("allFlights")
-def resolve_all_flights(obj, info) -> List[dict]:
+def resolve_all_flights(obj, info, page: int = 1, size: int = 10) -> dict:
     factory = getFactoryInstance()
     all_flights = factory.firebase_flights.read_all_flights()
     flightPot = []
     for date, flightData in all_flights.items():
         for uniqueId, singleFlight in flightData.items():
             flightPot.append(singleFlight)
-    return flightPot
+
+    start = (page - 1) * size
+    end = start + size
+    flights = flightPot[start:end]
+
+    return {"flights": flights, "total": len(flightPot)}
 
 
 # Create a dictionary of resolvers
@@ -75,9 +80,15 @@ type_defs = gql("""
         userEmail: String
         uniqueId: String
     }
+    
+    type FlightPage {
+        flights: [Flight]
+        total: Int
+    }
+
 
     type Query {
-        allFlights: [Flight]
+        allFlights(page: Int, size: Int): FlightPage
     }
 """)
 
