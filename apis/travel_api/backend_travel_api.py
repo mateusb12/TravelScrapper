@@ -1,17 +1,26 @@
 import os
-from flask import Flask, jsonify
-from graphene import Schema
+from flask import Flask, jsonify, request
+from firebase_data.firebase_factory import FirebaseFactory, getFactoryInstance
+from ariadne import make_executable_schema, graphql_sync
+from apis.travel_api.schemas import type_defs, resolvers
 
-from apis.travel_api.graphQLSchemas import Query
-from firebase_data.firebase_factory import FirebaseFactory
-from flask_graphql import GraphQLView
-
-factory: FirebaseFactory = FirebaseFactory()
-factory.run("test@test.com", "123456")
+factory: FirebaseFactory = getFactoryInstance()
 app = Flask(__name__)
 app.config['JSON_SORT_KEYS'] = False
-schema = Schema(query=Query)
-app.add_url_rule('/graphql', view_func=GraphQLView.as_view('graphql', schema=schema, graphiql=True))
+schema = make_executable_schema(type_defs, resolvers)
+
+
+@app.route("/graphql", methods=['POST'])
+def graphql_server():
+    data = request.get_json()
+    success, result = graphql_sync(
+        schema,
+        data,
+        context_value=request,
+        debug=app.debug
+    )
+    status_code = 200 if success else 400
+    return jsonify(result), status_code
 
 
 @app.route("/")

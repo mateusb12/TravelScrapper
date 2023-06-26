@@ -49,6 +49,12 @@ def get_dummy_flights():
     }}
 
 
+def getFactoryInstance() -> FirebaseFactory:
+    factory: FirebaseFactory = FirebaseFactory()
+    factory.run("test@test.com", "123456")
+    return factory
+
+
 def __main():
     factory = FirebaseFactory()
     factory.run("test@test.com", "123456")
