@@ -1,38 +1,46 @@
 # Get All Queries Endpoint
 
-**Endpoint:** `/get_all_queries`
+This endpoint retrieves all flight query records from the Firebase database.
 
-**Method:** `GET`
+- **Endpoint:** `/get_all_queries`
+- **Method:** `GET`
 
-**Response:** 
+## Contract
+
+### Response
 
 - A JSON object containing all queries.
-- HTTP status code 200
+- HTTP status code 200 for a successful request.
 
-**Description:** 
+The JSON object has keys representing dates. Each date key's value is an object. This object has keys that are unique query identifiers. Each unique query identifier key's value is an object with the following keys:
 
-This endpoint returns all queries from Firebase when accessed with a GET request.
+- `arrivalAirport`: A string representing the arrival airport.
+- `departureAirport`: A string representing the departure airport.
+- `departureDate`: A string representing the departure date.
+- `queryDate`: A string representing the date when the query was made.
+- `userEmail`: A string representing the user's email.
+
+### Example
 
 ```json
-"Date": Date {
+"Date": {
     "Unique Query Identifier": {
-        "arrivalAirport": String,
-        "departureAirport": String,
-        "departureDate": String,
-        "queryDate": String,
-        "userEmail": String
+        "arrivalAirport": "Airport",
+        "departureAirport": "Airport",
+        "departureDate": "Date",
+        "queryDate": "Date",
+        "userEmail": "Email"
     }
 }
 ```
 
-## Example
+### Request Example
 
-### Request
 ```http
 GET /get_all_queries
 ```
 
-### Response
+### Response Example
 ```json
 {
     "-NMK3JNMYjRC9hEbc3Yd": {
@@ -43,4 +51,5 @@ GET /get_all_queries
         "userEmail": "test@test.com"
     }
 }
+
 ```

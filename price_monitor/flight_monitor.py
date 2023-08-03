@@ -65,7 +65,8 @@ class FlightMonitor:
         kiwi_api_call = kiwi_call(fly_from=departure_airport, fly_to=arrival_airport, date_from=raw_departure_date,
                                   date_to=raw_arrival_date, limit=100)
         if 'status' in kiwi_api_call and kiwi_api_call["status"] == "Bad Request":
-            raise ValueError("Kiwi API call failed")
+            raise ValueError(f"Kiwi API call failed.\nStatus → {kiwi_api_call['status']}"
+                             f"\nMessage → {kiwi_api_call['error']}")
         trimmed_data = self._trim_kiwi_data(kiwi_api_call["data"])
         flight_processor_instance = FlightProcessor(trimmed_data)
         raw_flights = flight_processor_instance.flights
