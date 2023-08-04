@@ -1,3 +1,4 @@
+import datetime
 from typing import List
 
 from apis.api_consumer.kiwi_api_call import kiwi_call
@@ -23,6 +24,7 @@ class FlightMonitor:
         self.new_flight_data = [{}]
         self.output = {"cheapest_firebase_flight": 0, "cheapest_kiwi_flight": 0}
         self.query_data = []
+        self.query_results = []
 
     def search_prices(self):
         self._gather_current_firebase_flight_data()
@@ -69,7 +71,7 @@ class FlightMonitor:
 
     def _process_incoming_flight_data(self, kiwi_flights: List[dict]):
         """
-        Filters, structures, and sorts flight data by duration , returning a list of processed flight data.
+        Filters, structures, and sorts flight data by duration, returning a list of processed flight data.
         """
         lowest_price_flights = self._filter_flights(kiwi_flights)
         flight_processor_instance = FlightProcessor(lowest_price_flights)
@@ -115,6 +117,9 @@ class FlightMonitor:
         if price_diff <= -10:
             return self.handle_new_cheapest_flight(price_diff, lowest_kiwi_price)
         self._insert_new_data(self.new_flight_data)
+        price_dict = {"lowest_firebase_price": lowest_firebase_price, "lowest_kiwi_price": lowest_kiwi_price,
+                      "price_diff": price_diff, "search_date": datetime.datetime.now().strftime('%d %B %Y')}
+        self.query_results.append(price_dict)
         return {"output": "failure", "outputDetails": f"Could not find a cheaper flight than {lowest_firebase_price}"}
 
     def handle_new_cheapest_flight(self, price_diff, lowest_kiwi_price):
