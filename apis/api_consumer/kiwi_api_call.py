@@ -18,7 +18,11 @@ def kiwi_call(**kwargs) -> dict:
         "max_fly_duration": "20",
     }
     response = requests.get(url, headers=header_dict)
-    return response.json()
+    kiwi_api_call = response.json()
+    if 'status' in kiwi_api_call and kiwi_api_call["status"] == "Bad Request":
+        raise ValueError(f"Kiwi API call failed.\nStatus → {kiwi_api_call['status']}"
+                         f"\nMessage → {kiwi_api_call['error']}")
+    return kiwi_api_call
 
 
 def kiwi_call_example() -> dict:

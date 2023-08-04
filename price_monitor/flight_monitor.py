@@ -64,16 +64,23 @@ class FlightMonitor:
         raw_departure_date, raw_arrival_date = revert_date(raw_departure_date), revert_date(raw_arrival_date)
         kiwi_api_call = kiwi_call(fly_from=departure_airport, fly_to=arrival_airport, date_from=raw_departure_date,
                                   date_to=raw_arrival_date, limit=100)
-        if 'status' in kiwi_api_call and kiwi_api_call["status"] == "Bad Request":
-            raise ValueError(f"Kiwi API call failed.\nStatus → {kiwi_api_call['status']}"
-                             f"\nMessage → {kiwi_api_call['error']}")
-        trimmed_data = self._trim_kiwi_data(kiwi_api_call["data"])
-        flight_processor_instance = FlightProcessor(trimmed_data)
-        raw_flights = flight_processor_instance.flights
-        self.new_flight_data = sorted(raw_flights, key=lambda x: x["duration"]["total"])
+        kiwi_flights = kiwi_api_call["data"]
+        self.new_flight_data = self._process_incoming_flight_data(kiwi_flights)
+
+    def _process_incoming_flight_data(self, kiwi_flights: List[dict]):
+        """
+        Filters, structures, and sorts flight data by duration , returning a list of processed flight data.
+        """
+        lowest_price_flights = self._filter_flights(kiwi_flights)
+        flight_processor_instance = FlightProcessor(lowest_price_flights)
+        structured_flights = flight_processor_instance.flights
+        return sorted(structured_flights, key=lambda x: x["duration"]["total"])
 
     @staticmethod
-    def _trim_kiwi_data(kiwi_flights: List[dict]) -> List[dict]:
+    def _filter_flights(kiwi_flights: List[dict]) -> List[dict]:
+        """
+        Filters the Kiwi flights data to only include the flights with the lowest price.
+        """
         lowest_price_value = min(flight["price"] for flight in kiwi_flights)
         return [flight for flight in kiwi_flights if flight["price"] == lowest_price_value]
 

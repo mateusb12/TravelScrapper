@@ -38,7 +38,7 @@ def test_trim_kiwi_data_removes_expensive_flights(get_flight_monitor_instance):
     fm = get_flight_monitor_instance
     kiwi_api_call = kiwi_call(fly_from="FOR", fly_to="RIO", date_from="01/01/2023",
                               date_to="01/03/2023", limit=500)["data"]
-    trimmed_data = fm._trim_kiwi_data(kiwi_api_call)
+    trimmed_data = fm._filter_flights(kiwi_api_call)
     assert len(trimmed_data) < len(kiwi_api_call)
 
 
