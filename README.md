@@ -1,5 +1,34 @@
-# Travel Scrapper
-Travel scrapper is an algorithm made for automatically checking for new flight prices. 
+# Travel Scrapper  
+Travel scrapper is an algorithm made for automatically checking for new flight prices.
+  
+## Getting Started  
+  
+### 1. **Start the Frontend server** 📁  
+Run the file `interface/flask_run.py` 
+  
+[Step 1 Image](docs/pictures/flask.png)
+  
+### 2. **Open the website** 🐍  
+Open `http://localhost:8080` and perform the login process.
+
+[Step 2 Image](docs/pictures/login_page.png)
+[Step 3 Image](docs/pictures/main_buttons.png)
+  
+### 3. **Check your current queries** 🌐  
+Under the "Saved Queries" button, you can see your current flight queries
+[Step 4 Image](docs/pictures/saved_queries.png)
+  
+### 4. **[Optional] Create new query** 🚀  
+If you don't have any creates, you can use the creation window
+[Step 5 Image](docs/pictures/query_creation.png)
+  
+### 5. **Run your queries** 🤖  
+By clicking on the "run" button, the algorithm will
+ - Search for new flights, using the query data you have previously set up
+ - Compare the new flight prices with the current flight stored in firebase
+ - In case the algorithm finds a cheaper flight, it will message you through Telegram using the data set up in the .env file
+ 
+[Step 6 Image](docs/pictures/price_result.png)
 
 ### [Api Overview](docs/api_overview.md)
 
