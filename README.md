@@ -39,13 +39,7 @@ By clicking on the "run" button, the algorithm will
 - Whenever a new cheaper flight appears on the radar, it sends a telegram message to the user
 
 ## Setup guide
-Look at .env_example for the default pattern. Create a .env file on the tokens folder with the following:
-- KIWI_TOKEN → your tequila API token
-- TELEGRAM_TOKEN →  token of the BOT that will send you telegram messages
-- TELEGRAM_USER_ID → your telegram user number. Send a message to @get_my_telegram_chat_id_bot to check it by yourself
-- FIREBASE_TOKENS → self-explanatory, these are mostly database credentials related
-- PORT → port that the flask API will run on. Useful for deploying
-
+Look at .env_example for the default pattern. Create a .env file following the pattern stated in the file.
 After configuring everything on the .env file, you should run
 ```
 apis/travel_api/travel_api_launcher.py
@@ -80,14 +74,5 @@ This function runs the whole pipeline described above on the current queries (te
 
 #### Refresh DB
 This function recreates the columns and erases all data in the database
-
-# HEROKU
-After testing the endpoints locally, you should
-- Upload the code on Heroku
-- Setup the environment variables on Heroku
-- Install the Heroku Scheduler addon and run the job below every day
-```
-$ python apis/api_execution/self_execution.py
-```
 
 
